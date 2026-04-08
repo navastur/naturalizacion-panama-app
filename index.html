@@ -945,6 +945,12 @@
         checkStreak();
         updateMediaCompletionStatus();
 
+        // [EXCEPCIÓN TEMPORAL LUIS] Forzar el hito una vez para ver la animación
+        if (!sessionStorage.getItem('luis_test_milestone')) {
+            sessionStorage.setItem('luis_test_milestone', 'true');
+            userData.lastXPMilestone = Math.max(0, userData.xp - 25);
+        }
+
         const thresholds = [0, 75, 200, 400, 600, 800, 1100];
         const getLvl = (xp) => {
             for (let i = thresholds.length - 1; i >= 0; i--) {
