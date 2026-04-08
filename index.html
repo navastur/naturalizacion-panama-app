@@ -1183,8 +1183,10 @@
         if(id === 'screen-home') document.getElementById('nav-home').classList.replace('text-gray-400', 'text-blue-600');
         if(id === 'screen-stats') document.getElementById('nav-stats').classList.replace('text-gray-400', 'text-blue-600');
         if(id === 'screen-legal') document.getElementById('nav-legal').classList.replace('text-gray-400', 'text-blue-600');
-    }
 
+        // Initialize provinces game if on that screen
+        if(id === 'screen-provincias') initProvincesGame();
+    }
     function goHome() { switchScreen('screen-home'); updateDashboard(); }
     function closeExplanation() { document.getElementById('explanation-modal').style.display = 'none'; }
     function closeMastery() { document.getElementById('mastery-modal').style.display = 'none'; }
