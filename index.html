@@ -1535,15 +1535,58 @@
 
         draggable.style.visibility = "hidden";
 
-        // Aplicar color directamente al SVG (usamos Tailwind classes para ser consistente, 
-        // pero requiere limpiar el inline style primero)
+        // Aplicar color directamente al SVG
         svgPath.style.fill = ""; 
         svgPath.classList.add(province.color, "transition-colors", "duration-500");
 
-        // Añadir una etiqueta de texto sobre el SVG podría ser complicado matemáticamente 
-        // con bounding boxes. Por ahora, el color confirmará el éxito.
+        // Añadir el nombre de la provincia en el centro del path SVG
+        try {
+            const bbox = svgPath.getBBox();
+            const centerX = bbox.x + bbox.width / 2;
+            const centerY = bbox.y + bbox.height / 2;
+            
+            const textElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            textElement.setAttribute("x", centerX);
+            textElement.setAttribute("y", centerY);
+            textElement.setAttribute("text-anchor", "middle");
+            textElement.setAttribute("dominant-baseline", "middle");
+            textElement.setAttribute("fill", "black");
+            textElement.setAttribute("font-size", "14px");
+            textElement.setAttribute("font-weight", "bold");
+            textElement.setAttribute("pointer-events", "none");
+            // Para que se vea bien sobre distintos colores, añadimos un pequeño contorno blanco
+            textElement.setAttribute("stroke", "white");
+            textElement.setAttribute("stroke-width", "1px");
+            textElement.setAttribute("paint-order", "stroke fill");
+            
+            // Ajustar el texto si es muy largo, dividiéndolo o reduciendo la fuente
+            let nameLines = province.name.split(" ");
+            if (nameLines.length > 2 && province.name.length > 15) {
+                textElement.setAttribute("font-size", "10px");
+            } else if (province.name.length > 10) {
+                textElement.setAttribute("font-size", "11px");
+            }
+            
+            textElement.textContent = province.name;
+            
+            // Animación sencilla
+            textElement.style.opacity = "0";
+            textElement.style.transition = "opacity 0.5s ease-in";
+            
+            svgPath.parentNode.appendChild(textElement);
+            
+            // Trigger reflow and show
+            setTimeout(() => { textElement.style.opacity = "1"; }, 50);
+            
+        } catch (e) {
+            console.error("Error adding text to SVG", e);
+        }
 
         const progressSound = document.getElementById("progress-sound");
+        if (progressSound) {
+            progressSound.currentTime = 0;
+            progressSound.play().catch(e => console.log("Audio blocked", e));
+        }
         if (progressSound) {
             progressSound.currentTime = 0;
             progressSound.play().catch(e => console.log("Audio blocked", e));
