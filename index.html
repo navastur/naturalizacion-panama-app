@@ -113,31 +113,31 @@
                     <div id="milestone-line-fill" class="absolute left-[11px] top-2 w-2 bg-gradient-to-b from-yellow-300 via-yellow-500 to-yellow-600 rounded-full shadow-[0_0_15px_rgba(234,179,8,0.8)]" style="height: 0%; transition: height 1.5s cubic-bezier(0.34, 1.56, 0.64, 1);"></div>
 
                     <div class="flex items-center gap-3 mb-3 relative z-10" id="md-ayalavida">
-                        <div class="w-8 h-8 rounded-full border-4 border-white bg-blue-600 shadow-sm flex items-center justify-center" id="m-dot-ayalavida"></div>
+                        <div class="w-8 h-8 rounded-full border-4 border-red-600 bg-white shadow-sm flex items-center justify-center" id="m-dot-ayalavida"></div>
                         <span class="text-[14px] font-bold text-gray-500">Ayalavida</span>
                     </div>
                     <div class="flex items-center gap-3 mb-3 relative z-10" id="md-meto">
-                        <div class="w-8 h-8 rounded-full border-4 border-white bg-red-600 shadow-sm flex items-center justify-center" id="m-dot-meto"></div>
+                        <div class="w-8 h-8 rounded-full border-4 border-red-600 bg-white shadow-sm flex items-center justify-center" id="m-dot-meto"></div>
                         <span class="text-[14px] font-bold text-gray-500">Meto</span>
                     </div>
                     <div class="flex items-center gap-3 mb-3 relative z-10" id="md-berraco">
-                        <div class="w-8 h-8 rounded-full border-4 border-white bg-blue-600 shadow-sm flex items-center justify-center" id="m-dot-berraco"></div>
+                        <div class="w-8 h-8 rounded-full border-4 border-red-600 bg-white shadow-sm flex items-center justify-center" id="m-dot-berraco"></div>
                         <span class="text-[14px] font-bold text-gray-500">Berraco</span>
                     </div>
                     <div class="flex items-center gap-3 mb-3 relative z-10" id="md-xopa">
-                        <div class="w-8 h-8 rounded-full border-4 border-white bg-red-600 shadow-sm flex items-center justify-center" id="m-dot-xopa"></div>
+                        <div class="w-8 h-8 rounded-full border-4 border-red-600 bg-white shadow-sm flex items-center justify-center" id="m-dot-xopa"></div>
                         <span class="text-[14px] font-bold text-gray-500">Xopá</span>
                     </div>
                     <div class="flex items-center gap-3 mb-3 relative z-10" id="md-ofi">
-                        <div class="w-8 h-8 rounded-full border-4 border-white bg-blue-600 shadow-sm flex items-center justify-center" id="m-dot-ofi"></div>
+                        <div class="w-8 h-8 rounded-full border-4 border-red-600 bg-white shadow-sm flex items-center justify-center" id="m-dot-ofi"></div>
                         <span class="text-[14px] font-bold text-gray-500">Ofi</span>
                     </div>
                     <div class="flex items-center gap-3 mb-3 relative z-10" id="md-pritty">
-                        <div class="w-8 h-8 rounded-full border-4 border-white bg-red-600 shadow-sm flex items-center justify-center" id="m-dot-pritty"></div>
+                        <div class="w-8 h-8 rounded-full border-4 border-red-600 bg-white shadow-sm flex items-center justify-center" id="m-dot-pritty"></div>
                         <span class="text-[14px] font-bold text-gray-500">Pritty</span>
                     </div>
                     <div class="flex items-center gap-3 relative z-10" id="md-disque">
-                        <div class="w-8 h-8 rounded-full border-4 border-white bg-blue-600 shadow-sm flex items-center justify-center" id="m-dot-disque"></div>
+                        <div class="w-8 h-8 rounded-full border-4 border-red-600 bg-white shadow-sm flex items-center justify-center" id="m-dot-disque"></div>
                         <span class="text-[14px] font-bold text-gray-500">Disque</span>
                     </div>
                 </div>
@@ -1016,17 +1016,12 @@
         ranks.forEach(r => {
             const dot = document.getElementById('m-dot-'+r);
             const span = document.querySelector(`#md-${r} span`);
-            // Reset to original Panama palette colors
-            if (['disque', 'ofi', 'berraco', 'ayalavida'].includes(r)) {
-                dot.classList.remove('bg-gray-100', 'bg-blue-600', 'bg-red-600', 'scale-125');
-                dot.classList.add('bg-blue-600');
-            } else {
-                dot.classList.remove('bg-gray-100', 'bg-blue-600', 'bg-red-600', 'scale-125');
-                dot.classList.add('bg-red-600');
-            }
+            // White interior, Red border
+            dot.classList.remove('bg-blue-600', 'bg-red-600', 'scale-125', 'ring-4', 'ring-white');
+            dot.classList.add('bg-white', 'border-red-600');
             dot.innerHTML = ''; 
             if(span) {
-                span.classList.remove('text-blue-600', 'font-black');
+                span.classList.remove('text-blue-600', 'font-black', 'text-lg');
                 span.classList.add('text-gray-500');
             }
         });
@@ -1050,8 +1045,8 @@
                 const dot = document.getElementById('m-dot-'+r);
                 const span = document.querySelector(`#md-${r} span`);
                 if (getPanamaLevel(level).toLowerCase().includes(r)) {
-                    dot.classList.add('scale-125', 'shadow-lg', 'z-20', 'ring-4', 'ring-white');
-                    dot.innerHTML = '<span class="text-white text-2xl drop-shadow-md">★</span>'; // Estrella más grande
+                    dot.classList.add('scale-125', 'shadow-lg', 'z-20');
+                    dot.innerHTML = '<span class="text-blue-600 text-2xl drop-shadow-sm">★</span>'; // Estrella azul sobre fondo blanco
                     if(span) {
                         span.classList.remove('text-gray-500');
                         span.classList.add('text-blue-600', 'font-black', 'text-lg');
