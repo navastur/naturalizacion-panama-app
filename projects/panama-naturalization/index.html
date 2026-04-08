@@ -308,6 +308,12 @@
             <div id="provinces-names-container" class="mt-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3 text-center">
                 <!-- Draggable names will be inserted here by JS -->
             </div>
+
+            <div id="provinces-game-complete" class="hidden mt-8 p-6 text-center bg-white rounded-xl shadow-md border border-green-100">
+                <h2 class="text-xl font-black text-green-700 mb-2">¡Mapa Completado!</h2>
+                <p class="text-gray-600 mb-4">Has colocado todas las provincias y comarcas correctamente. ¡Felicidades! (+50 XP)</p>
+                <button onclick="restartProvincesGame()" class="bg-green-500 text-white font-bold py-3 px-6 rounded-xl shadow-lg hover:bg-green-600 transition-colors">Comenzar de nuevo</button>
+            </div>
         </div>
     </div>
 
@@ -1510,12 +1516,19 @@
         correctProvincesCount++;
         if (correctProvincesCount === provinceData.length) {
             setTimeout(() => {
-                alert("¡Felicidades! Has completado el mapa de Panamá. (+50 XP)");
                 userData.xp += 50;
                 updateDashboard();
-                goHome();
-            }, 1500);
+                document.getElementById('provinces-names-container').classList.add('hidden');
+                document.getElementById('provinces-game-complete').classList.remove('hidden');
+            }, 1000);
         }
+    }
+
+    function restartProvincesGame() {
+        correctProvincesCount = 0;
+        document.getElementById('provinces-names-container').classList.remove('hidden');
+        document.getElementById('provinces-game-complete').classList.add('hidden');
+        initProvincesGame(); // Reiniciar el juego
     }
 
     updateDashboard();
