@@ -257,6 +257,17 @@
                     </div>
                     <span class="text-xs font-bold text-center text-gray-800 leading-tight">Himno Nacional y Juramento de la Bandera</span>
                 </button>
+                <button onclick="switchScreen('screen-provincias')" class="card flex flex-col items-center hover:bg-gray-50 col-span-2 border-l-4 border-l-teal-500">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center">
+                            <i class="fa-solid fa-map-location-dot fa-lg"></i>
+                        </div>
+                        <div class="text-left">
+                            <span class="text-xs font-bold text-gray-800 block">Test de Provincias</span>
+                            <span class="text-[9px] text-gray-400 uppercase font-black">Nuevo Minijuego</span>
+                        </div>
+                    </div>
+                </button>
                 <button onclick="showStats()" class="card flex flex-col items-center hover:bg-gray-50 col-span-2 border-l-4 border-l-orange-500">
                     <div class="flex items-center gap-4">
                         <div class="w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center">
@@ -269,6 +280,27 @@
                     </div>
                 </button>
             </div>
+        </div>
+    </div>
+
+    <!-- SCREEN: PROVINCIAS TEST -->
+    <div id="screen-provincias" class="screen" style="background-color: #f8fafc;">
+        <div class="header" style="background: #14b8a6; border-radius: 0 0 15px 15px; padding: 20px;">
+            <div class="flex justify-between items-center mb-4">
+                <button onclick="goHome()" class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-white backdrop-blur-sm">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+                <div class="text-white font-black tracking-widest text-sm drop-shadow-md">TEST DE PROVINCIAS</div>
+                <div class="w-10"></div>
+            </div>
+            <div class="text-center text-white mt-4 pb-2">
+                <h1 class="text-2xl font-black leading-tight drop-shadow-lg">Mapa Interactivo</h1>
+                <p class="text-teal-100 text-xs mt-1 font-medium">Demuestra tus conocimientos</p>
+            </div>
+        </div>
+        <div class="p-5" id="provincias-game-container">
+            <!-- Aquí irá el juego de las provincias -->
+            <p class="text-center text-gray-500 mt-10">Cargando minijuego...</p>
         </div>
     </div>
 
@@ -876,6 +908,13 @@
     if (!userData.completedMedia) userData.completedMedia = [];
     if (userData.lastXPMilestone === undefined) userData.lastXPMilestone = userData.xp;
     if (!userData.lastLoginDate) userData.lastLoginDate = new Date().toISOString().slice(0, 10); // Inicializar con la fecha de hoy si es nuevo usuario
+
+    // Definir los totales de videos y podcasts globalmente
+    const videoIds = ['h5dsmw9lyl', '83qlave7np', 'tg61ztp1h5', 'oko1duw3j1', '6jqx7i0fcp', 'hry856lx2o'];
+    const podcastIds = ['19olMhckJRkKtEgJsBiFOR', '6fhWkXeZxyBl1NECp3W0K1', '1dYqjQJYRHcETC1arFwO82', '1942OKLMwkdPWZxZm07ODS', '5WWXAf3pEDqQyaRj6YntxX'];
+
+    const totalVideos = videoIds.length;
+    const totalPodcasts = podcastIds.length;
     
     let currentEbookPage = 0;
     let currentPodcastId = '19olMhckJRkKtEgJsBiFOR';
@@ -927,6 +966,14 @@
         localStorage.setItem('panama_user_data', JSON.stringify(userData)); // Guardar los cambios de la racha
     }
 
+    const levelThresholds = [0, 75, 200, 400, 600, 800, 1100];
+    function getUserLevel(xp) {
+        for (let i = levelThresholds.length - 1; i >= 0; i--) {
+            if (xp >= levelThresholds[i]) return i + 1;
+        }
+        return 1;
+    }
+
     function getPanamaLevel(lvl) {
         const names = ["Disque", "Pritty", "Ofi", "Xopá", "Berraco", "Meto", "Ayalavida"];
         return "Nivel " + (names[lvl - 1] || "Ayalavida");
@@ -946,20 +993,12 @@
         checkStreak();
         updateMediaCompletionStatus();
 
-        const thresholds = [0, 75, 200, 400, 600, 800, 1100];
-        const getLvl = (xp) => {
-            for (let i = thresholds.length - 1; i >= 0; i--) {
-                if (xp >= thresholds[i]) return i + 1;
-            }
-            return 1;
-        };
-
-        const prevLevel = getLvl(userData.lastXPMilestone || 0);
-        const level = getLvl(userData.xp);
+        const prevLevel = getUserLevel(userData.lastXPMilestone || 0);
+        const level = getUserLevel(userData.xp);
 
         // UI Progress bar calculation
-        const currentThreshold = thresholds[level - 1];
-        const nextThreshold = thresholds[level] || (currentThreshold + 300); // Default step for max level
+        const currentThreshold = levelThresholds[level - 1];
+        const nextThreshold = levelThresholds[level] || (currentThreshold + 300); // Default step for max level
         const xpForNext = nextThreshold - currentThreshold;
         const currentXP = Math.max(0, userData.xp - currentThreshold);
 
@@ -1162,30 +1201,32 @@
             if(s === 3) { stats.green++; stats.red--; }
             else if(s > 0) { stats.yellow++; stats.red--; }
         });
-        const level = Math.floor(userData.xp / 500) + 1;
-        document.getElementById('stats-green').innerText = stats.green;
-        document.getElementById('stats-yellow').innerText = stats.yellow;
-        document.getElementById('stats-red').innerText = stats.red;
-        document.getElementById('stats-total-xp').innerText = `${userData.xp} XP`;
-        document.getElementById('stats-streak').innerText = `${userData.streak} Día${userData.streak > 1 ? 's' : ''} 🔥`;
-        document.getElementById('stats-level-num').innerText = level;
-        document.getElementById('stats-level-name').innerText = getPanamaLevel(level);
+        const level = getUserLevel(userData.xp);
+        const statsGreen = document.getElementById('stats-green');
+        if(statsGreen) statsGreen.innerText = stats.green;
+        const statsYellow = document.getElementById('stats-yellow');
+        if(statsYellow) statsYellow.innerText = stats.yellow;
+        const statsRed = document.getElementById('stats-red');
+        if(statsRed) statsRed.innerText = stats.red;
+        const statsTotalXp = document.getElementById('stats-total-xp');
+        if(statsTotalXp) statsTotalXp.innerText = `${userData.xp} XP`;
+        const statsStreak = document.getElementById('stats-streak');
+        if(statsStreak) statsStreak.innerText = `${userData.streak} Día${userData.streak > 1 ? 's' : ''} 🔥`;
+        const statsLevelNum = document.getElementById('stats-level-num');
+        if(statsLevelNum) statsLevelNum.innerText = level;
+        const statsLevelName = document.getElementById('stats-level-name');
+        if(statsLevelName) statsLevelName.innerText = getPanamaLevel(level);
 
         // Update Roadmap Line
         const ranks = ['disque', 'pritty', 'ofi', 'xopa', 'berraco', 'meto', 'ayalavida'];
-        let progressToAyalavida = 0;
-        if(level >= 21) progressToAyalavida = 100;
-        else if(level >= 13) progressToAyalavida = 85;
-        else if(level >= 9) progressToAyalavida = 70;
-        else if(level >= 6) progressToAyalavida = 50;
-        else if(level >= 4) progressToAyalavida = 35;
-        else if(level >= 2) progressToAyalavida = 15;
+        let progressToAyalavida = Math.min((userData.xp / 1100) * 100, 100);
         
-        document.getElementById('progress-line-fill').style.height = `${progressToAyalavida}%`;
+        const progressLineFill = document.getElementById('progress-line-fill');
+        if(progressLineFill) progressLineFill.style.height = `${progressToAyalavida}%`;
         
         ranks.forEach(r => {
             const dot = document.getElementById('dot-'+r);
-            if (getPanamaLevel(level).toLowerCase().includes(r)) {
+            if (dot && getPanamaLevel(level).toLowerCase().includes(r)) {
                 dot.classList.remove('bg-gray-200');
                 dot.classList.add('bg-orange-500');
             }
