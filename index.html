@@ -1651,6 +1651,103 @@ function restartProvincesGame() {
             btn.disabled = true;
         }
     }
+
+
+    // --- ZOOM AND PAN LOGIC FOR SVG MAP ---
+    let currentScale = 1;
+    let currentX = 0;
+    let currentY = 0;
+
+    function updateMapTransform() {
+        const svgGroup = document.getElementById("features");
+        if (svgGroup) {
+            svgGroup.setAttribute("transform", `translate(${currentX}, ${currentY}) scale(${currentScale}) matrix(1, 0, 0, 1, 0, 10)`);
+        }
+    }
+
+    function zoomMap(factor) {
+        const newScale = currentScale * factor;
+        // Limit scale between 1x and 4x
+        if (newScale >= 1 && newScale <= 4) {
+            currentScale = newScale;
+            updateMapTransform();
+        } else if (newScale < 1) {
+            currentScale = 1;
+            currentX = 0;
+            currentY = 0;
+            updateMapTransform();
+        }
+    }
+
+    const initZoomMap = () => {
+        const zoomInBtn = document.getElementById("zoom-in-btn");
+        const zoomOutBtn = document.getElementById("zoom-out-btn");
+        
+        if (zoomInBtn && !zoomInBtn.hasAttribute("data-zoom-attached")) {
+            zoomInBtn.addEventListener("click", () => zoomMap(1.2));
+            zoomInBtn.setAttribute("data-zoom-attached", "true");
+        }
+        if (zoomOutBtn && !zoomOutBtn.hasAttribute("data-zoom-attached")) {
+            zoomOutBtn.addEventListener("click", () => zoomMap(1 / 1.2));
+            zoomOutBtn.setAttribute("data-zoom-attached", "true");
+        }
+
+        const svgElement = document.querySelector("#map-wrapper svg");
+        if (svgElement && !svgElement.hasAttribute("data-zoom-attached")) {
+            svgElement.setAttribute("data-zoom-attached", "true");
+            let isDragging = false;
+            let startX, startY;
+
+            svgElement.addEventListener("touchstart", (e) => {
+                if (e.touches.length === 1 && currentScale > 1) {
+                    isDragging = true;
+                    startX = e.touches[0].clientX - currentX;
+                    startY = e.touches[0].clientY - currentY;
+                }
+            });
+
+            svgElement.addEventListener("touchmove", (e) => {
+                if (isDragging && e.touches.length === 1) {
+                    e.preventDefault();
+                    currentX = e.touches[0].clientX - startX;
+                    currentY = e.touches[0].clientY - startY;
+                    updateMapTransform();
+                }
+            }, { passive: false });
+
+            svgElement.addEventListener("touchend", () => {
+                isDragging = false;
+            });
+            
+            svgElement.addEventListener("mousedown", (e) => {
+                if (currentScale > 1) {
+                    isDragging = true;
+                    startX = e.clientX - currentX;
+                    startY = e.clientY - currentY;
+                }
+            });
+
+            svgElement.addEventListener("mousemove", (e) => {
+                if (isDragging) {
+                    e.preventDefault();
+                    currentX = e.clientX - startX;
+                    currentY = e.clientY - startY;
+                    updateMapTransform();
+                }
+            });
+
+            svgElement.addEventListener("mouseup", () => {
+                isDragging = false;
+            });
+            
+            svgElement.addEventListener("mouseleave", () => {
+                isDragging = false;
+            });
+        }
+    };
+    
+    document.addEventListener("DOMContentLoaded", initZoomMap);
+    setTimeout(initZoomMap, 500); // Fallback if already loaded
 </script>
     <audio id="progress-sound" src="assets/sounds/progress-sound.wav" preload="auto"></audio>
     <audio id="levelup-sound" src="assets/sounds/levelup-sound.m4a" preload="auto"></audio>
