@@ -963,6 +963,8 @@
         const xpForNext = nextThreshold - currentThreshold;
         const currentXP = Math.max(0, userData.xp - currentThreshold);
 
+        console.log(`DEBUG: updateDashboard - XP: ${userData.xp}, Level: ${level}, Rango: ${getPanamaLevel(level)}`);
+
         const masteredCount = Object.values(userData.mastery).filter(s => s === 3).length;
         const progressPercent = Math.round((masteredCount / fullData.length) * 100);
 
