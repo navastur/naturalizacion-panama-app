@@ -1233,9 +1233,36 @@
         
         ranks.forEach(r => {
             const dot = document.getElementById('dot-'+r);
-            if (dot && getPanamaLevel(level).toLowerCase().includes(r)) {
-                dot.classList.remove('bg-gray-200');
-                dot.classList.add('bg-orange-500');
+            const span = document.querySelector(`#rd-${r} span`);
+            
+            const rankThresholds = {
+                'disque': 0,
+                'pritty': 75,
+                'ofi': 200,
+                'xopa': 400,
+                'berraco': 600,
+                'meto': 800,
+                'ayalavida': 1100
+            };
+
+            if (dot) {
+                if (userData.xp >= rankThresholds[r]) {
+                    dot.classList.remove('bg-gray-200');
+                    dot.classList.add('bg-orange-500');
+                } else {
+                    dot.classList.remove('bg-orange-500');
+                    dot.classList.add('bg-gray-200');
+                }
+            }
+
+            if (span) {
+                if (getPanamaLevel(level).toLowerCase().replace('nivel ', '') === r) {
+                    span.classList.remove('text-gray-500');
+                    span.classList.add('text-orange-500', 'font-black');
+                } else {
+                    span.classList.remove('text-orange-500', 'font-black');
+                    span.classList.add('text-gray-500');
+                }
             }
         });
     }
