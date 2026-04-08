@@ -1453,7 +1453,7 @@
         { name: "Panamá", id: "PA8", color: "fill-fuchsia-300" },
         { name: "Guna Yala", id: "PAKY", color: "fill-yellow-200" },
         { name: "Darién", id: "PA5", color: "fill-rose-300" },
-        { name: "Emberá-Wounaan / Madugandí / Wargandí", id: "PAEM", color: "fill-orange-300" }
+        { name: "Emberá-Wounaan", id: "PAEM", color: "fill-orange-300" }
     ];
 
     
@@ -1537,50 +1537,89 @@
         svgPath.style.fill = ""; 
         svgPath.classList.add(province.color, "transition-colors", "duration-500");
 
-        // Añadir el nombre de la provincia en el centro del path SVG
+        // Añadir el nombre de la provincia
         try {
             const bbox = svgPath.getBBox();
-            const centerX = bbox.x + bbox.width / 2;
-            const centerY = bbox.y + bbox.height / 2;
+            let centerX = bbox.x + bbox.width / 2;
+            let centerY = bbox.y + bbox.height / 2;
             
-            const textElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
-            textElement.setAttribute("x", centerX);
-            textElement.setAttribute("y", centerY);
-            textElement.setAttribute("text-anchor", "middle");
-            textElement.setAttribute("dominant-baseline", "middle");
-            textElement.setAttribute("fill", "black");
-            textElement.setAttribute("font-size", "14px");
-            textElement.setAttribute("font-weight", "bold");
-            textElement.setAttribute("pointer-events", "none");
-            // Para que se vea bien sobre distintos colores, añadimos un pequeño contorno blanco
-            textElement.setAttribute("stroke", "white");
-            textElement.setAttribute("stroke-width", "1px");
-            textElement.setAttribute("paint-order", "stroke fill");
-            
-            // Ajustar el texto si es muy largo, dividiéndolo o reduciendo la fuente
-            let nameLines = province.name.split(" ");
-            if (nameLines.length > 2 && province.name.length > 15) {
-                textElement.setAttribute("font-size", "10px");
-            } else if (province.name.length > 10) {
-                textElement.setAttribute("font-size", "11px");
+            // Adjustments based on visual map layout (manual offsets for tricky shapes)
+            if (province.id === "PA1") { // Bocas del Toro
+                centerY += 10;
+            } else if (province.id === "PANT") { // Naso
+                centerX += 5;
+            } else if (province.id === "PANA" || province.id === "PANB") { // Ngabe
+                centerY += 10;
+            } else if (province.id === "PA9") { // Veraguas
+                centerY += 30;
+                centerX -= 10;
+            } else if (province.id === "PA6") { // Herrera
+                centerX += 5;
+            } else if (province.id === "PA7") { // Los Santos
+                centerY += 20;
+            } else if (province.id === "PA2") { // Coclé
+                centerY += 10;
+            } else if (province.id === "PA10") { // Panama Oeste
+                centerX -= 10;
+                centerY -= 10;
+            } else if (province.id === "PA8") { // Panama
+                centerX += 40;
+                centerY -= 20;
+            } else if (province.id === "PAYA" || province.id === "PAKY") { // Guna Yala
+                centerX += 30;
+                centerY -= 10;
+            } else if (province.id === "PA5") { // Darien
+                centerX += 20;
+            } else if (province.id === "PAEM") { // Embera
+                // Este territorio esta dividido, lo movemos a la parte principal del este
+                centerX = bbox.x + bbox.width * 0.7;
+                centerY = bbox.y + bbox.height * 0.4;
             }
+
+            const textGroup = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            textGroup.setAttribute("text-anchor", "middle");
+            textGroup.setAttribute("dominant-baseline", "middle");
+            textGroup.setAttribute("fill", "black");
+            textGroup.setAttribute("font-size", "14px"); // Tamaño grande
+            textGroup.setAttribute("font-family", "Inter, sans-serif"); // Fuente limpia
+            textGroup.setAttribute("font-weight", "500");
+            textGroup.setAttribute("pointer-events", "none");
+            textGroup.setAttribute("stroke", "white");
+            textGroup.setAttribute("stroke-width", "3px"); // Borde grueso para legibilidad
+            textGroup.setAttribute("stroke-linejoin", "round");
+            textGroup.setAttribute("paint-order", "stroke fill");
+            textGroup.style.opacity = "0";
+            textGroup.style.transition = "opacity 0.5s ease-in";
+
+            // Romper en multilineas
+            let lines = [province.name];
+            if (province.name === "Emberá-Wounaan") lines = ["Emberá", "Wounaan"];
+            if (province.name === "Naso Tjër Di") lines = ["Naso", "Tjër Di"];
+            if (province.name === "Bocas del Toro") lines = ["Bocas", "del Toro"];
+            if (province.name === "Panamá Oeste") lines = ["Panamá", "Oeste"];
             
-            textElement.textContent = province.name;
+            const lineHeight = 16;
+            const startY = centerY - ((lines.length - 1) * lineHeight) / 2;
+
+            lines.forEach((line, index) => {
+                const tspan = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
+                tspan.setAttribute("x", centerX);
+                tspan.setAttribute("y", startY + index * lineHeight);
+                tspan.textContent = line;
+                textGroup.appendChild(tspan);
+            });
+
+            svgPath.parentNode.appendChild(textGroup);
             
-            // Animación sencilla
-            textElement.style.opacity = "0";
-            textElement.style.transition = "opacity 0.5s ease-in";
-            
-            svgPath.parentNode.appendChild(textElement);
-            
-            // Trigger reflow and show
-            setTimeout(() => { textElement.style.opacity = "1"; }, 50);
+            // Animacion fade in
+            setTimeout(() => { textGroup.style.opacity = "1"; }, 50);
             
         } catch (e) {
             console.error("Error adding text to SVG", e);
         }
 
         const progressSound = document.getElementById("progress-sound");
+        
         if (progressSound) {
             progressSound.currentTime = 0;
             progressSound.play().catch(e => console.log("Audio blocked", e));
