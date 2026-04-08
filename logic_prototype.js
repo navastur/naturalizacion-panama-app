@@ -136,3 +136,4 @@ const smartExam = app.generateSmartExam();
 console.log("Preguntas seleccionadas para refuerzo:", smartExam);
 
 console.log("\nESTADO FINAL:", app.getDashboard());
+// Update forced 2026-04-08
