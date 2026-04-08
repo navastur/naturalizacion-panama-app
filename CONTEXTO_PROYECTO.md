@@ -53,7 +53,6 @@ Crear una aplicación web para ayudar a los usuarios a prepararse para el examen
     *   Integración de `updateMediaCompletionStatus()` en `updateDashboard()`.
 *   **Problemas pendientes y depuración:**
     *   **El array `userData.completedMedia` no está acumulando correctamente los IDs de videos/podcasts:** Aún se necesita depuración con la salida de la consola del usuario.
-    *   **Los cambios en `index.html` no se reflejan para el usuario:** Necesitamos saber cómo el usuario ejecuta la aplicación para diagnosticar este problema de replicación de cambios.
 *   **Tareas pendientes de implementación:**
     *   **Implementación del botón "Mapa de Provincias":** Se ha solicitado añadir un botón en la homepage para el mapa de provincias de Panamá. Contenido pendiente de definición por el usuario.
 
@@ -62,9 +61,9 @@ Crear una aplicación web para ayudar a los usuarios a prepararse para el examen
 *   **2026-04-08:**
     *   Sustitución de token de GitHub por uno nuevo con permisos válidos.
     *   Cambio de visibilidad del repositorio `navastur/naturalizacion-panama-app` a **público**.
-    *   Activación de GitHub Pages para la rama `main`.
+    *   Activación y despliegue exitoso en **GitHub Pages** desde la rama `main`.
     *   Reestructuración del repositorio: archivos de la app movidos a la raíz de la rama `main` para despliegue automático.
-    *   Push forzado de todos los cambios locales (`index.html`, `mvp_app.html`, `logic_prototype.js`) a la rama `main` del repositorio remoto.
+    *   Sincronización total de cambios locales (`index.html`, `mvp_app.html`, `logic_prototype.js`) con el repositorio remoto.
 *   **2026-04-07 (Sesión actual):**
     *   Creación inicial del archivo `CONTEXTO_PROYECTO.md`.
     *   Actualización de la lógica de `showMilestone` para barra de XP proporcional y puntos de nivel amarillos.
