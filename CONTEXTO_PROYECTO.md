@@ -59,6 +59,9 @@ Crear una aplicación web para ayudar a los usuarios a prepararse para el examen
 
 ## 6. Log de Cambios
 
+*   **2026-04-08:**
+    *   Cambio de visibilidad del repositorio `navastur/naturalizacion-panama-app` a **público**.
+    *   Activación de GitHub Pages para la rama `main`.
 *   **2026-04-07 (Sesión actual):**
     *   Creación inicial del archivo `CONTEXTO_PROYECTO.md`.
     *   Actualización de la lógica de `showMilestone` para barra de XP proporcional y puntos de nivel amarillos.
