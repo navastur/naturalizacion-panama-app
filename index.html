@@ -1044,9 +1044,27 @@
             ranks.forEach(r => {
                 const dot = document.getElementById('m-dot-'+r);
                 const span = document.querySelector(`#md-${r} span`);
+                
+                // Si este rango ya ha sido superado por el XP actual
+                const rankThresholds = {
+                    'disque': 0,
+                    'pritty': 75,
+                    'ofi': 200,
+                    'xopa': 400,
+                    'berraco': 600,
+                    'meto': 800,
+                    'ayalavida': 1100
+                };
+
+                if (userData.xp >= rankThresholds[r]) {
+                    // Completados: Relleno Azul, Borde Blanco
+                    dot.classList.remove('bg-white', 'border-red-600');
+                    dot.classList.add('bg-blue-600', 'border-white');
+                }
+
                 if (getPanamaLevel(level).toLowerCase().includes(r)) {
-                    dot.classList.add('scale-125', 'shadow-lg', 'z-20');
-                    dot.innerHTML = '<span class="text-blue-600 text-2xl drop-shadow-sm">★</span>'; // Estrella azul sobre fondo blanco
+                    dot.classList.add('scale-125', 'shadow-lg', 'z-20', 'ring-4', 'ring-white');
+                    dot.innerHTML = '<span class="text-white text-2xl drop-shadow-md">★</span>'; // Estrella blanca original
                     if(span) {
                         span.classList.remove('text-gray-500');
                         span.classList.add('text-blue-600', 'font-black', 'text-lg');
