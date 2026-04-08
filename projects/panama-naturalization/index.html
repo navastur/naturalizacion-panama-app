@@ -927,13 +927,8 @@
     }
 
     function getPanamaLevel(lvl) {
-        if (lvl <= 1) return "Nivel Disque";
-        if (lvl <= 3) return "Nivel Pritty";
-        if (lvl <= 5) return "Nivel Ofi";
-        if (lvl <= 8) return "Nivel Xopá";
-        if (lvl <= 12) return "Nivel Berraco";
-        if (lvl <= 20) return "Nivel Meto";
-        return "Nivel Ayalavida";
+        const names = ["Disque", "Pritty", "Ofi", "Xopá", "Berraco", "Meto", "Ayalavida"];
+        return "Nivel " + (names[lvl - 1] || "Ayalavida");
     }
 
     function updateMediaCompletionStatus() {
@@ -947,12 +942,26 @@
 
     function updateDashboard() {
         console.log("DEBUG: updateDashboard - userData.completedMedia al inicio:", userData.completedMedia);
-        checkStreak(); // Llamar a la función para revisar y actualizar la racha
-        updateMediaCompletionStatus(); // Llamar a la función para actualizar los checks
-        const xpForNext = 500;
-        const prevLevel = Math.floor(userData.lastXPMilestone / xpForNext) + 1;
-        const level = Math.floor(userData.xp / xpForNext) + 1;
-        const currentXP = userData.xp % xpForNext;
+        checkStreak();
+        updateMediaCompletionStatus();
+
+        const thresholds = [0, 75, 200, 400, 600, 800, 1100];
+        const getLvl = (xp) => {
+            for (let i = thresholds.length - 1; i >= 0; i--) {
+                if (xp >= thresholds[i]) return i + 1;
+            }
+            return 1;
+        };
+
+        const prevLevel = getLvl(userData.lastXPMilestone || 0);
+        const level = getLvl(userData.xp);
+
+        // UI Progress bar calculation
+        const currentThreshold = thresholds[level - 1];
+        const nextThreshold = thresholds[level] || (currentThreshold + 300); // Default step for max level
+        const xpForNext = nextThreshold - currentThreshold;
+        const currentXP = Math.max(0, userData.xp - currentThreshold);
+
         const masteredCount = Object.values(userData.mastery).filter(s => s === 3).length;
         const progressPercent = Math.round((masteredCount / fullData.length) * 100);
 
