@@ -945,6 +945,14 @@
         checkStreak();
         updateMediaCompletionStatus();
 
+        // [TEST LUIS] Forzar modal de Nivel Berraco al iniciar
+        if (!localStorage.getItem('luis_test_berraco_v1')) {
+            localStorage.setItem('luis_test_berraco_v1', 'true');
+            setTimeout(() => {
+                showLevelUp(9); // Nivel 9 = Berraco
+            }, 1000);
+        }
+
         const thresholds = [0, 75, 200, 400, 600, 800, 1100];
         const getLvl = (xp) => {
             for (let i = thresholds.length - 1; i >= 0; i--) {
