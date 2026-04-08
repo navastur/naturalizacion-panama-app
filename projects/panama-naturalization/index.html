@@ -1030,7 +1030,14 @@
         
         // Play progress sound
         if (progressSound) {
-            progressSound.play();
+            progressSound.play().catch(err => {
+                console.warn("Audio blocked. Waiting for click.");
+                const playOnGesture = () => {
+                    progressSound.play();
+                    document.removeEventListener('click', playOnGesture);
+                };
+                document.addEventListener('click', playOnGesture);
+            });
         }
 
         // Trigger animation
@@ -1101,7 +1108,14 @@
 
         // Play level up sound
         if (levelupSound) {
-            levelupSound.play();
+            levelupSound.play().catch(err => {
+                console.warn("Audio blocked. Waiting for click.");
+                const playOnGesture = () => {
+                    levelupSound.play();
+                    document.removeEventListener('click', playOnGesture);
+                };
+                document.addEventListener('click', playOnGesture);
+            });
         }
 
         // Delay the continue button (wait for the fanfare)
