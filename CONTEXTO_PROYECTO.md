@@ -11,7 +11,7 @@ Crear una aplicación web para ayudar a los usuarios a prepararse para el examen
 *   **Frontend:** HTML, CSS (Tailwind CSS), JavaScript puro.
 *   **Contenido:** Datos de preguntas, respuestas y explicaciones incrustados directamente en el JavaScript del `index.html`. Videos de Wistia, podcasts de Spotify, sonidos genéricos (SoundHelix).
 *   **Persistencia de datos:** `localStorage` del navegador para almacenar el progreso del usuario (XP, rachas, dominio de preguntas, medios completados).
-*   **Despliegue/Acceso:** Repositorio de GitHub `naturalizacion-panama-app`.
+*   **Despliegue/Acceso:** Repositorio de GitHub `naturalizacion-panama-app`. URL pública: `https://navastur.github.io/naturalizacion-panama-app/`.
 
 ## 3. Decisiones de Arquitectura
 
@@ -60,8 +60,11 @@ Crear una aplicación web para ayudar a los usuarios a prepararse para el examen
 ## 6. Log de Cambios
 
 *   **2026-04-08:**
+    *   Sustitución de token de GitHub por uno nuevo con permisos válidos.
     *   Cambio de visibilidad del repositorio `navastur/naturalizacion-panama-app` a **público**.
     *   Activación de GitHub Pages para la rama `main`.
+    *   Reestructuración del repositorio: archivos de la app movidos a la raíz de la rama `main` para despliegue automático.
+    *   Push forzado de todos los cambios locales (`index.html`, `mvp_app.html`, `logic_prototype.js`) a la rama `main` del repositorio remoto.
 *   **2026-04-07 (Sesión actual):**
     *   Creación inicial del archivo `CONTEXTO_PROYECTO.md`.
     *   Actualización de la lógica de `showMilestone` para barra de XP proporcional y puntos de nivel amarillos.
