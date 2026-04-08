@@ -945,9 +945,9 @@
         checkStreak();
         updateMediaCompletionStatus();
 
-        // [EXCEPCIÓN TEMPORAL LUIS] Forzar el hito una vez para ver la animación
-        if (!sessionStorage.getItem('luis_test_milestone')) {
-            sessionStorage.setItem('luis_test_milestone', 'true');
+        // [PERSISTENCIA LUIS] Forzar el hito la primera vez que un usuario entra para dar bienvenida visual
+        if (!localStorage.getItem('panama_has_seen_initial_milestone')) {
+            localStorage.setItem('panama_has_seen_initial_milestone', 'true');
             userData.lastXPMilestone = Math.max(0, userData.xp - 25);
         }
 
