@@ -945,14 +945,6 @@
         checkStreak();
         updateMediaCompletionStatus();
 
-        // [BIENVENIDA PERSISTENTE] Forzar la animación la primera vez que se entra
-        if (!localStorage.getItem('panama_welcome_milestone_v3')) {
-            localStorage.setItem('panama_welcome_milestone_v3', 'true');
-            // Forzamos el valor hacia atrás para que la resta siempre dé al menos 25
-            userData.lastXPMilestone = userData.xp - 25;
-            console.log("DEBUG: Primera vez detectada. Forzando hito visual.");
-        }
-
         const thresholds = [0, 75, 200, 400, 600, 800, 1100];
         const getLvl = (xp) => {
             for (let i = thresholds.length - 1; i >= 0; i--) {
