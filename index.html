@@ -299,15 +299,8 @@
             </div>
         </div>
         <div class="p-5" id="provincias-game-container">
-            <div class="relative w-full max-w-lg mx-auto bg-[#c5e1f8] rounded-xl shadow-inner border border-blue-200 overflow-hidden flex items-center justify-center p-2 sm:p-4">
-                <div class="relative w-full" id="map-wrapper" style="aspect-ratio: 1045/637;">
-                    <img src="assets/provinces/mapa_panama_mudo.png" alt="Mapa Mudo de Panamá" class="w-full h-full object-cover" id="panama-map">
-                </div>
-            </div>
-
-            <div id="provinces-names-container" class="mt-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3 text-center">
-                <!-- Draggable names will be inserted here by JS -->
-            </div>
+            <!-- Aquí irá el juego de las provincias -->
+            <p class="text-center text-gray-500 mt-10">Cargando minijuego...</p>
         </div>
     </div>
 
@@ -1360,133 +1353,6 @@
         const weakOnes = fullData.filter(q => (userData.mastery[q.id] || 0) < 3); 
         if(weakOnes.length === 0) goHome(); 
         else renderFlashcard(weakOnes); 
-    }
-
-    const provinceData = [
-        { name: "Bocas del Toro", id: "bocas-del-toro", x: 14, y: 15, color: "bg-pink-300" },
-        { name: "Naso Tjër Di", id: "naso-tjer-di", x: 4, y: 12, color: "bg-lime-300" },
-        { name: "Chiriquí", id: "chiriqui", x: 10, y: 40, color: "bg-yellow-300" },
-        { name: "Ngäbe-Buglé", id: "ngabe-bugle", x: 23, y: 36, color: "bg-orange-300" },
-        { name: "Veraguas", id: "veraguas", x: 34, y: 55, color: "bg-purple-300" },
-        { name: "Herrera", id: "herrera", x: 39, y: 70, color: "bg-red-300" },
-        { name: "Los Santos", id: "los-santos", x: 44, y: 83, color: "bg-green-400" },
-        { name: "Coclé", id: "cocle", x: 43, y: 43, color: "bg-yellow-200" },
-        { name: "Colón", id: "colon", x: 54, y: 15, color: "bg-lime-200" },
-        { name: "Panamá Oeste", id: "panama-oeste", x: 53, y: 31, color: "bg-orange-200" },
-        { name: "Panamá", id: "panama", x: 65, y: 22, color: "bg-fuchsia-300" },
-        { name: "Guna Yala", id: "guna-yala", x: 80, y: 10, color: "bg-yellow-200" },
-        { name: "Madugandí", id: "madugandi", x: 77, y: 18, color: "bg-purple-200" },
-        { name: "Wargandí", id: "wargandi", x: 85, y: 27, color: "bg-pink-200" },
-        { name: "Darién", id: "darien", x: 91, y: 62, color: "bg-rose-300" },
-        { name: "Emberá-Wounaan", id: "embera-wounaan", x: 90, y: 46, color: "bg-orange-300" }
-    ];
-
-    let correctProvincesCount = 0;
-
-    function initProvincesGame() {
-        const container = document.getElementById('provinces-names-container');
-        const mapWrapper = document.getElementById('map-wrapper');
-        if (!container || !mapWrapper) return;
-        
-        container.innerHTML = '';
-        correctProvincesCount = 0;
-
-        // Clear existing drop zones if any
-        document.querySelectorAll('.drop-zone').forEach(el => el.remove());
-
-        // Create Drop Zones
-        provinceData.forEach(p => {
-            const dropZone = document.createElement('div');
-            dropZone.id = `drop-${p.id}`;
-            dropZone.className = 'drop-zone absolute w-14 h-8 flex items-center justify-center rounded-lg border-2 border-dashed border-gray-400/50 bg-white/20 transform -translate-x-1/2 -translate-y-1/2 z-10 transition-colors';
-            dropZone.style.left = `${p.x}%`;
-            dropZone.style.top = `${p.y}%`;
-            dropZone.dataset.targetId = p.id;
-            
-            // Add drop event listeners
-            dropZone.addEventListener('dragover', e => {
-                e.preventDefault();
-                dropZone.classList.add('border-blue-500', 'bg-blue-100/50');
-            });
-            dropZone.addEventListener('dragleave', e => {
-                dropZone.classList.remove('border-blue-500', 'bg-blue-100/50');
-            });
-            dropZone.addEventListener('drop', e => {
-                e.preventDefault();
-                dropZone.classList.remove('border-blue-500', 'bg-blue-100/50');
-                const draggedId = e.dataTransfer.getData('text/plain');
-                if (draggedId === p.id) {
-                    handleCorrectDrop(p, dropZone);
-                } else {
-                    // Animación de error en la etiqueta original o simplemente dejar que el navegador haga el "snap back"
-                    const wrongElement = document.getElementById(`draggable-${draggedId}`);
-                    if(wrongElement) {
-                        wrongElement.classList.add('animate-pulse', 'bg-red-200');
-                        setTimeout(() => wrongElement.classList.remove('animate-pulse', 'bg-red-200'), 500);
-                    }
-                }
-            });
-            mapWrapper.appendChild(dropZone);
-        });
-
-        // Shuffle names
-        const shuffledProvinces = [...provinceData].sort(() => Math.random() - 0.5);
-
-        shuffledProvinces.forEach(p => {
-            const nameDiv = document.createElement('div');
-            nameDiv.id = `draggable-${p.id}`;
-            nameDiv.className = 'draggable-province bg-white text-gray-800 font-bold py-2 px-1 rounded-lg shadow-sm cursor-grab active:cursor-grabbing text-[10px] sm:text-xs transform transition-all duration-300 ease-out hover:scale-105 border border-gray-200';
-            nameDiv.innerText = p.name;
-            nameDiv.draggable = true;
-            
-            nameDiv.addEventListener('dragstart', e => {
-                e.dataTransfer.setData('text/plain', p.id);
-                setTimeout(() => nameDiv.classList.add('opacity-30'), 0);
-            });
-            nameDiv.addEventListener('dragend', e => {
-                nameDiv.classList.remove('opacity-30');
-            });
-            
-            container.appendChild(nameDiv);
-        });
-    }
-
-    function handleCorrectDrop(province, dropZone) {
-        const draggable = document.getElementById(`draggable-${province.id}`);
-        if (!draggable) return;
-
-        // Ocultamos la caja de origen
-        draggable.style.visibility = 'hidden';
-
-        // Reemplazamos la zona de drop por la etiqueta coloreada
-        dropZone.className = `absolute flex items-center justify-center rounded shadow-md transform -translate-x-1/2 -translate-y-1/2 z-20 ${province.color} px-2 py-1 text-[8px] sm:text-[10px] font-black text-gray-900 border border-black/20 animate-bounce`;
-        dropZone.style.width = 'auto';
-        dropZone.style.height = 'auto';
-        dropZone.style.left = `${province.x}%`;
-        dropZone.style.top = `${province.y}%`;
-        dropZone.innerText = province.name;
-
-        // Sonido de progreso
-        const progressSound = document.getElementById('progress-sound');
-        if (progressSound) {
-            progressSound.currentTime = 0;
-            progressSound.play().catch(e => console.log('Audio blocked', e));
-        }
-
-        // Dejar de rebotar rápido
-        setTimeout(() => {
-            dropZone.classList.remove('animate-bounce');
-        }, 1000);
-
-        correctProvincesCount++;
-        if (correctProvincesCount === provinceData.length) {
-            setTimeout(() => {
-                alert("¡Felicidades! Has completado el mapa de Panamá. (+50 XP)");
-                userData.xp += 50;
-                updateDashboard();
-                goHome();
-            }, 1500);
-        }
     }
 
     updateDashboard();
