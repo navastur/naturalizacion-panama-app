@@ -255,25 +255,23 @@
                     </div>
                     <span class="text-xs font-bold text-center text-gray-800 leading-tight">Tarjetas de Memoria</span>
                 </button>
+                                <button onclick="switchScreen('screen-provincias')" class="card flex flex-col items-center hover:bg-gray-50">
+                    <div class="w-12 h-12 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center mb-2">
+                        <i class="fa-solid fa-map-location-dot fa-lg"></i>
+                    </div>
+                    <span class="text-xs font-bold text-gray-800 text-center leading-tight">Test de Provincias</span>
+                </button>
                 <button onclick="switchScreen('screen-himno')" class="card flex flex-col items-center hover:bg-gray-50">
                     <div class="w-12 h-12 rounded-full bg-red-600 text-white flex items-center justify-center mb-2">
                         <i class="fa-solid fa-flag fa-lg"></i>
                     </div>
                     <span class="text-xs font-bold text-center text-gray-800 leading-tight">Himno Nacional y Juramento de la Bandera</span>
                 </button>
-                <button onclick="switchScreen('screen-provincias')" class="card flex flex-col items-center hover:bg-gray-50 border-l-4 border-l-teal-500">
-                    <div class="w-10 h-10 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center mb-2">
-                        <i class="fa-solid fa-map-location-dot fa-lg"></i>
-                    </div>
-                    <span class="text-xs font-bold text-gray-800 text-center leading-tight">Test de Provincias</span>
-                    <span class="text-[9px] text-gray-400 uppercase font-black">Nuevo Minijuego</span>
-                </button>
-                <button onclick="showStats()" class="card flex flex-col items-center hover:bg-gray-50 border-l-4 border-l-orange-500">
-                    <div class="w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center mb-2">
+                <button onclick="showStats()" class="card flex flex-col items-center hover:bg-gray-50">
+                    <div class="w-12 h-12 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center mb-2">
                         <i class="fa-solid fa-chart-simple fa-lg"></i>
                     </div>
                     <span class="text-xs font-bold text-gray-800 text-center leading-tight">Tus Estadísticas</span>
-                    <span class="text-[9px] text-gray-400 uppercase font-black" id="stat-summary-level">Nivel Disque</span>
                 </button>
             </div>
         </div>
