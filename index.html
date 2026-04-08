@@ -1541,22 +1541,26 @@
             let centerX = bbox.x + bbox.width / 2;
             let centerY = bbox.y + bbox.height / 2;
             
-            // Adjustments based on visual map layout (manual offsets for tricky shapes)
+                        // Adjustments based on visual map layout (manual offsets for tricky shapes)
             if (province.id === "PA1") { // Bocas del Toro
                 centerY += 10;
             } else if (province.id === "PANT") { // Naso
                 centerX += 5;
+            } else if (province.id === "PA4") { // Chiriqui
+                centerX -= 30;
             } else if (province.id === "PANA" || province.id === "PANB") { // Ngabe
                 centerY += 10;
             } else if (province.id === "PA9") { // Veraguas
-                centerY += 30;
-                centerX -= 10;
+                centerY -= 20;
+                centerX += 20;
             } else if (province.id === "PA6") { // Herrera
-                centerX += 5;
+                centerX -= 20;
             } else if (province.id === "PA7") { // Los Santos
-                centerY += 20;
+                centerY -= 10;
             } else if (province.id === "PA2") { // Coclé
                 centerY += 10;
+            } else if (province.id === "PA3") { // Colon
+                centerX -= 30;
             } else if (province.id === "PA10") { // Panama Oeste
                 centerX -= 10;
                 centerY -= 10;
@@ -1565,13 +1569,14 @@
                 centerY -= 20;
             } else if (province.id === "PAYA" || province.id === "PAKY") { // Guna Yala
                 centerX += 30;
-                centerY -= 10;
+                centerY -= 30;
             } else if (province.id === "PA5") { // Darien
                 centerX += 20;
+                centerY += 30;
             } else if (province.id === "PAEM") { // Embera
                 // Este territorio esta dividido, lo movemos a la parte principal del este
                 centerX = bbox.x + bbox.width * 0.7;
-                centerY = bbox.y + bbox.height * 0.4;
+                centerY = bbox.y + bbox.height * 0.15;
             }
 
             const textGroup = document.createElementNS("http://www.w3.org/2000/svg", "text");
