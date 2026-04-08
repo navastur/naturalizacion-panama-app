@@ -941,14 +941,16 @@
     }
 
     function updateDashboard() {
-        console.log("DEBUG: updateDashboard - userData.completedMedia al inicio:", userData.completedMedia);
+        console.log("DEBUG: updateDashboard - XP:", userData.xp);
         checkStreak();
         updateMediaCompletionStatus();
 
-        // [PERSISTENCIA LUIS] Forzar el hito la primera vez que un usuario entra para dar bienvenida visual
-        if (!localStorage.getItem('panama_has_seen_initial_milestone')) {
-            localStorage.setItem('panama_has_seen_initial_milestone', 'true');
-            userData.lastXPMilestone = Math.max(0, userData.xp - 25);
+        // [BIENVENIDA PERSISTENTE] Forzar la animación la primera vez que se entra
+        if (!localStorage.getItem('panama_welcome_milestone_v3')) {
+            localStorage.setItem('panama_welcome_milestone_v3', 'true');
+            // Forzamos el valor hacia atrás para que la resta siempre dé al menos 25
+            userData.lastXPMilestone = userData.xp - 25;
+            console.log("DEBUG: Primera vez detectada. Forzando hito visual.");
         }
 
         const thresholds = [0, 75, 200, 400, 600, 800, 1100];
