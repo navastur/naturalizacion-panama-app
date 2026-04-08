@@ -166,7 +166,7 @@
                     <p id="levelup-rank-name" class="text-2xl font-black text-yellow-700 uppercase tracking-widest drop-shadow-sm"></p>
                 </div>
 
-                <button onclick="closeLevelUp()" class="w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-black py-4 rounded-xl uppercase text-[13px] tracking-widest shadow-xl shadow-yellow-300 hover:from-yellow-600 hover:to-orange-600 transition-all transform active:scale-95">¡A por el siguiente!</button>
+                <button id="levelup-continue-btn" onclick="closeLevelUp()" class="w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-black py-4 rounded-xl uppercase text-[13px] tracking-widest shadow-xl shadow-yellow-300 hover:from-yellow-600 hover:to-orange-600 transition-all transform active:scale-95" style="display: none;">¡A por el siguiente!</button>
             </div>
         </div>
     </div>
@@ -1038,7 +1038,8 @@
 
     function showLevelUp(level) {
         const modal = document.getElementById('levelup-modal');
-        const levelupSound = document.getElementById('levelup-sound'); // Get the audio element
+        const levelupSound = document.getElementById('levelup-sound');
+        const continueBtn = document.getElementById('levelup-continue-btn');
         
         document.getElementById('levelup-text').innerText = `Has alcanzado el nivel ${level}`;
         document.getElementById('levelup-rank-name').innerText = getPanamaLevel(level);
@@ -1048,11 +1049,20 @@
         document.getElementById('levelup-badge').innerText = badges[index];
         
         modal.style.display = 'flex';
+        if(continueBtn) continueBtn.style.display = 'none';
 
         // Play level up sound
         if (levelupSound) {
             levelupSound.play();
         }
+
+        // Delay the continue button (wait for the fanfare)
+        setTimeout(() => {
+            if(continueBtn) {
+                continueBtn.style.display = 'block';
+                continueBtn.classList.add('animate-bounce'); // Visual cue
+            }
+        }, 5000);
     }
 
     function closeLevelUp() { document.getElementById('levelup-modal').style.display = 'none'; }
@@ -1333,6 +1343,6 @@
     }
 </script>
     <audio id="progress-sound" src="assets/sounds/progress-sound.wav" preload="auto"></audio>
-    <audio id="levelup-sound" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" preload="auto"></audio>
+    <audio id="levelup-sound" src="assets/sounds/levelup-sound.m4a" preload="auto"></audio>
 </body>
 </html>
