@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mockup Trámites - Naturalización Panamá</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background-color: #f3f4f6; font-family: 'Inter', sans-serif; }
+        .app-container { max-width: 375px; margin: 0 auto; background: white; min-height: 100vh; position: relative; }
+        .header { background: #1e3a8a; color: white; padding: 20px; border-bottom-right-radius: 20px; border-bottom-left-radius: 20px; }
+        .step-card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 15px; border: 1px solid #e5e7eb; position: relative; }
+        .step-number { position: absolute; -top: 10px; -left: 10px; background: #3b82f6; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; }
+    </style>
+</head>
+<body>
+<div class="app-container pb-10">
+    <div class="header">
+        <h1 class="text-lg font-bold">Guía de Trámites</h1>
+        <p class="text-[10px] opacity-70">Requisitos para la Naturalización</p>
+    </div>
+    <div class="p-4">
+        <div class="step-card">
+            <h3 class="font-bold text-sm mb-2 ml-2">1. Requisitos Básicos</h3>
+            <ul class="text-xs space-y-2 text-gray-600 list-disc ml-6">
+                <li>5 años de residencia permanente (3 si hay cónyuge/hijos panameños).</li>
+                <li>Paz y Salvo con el Tesoro Nacional.</li>
+                <li>Certificado de salud.</li>
+            </ul>
+        </div>
+        <div class="step-card">
+            <h3 class="font-bold text-sm mb-2 ml-2">2. Documentación</h3>
+            <ul class="text-xs space-y-2 text-gray-600 list-disc ml-6">
+                <li>Poder y Solicitud mediante abogado.</li>
+                <li>Copia autenticada del pasaporte.</li>
+                <li>Certificado de antecedentes penales.</li>
+            </ul>
+        </div>
+        <div class="step-card bg-blue-50 border-blue-200">
+            <h3 class="font-bold text-sm mb-2 ml-2 text-blue-800">3. El Examen</h3>
+            <p class="text-xs text-blue-700 ml-2">Se realiza en el Tribunal Electoral. Consta de Historia, Geografía y Cívica. Esta app te prepara para este paso.</p>
+        </div>
+        <div class="mt-6">
+            <h4 class="text-xs font-bold text-gray-400 uppercase mb-3">Oficinas Principales</h4>
+            <div class="flex gap-3 overflow-x-auto pb-4">
+                <div class="min-w-[200px] bg-gray-50 p-3 rounded-lg border">
+                    <p class="font-bold text-xs">Sede Ancón (TE)</p>
+                    <p class="text-[10px] text-gray-500">Av. Omar Torrijos, Ciudad de Panamá</p>
+                </div>
+                <div class="min-w-[200px] bg-gray-50 p-3 rounded-lg border">
+                    <p class="font-bold text-xs">Ministerio de Gobierno</p>
+                    <p class="text-[10px] text-gray-500">Casco Antiguo, Calle 3ra</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

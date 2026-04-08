@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mockup Home v2 - Naturalización Panamá</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background-color: #f3f4f6; font-family: 'Inter', sans-serif; }
+        .app-container { max-width: 375px; margin: 0 auto; background: white; min-height: 100vh; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .header { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; padding: 30px 20px; border-bottom-right-radius: 30px; border-bottom-left-radius: 30px; }
+        .card { background: white; border-radius: 15px; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: transform 0.2s; border: 1px solid #e5e7eb; }
+        .card:active { transform: scale(0.98); }
+        .icon-circle { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
+        .nav-bar { position: absolute; bottom: 0; width: 100%; display: flex; justify-content: space-around; padding: 15px 0; background: white; border-top: 1px solid #e5e7eb; }
+        .streak-badge { background: #fff7ed; color: #ea580c; border: 1px solid #ffedd5; padding: 4px 10px; border-radius: 20px; font-weight: bold; font-size: 0.75rem; display: flex; align-items: center; gap: 4px; }
+    </style>
+</head>
+<body>
+
+<div class="app-container overflow-hidden pb-24">
+    <!-- Header -->
+    <div class="header">
+        <div class="flex justify-between items-start mb-6">
+            <div>
+                <div class="flex items-center gap-2 mb-1">
+                   <h1 class="text-xl font-bold">¡Hola, Luis!</h1>
+                   <span class="bg-yellow-400 text-blue-900 px-2 py-0.5 rounded-md text-[10px] font-black uppercase">LVL 12</span>
+                </div>
+                <p class="text-blue-100 text-xs">Tu camino a la ciudadanía</p>
+            </div>
+            <div class="flex flex-col items-end gap-2">
+                <div class="streak-badge">
+                    <i class="fa-solid fa-fire"></i>
+                    <span>7 Días</span>
+                </div>
+                <div class="bg-white/20 p-2 rounded-full text-white text-xs">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Progress Bar Card -->
+        <div class="bg-white text-gray-800 p-4 rounded-2xl shadow-lg">
+            <div class="flex justify-between items-center mb-2">
+                <span class="text-xs font-bold text-gray-500 uppercase tracking-wide">XP: 2,450 / 3,000 para Lvl 13</span>
+                <span class="text-blue-600 font-black text-sm">35%</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                <div class="bg-blue-600 h-2.5 rounded-full" style="width: 35%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="p-5">
+        <h2 class="text-lg font-bold mb-4 text-gray-800">Menú Principal</h2>
+        
+        <!-- Action Cards Grid -->
+        <div class="grid grid-cols-2 gap-4">
+            <!-- Simulacro -->
+            <div class="card flex flex-col items-center">
+                <div class="icon-circle bg-red-100 text-red-600">
+                    <i class="fa-solid fa-file-lines fa-lg"></i>
+                </div>
+                <span class="text-xs font-bold text-center">Simulacro de Examen</span>
+            </div>
+            
+            <!-- Módulos de Estudio -->
+            <div class="card flex flex-col items-center">
+                <div class="icon-circle bg-blue-100 text-blue-600">
+                    <i class="fa-solid fa-book-open fa-lg"></i>
+                </div>
+                <span class="text-xs font-bold text-center">Módulos de Estudio</span>
+            </div>
+
+            <!-- Vídeos de Estudio -->
+            <div class="card flex flex-col items-center">
+                <div class="icon-circle bg-green-100 text-green-600">
+                    <i class="fa-solid fa-play fa-lg"></i>
+                </div>
+                <span class="text-xs font-bold text-center">Vídeos de Estudio</span>
+            </div>
+
+            <!-- Flashcards -->
+            <div class="card flex flex-col items-center border-2 border-yellow-400">
+                <div class="icon-circle bg-yellow-100 text-yellow-600">
+                    <i class="fa-solid fa-bolt fa-lg"></i>
+                </div>
+                <span class="text-xs font-bold text-center">Tarjetas de Memoria</span>
+                <span class="absolute top-1 right-1 bg-yellow-400 text-[8px] px-1 rounded font-bold text-white uppercase">NUEVO</span>
+            </div>
+
+            <!-- Guía de Trámites -->
+            <div class="card flex flex-col items-center">
+                <div class="icon-circle bg-purple-100 text-purple-600">
+                    <i class="fa-solid fa-info-circle fa-lg"></i>
+                </div>
+                <span class="text-xs font-bold text-center">Guía de Trámites</span>
+            </div>
+
+            <!-- Estadísticas -->
+            <div class="card flex flex-col items-center">
+                <div class="icon-circle bg-orange-100 text-orange-600">
+                    <i class="fa-solid fa-chart-line fa-lg"></i>
+                </div>
+                <span class="text-xs font-bold text-center">Tus Estadísticas</span>
+            </div>
+        </div>
+
+        <!-- Next Lesson Shortcut -->
+        <div class="mt-6 p-4 bg-blue-50 border border-blue-100 rounded-2xl flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <div>
+                    <p class="text-xs text-blue-600 font-bold uppercase tracking-wider">Continuar repasando (+50 XP)</p>
+                    <p class="text-sm font-bold text-gray-800">Historia: La Separación de 1903</p>
+                </div>
+            </div>
+            <i class="fa-solid fa-circle-play text-blue-600 text-xl"></i>
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <div class="nav-bar">
+        <div class="text-blue-600 text-center">
+            <i class="fa-solid fa-house"></i>
+            <p class="text-[10px] font-bold">Inicio</p>
+        </div>
+        <div class="text-gray-400 text-center">
+            <i class="fa-solid fa-fire text-orange-400"></i>
+            <p class="text-[10px]">Racha</p>
+        </div>
+        <div class="text-gray-400 text-center relative">
+            <i class="fa-solid fa-trophy"></i>
+            <div class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></div>
+            <p class="text-[10px]">Logros</p>
+        </div>
+        <div class="text-gray-400 text-center">
+            <i class="fa-solid fa-user"></i>
+            <p class="text-[10px]">Perfil</p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mockup Resultados - Naturalización Panamá</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background-color: #f3f4f6; font-family: 'Inter', sans-serif; }
+        .app-container { max-width: 375px; margin: 0 auto; background: white; min-height: 100vh; position: relative; overflow: hidden; }
+        .success-bg { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 40px 20px; text-align: center; border-bottom-right-radius: 40px; border-bottom-left-radius: 40px; }
+        .score-circle { width: 120px; height: 120px; border: 8px solid rgba(255,255,255,0.2); border-radius: 50%; margin: 20px auto; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(255,255,255,0.1); }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <div class="success-bg">
+        <h1 class="text-2xl font-black mb-2">¡Excelente Trabajo!</h1>
+        <p class="text-sm opacity-80">Has completado el simulacro</p>
+        <div class="score-circle">
+            <span class="text-4xl font-black">18/20</span>
+            <span class="text-[10px] font-bold uppercase">Aciertos</span>
+        </div>
+        <div class="mt-4 inline-block bg-yellow-400 text-green-900 px-4 py-1 rounded-full font-black text-xs uppercase tracking-widest">+150 XP</div>
+    </div>
+    <div class="p-6">
+        <div class="flex justify-around mb-8">
+            <div class="text-center">
+                <p class="text-[10px] font-bold text-gray-400 uppercase mb-1">Tiempo</p>
+                <p class="font-black text-gray-800">12:45</p>
+            </div>
+            <div class="text-center">
+                <p class="text-[10px] font-bold text-gray-400 uppercase mb-1">Precisión</p>
+                <p class="font-black text-gray-800">90%</p>
+            </div>
+            <div class="text-center">
+                <p class="text-[10px] font-bold text-gray-400 uppercase mb-1">Puntos</p>
+                <p class="font-black text-gray-800">2,600 XP</p>
+            </div>
+        </div>
+        <h3 class="text-xs font-black text-gray-400 uppercase mb-4 tracking-widest text-center">Nuevos Dominios</h3>
+        <div class="space-y-2">
+            <div class="flex items-center gap-3 p-3 bg-green-50 rounded-lg border border-green-100">
+                <i class="fa-solid fa-circle-check text-green-500"></i>
+                <p class="text-xs font-bold text-gray-700">Independencia de España (1821) <span class="text-[8px] bg-green-500 text-white px-1 rounded uppercase">VERDE</span></p>
+            </div>
+            <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-100 opacity-50">
+                <i class="fa-solid fa-circle-check text-gray-300"></i>
+                <p class="text-xs font-bold text-gray-400">Poder Legislativo</p>
+            </div>
+        </div>
+        <button class="w-full bg-blue-600 text-white font-bold py-4 rounded-xl mt-10 shadow-lg active:scale-95 transition-transform uppercase tracking-wider text-sm">Continuar</button>
+        <button class="w-full text-blue-600 font-bold py-4 mt-2 uppercase tracking-wider text-xs">Revisar Errores</button>
+    </div>
+</div>
+</body>
+</html>
