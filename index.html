@@ -1063,7 +1063,8 @@
                 }
 
                 if (getPanamaLevel(level).toLowerCase().includes(r)) {
-                    dot.classList.add('scale-125', 'shadow-lg', 'z-20', 'ring-4', 'ring-white');
+                    dot.classList.remove('border-red-600'); // Eliminar borde rojo de la estrella
+                    dot.classList.add('scale-125', 'shadow-lg', 'z-20', 'ring-4', 'ring-white', 'border-white');
                     dot.innerHTML = '<span class="text-white text-2xl drop-shadow-md">★</span>'; // Estrella blanca original
                     if(span) {
                         span.classList.remove('text-gray-500');
