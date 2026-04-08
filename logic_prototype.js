@@ -137,3 +137,98 @@ console.log("Preguntas seleccionadas para refuerzo:", smartExam);
 
 console.log("\nESTADO FINAL:", app.getDashboard());
 // Update forced 2026-04-08
+
+// --- ZOOM AND PAN LOGIC FOR SVG MAP ---
+let currentScale = 1;
+let currentX = 0;
+let currentY = 0;
+
+function updateMapTransform() {
+    const svgGroup = document.getElementById("features");
+    if (svgGroup) {
+        // The original matrix is transform="matrix(1, 0, 0, 1, 0, 10)"
+        // We will apply our scale and translate on top of it or replace it.
+        // Easiest is to wrap <g id="features"> in another group or just set transform directly
+        svgGroup.setAttribute("transform", `translate(${currentX}, ${currentY}) scale(${currentScale}) matrix(1, 0, 0, 1, 0, 10)`);
+    }
+}
+
+function zoomMap(factor) {
+    const newScale = currentScale * factor;
+    // Limit scale between 1x and 4x
+    if (newScale >= 1 && newScale <= 4) {
+        currentScale = newScale;
+        updateMapTransform();
+    } else if (newScale < 1) {
+        currentScale = 1;
+        currentX = 0;
+        currentY = 0;
+        updateMapTransform();
+    }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const zoomInBtn = document.getElementById("zoom-in-btn");
+    const zoomOutBtn = document.getElementById("zoom-out-btn");
+    
+    if (zoomInBtn) {
+        zoomInBtn.addEventListener("click", () => zoomMap(1.2));
+    }
+    if (zoomOutBtn) {
+        zoomOutBtn.addEventListener("click", () => zoomMap(1 / 1.2));
+    }
+
+    // Touch events for panning
+    const svgElement = document.querySelector("#map-wrapper svg");
+    if (svgElement) {
+        let isDragging = false;
+        let startX, startY;
+
+        svgElement.addEventListener("touchstart", (e) => {
+            if (e.touches.length === 1 && currentScale > 1) {
+                isDragging = true;
+                startX = e.touches[0].clientX - currentX;
+                startY = e.touches[0].clientY - currentY;
+            }
+        });
+
+        svgElement.addEventListener("touchmove", (e) => {
+            if (isDragging && e.touches.length === 1) {
+                e.preventDefault(); // Prevent scrolling
+                currentX = e.touches[0].clientX - startX;
+                currentY = e.touches[0].clientY - startY;
+                updateMapTransform();
+            }
+        }, { passive: false });
+
+        svgElement.addEventListener("touchend", () => {
+            isDragging = false;
+        });
+        
+        // Mouse events for panning
+        svgElement.addEventListener("mousedown", (e) => {
+            if (currentScale > 1) {
+                isDragging = true;
+                startX = e.clientX - currentX;
+                startY = e.clientY - currentY;
+            }
+        });
+
+        svgElement.addEventListener("mousemove", (e) => {
+            if (isDragging) {
+                e.preventDefault();
+                currentX = e.clientX - startX;
+                currentY = e.clientY - startY;
+                updateMapTransform();
+            }
+        });
+
+        svgElement.addEventListener("mouseup", () => {
+            isDragging = false;
+        });
+        
+        svgElement.addEventListener("mouseleave", () => {
+            isDragging = false;
+        });
+    }
+});
