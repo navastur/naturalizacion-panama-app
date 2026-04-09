@@ -341,13 +341,13 @@
                     </div>
                     <span class="text-xs font-bold text-gray-800 text-center leading-tight">Temario de Estudio</span>
                 </button>
-                <button onclick="switchScreen('screen-videos')" class="card flex flex-col items-center hover:bg-gray-50">
+                <button onclick="openVideos()" class="card flex flex-col items-center hover:bg-gray-50">
                     <div class="w-12 h-12 rounded-full bg-green-100 text-green-600 flex items-center justify-center mb-2">
                         <i class="fa-solid fa-play fa-lg"></i>
                     </div>
                     <span class="text-xs font-bold text-gray-800 text-center leading-tight">Vídeos de Estudio</span>
                 </button>
-                <button onclick="switchScreen('screen-podcasts')" class="card flex flex-col items-center hover:bg-gray-50">
+                <button onclick="openPodcasts()" class="card flex flex-col items-center hover:bg-gray-50">
                     <div class="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center mb-2">
                         <i class="fa-solid fa-microphone-lines fa-lg"></i>
                     </div>
@@ -1856,12 +1856,30 @@
         }
     }
 
+    function openVideos() {
+        if (!userData.isPremium) {
+            showFreeNotice('Vídeos Sección');
+        } else {
+            switchScreen('screen-videos');
+        }
+    }
+
+    function openPodcasts() {
+        if (!userData.isPremium) {
+            showFreeNotice('Podcasts Sección');
+        } else {
+            switchScreen('screen-podcasts');
+        }
+    }
+
     function showFreeNotice(type, count) {
-        document.getElementById('free-notice-title').innerText = `Modo Gratuito: ${type}`;
+        document.getElementById('free-notice-title').innerText = `Modo Gratuito: ${type.replace(' Sección', '')}`;
         
         let text = "";
-        if (type === 'Podcast') {
+        if (type === 'Podcast' || type === 'Podcasts Sección') {
             text = `Estás usando la versión Free de esta app. Esta versión está limitada y sólo podrás escuchar los primeros 5 minutos de estos podcasts. Suscríbete para desbloquear todo el contenido y escuchar las lecciones en audio de todos los temas.`;
+        } else if (type === 'Vídeo' || type === 'Vídeos Sección') {
+            text = `Estás usando la versión Free de esta app. Esta versión está limitada y sólo podrás ver los primeros 3 minutos de estos vídeos. Suscríbete para desbloquear todo el contenido y ver las video-lecciones de todos los temas.`;
         } else {
             text = `Estás usando la versión gratuita. Verás una muestra de ${count} preguntas predeterminadas. Suscríbete para desbloquear el banco completo de +100 preguntas y la selección aleatoria.`;
         }
@@ -1874,9 +1892,10 @@
 
     function closeFreeNotice() {
         const type = document.getElementById('free-notice-modal').dataset.type;
-        const payload = JSON.parse(document.getElementById('free-notice-modal').dataset.payload || '{}');
+        const payloadStr = document.getElementById('free-notice-modal').dataset.payload;
+        const payload = payloadStr ? JSON.parse(payloadStr) : {};
         document.getElementById('free-notice-modal').style.display = 'none';
-
+        
         if (type === 'Examen') {
             document.getElementById('exam-start-modal').style.display = 'flex';
         } else if (type === 'Tarjetas') {
@@ -1885,6 +1904,10 @@
             playVideo(payload.vidId, payload.title, payload.module, payload.provider, true);
         } else if (type === 'Podcast') {
             playPodcast(payload.vidId, payload.title, payload.module, true);
+        } else if (type === 'Vídeos Sección') {
+            switchScreen('screen-videos');
+        } else if (type === 'Podcasts Sección') {
+            switchScreen('screen-podcasts');
         }
     }
 
@@ -2395,15 +2418,9 @@ function restartProvincesGame() {
 
     function playVideo(vidId, title, module, provider = 'youtube', skipNotice = false) {
         if (!userData.isPremium) {
-            // Check if it's one of the first 3 videos
             const videoIds = ['h5dsmw9lyl', '83qlave7np', 'tg61ztp1h5'];
             if (!videoIds.includes(vidId)) {
                 showPremiumModal();
-                return;
-            }
-            if (!skipNotice) {
-                document.getElementById('free-notice-modal').dataset.payload = JSON.stringify({vidId, title, module, provider});
-                showFreeNotice('Vídeo', '3 minutos');
                 return;
             }
         }
@@ -2438,12 +2455,6 @@ function restartProvincesGame() {
             
             if (!isAllowed) {
                 showPremiumModal();
-                return;
-            }
-
-            if (!skipNotice) {
-                document.getElementById('free-notice-modal').dataset.payload = JSON.stringify({vidId, title, module});
-                showFreeNotice('Podcast', '5 minutos');
                 return;
             }
         }
