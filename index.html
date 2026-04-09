@@ -1677,6 +1677,11 @@
 
     function closePremiumModal() {
         document.getElementById('premium-modal').style.display = 'none';
+        // If the user reaches a limit in specific screens, send them home
+        const currentActiveScreen = document.querySelector('.screen.active');
+        if (currentActiveScreen && (currentActiveScreen.id === 'screen-practice' || currentActiveScreen.id === 'screen-flashcards' || currentActiveScreen.id === 'screen-provincias')) {
+            goHome();
+        }
     }
 
     function subscribePremium() {
