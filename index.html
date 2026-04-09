@@ -1159,9 +1159,9 @@
             <i class="fa-solid fa-house"></i>
             <p class="text-[10px] font-bold">Inicio</p>
         </button>
-        <button onclick="switchScreen('screen-legal')" id="nav-legal" class="text-gray-400 text-center">
-            <i class="fa-solid fa-scale-balanced"></i>
-            <p class="text-[10px]">Legal</p>
+        <button onclick="startFlashcards()" id="nav-practice" class="text-gray-400 text-center">
+            <i class="fa-solid fa-bolt"></i>
+            <p class="text-[10px]">Práctica</p>
         </button>
         <button onclick="switchScreen('screen-info-examen')" id="nav-exam" class="text-gray-400 text-center">
             <i class="fa-solid fa-file-lines"></i>
@@ -1725,12 +1725,12 @@
         // Reset nav icons
         document.getElementById('nav-home').classList.replace('text-blue-600', 'text-gray-400');
         if(document.getElementById('nav-exam')) document.getElementById('nav-exam').classList.replace('text-blue-600', 'text-gray-400');
-        if(document.getElementById('nav-legal')) document.getElementById('nav-legal').classList.replace('text-blue-600', 'text-gray-400');
+        if(document.getElementById('nav-practice')) document.getElementById('nav-practice').classList.replace('text-blue-600', 'text-gray-400');
         if(document.getElementById('nav-settings')) document.getElementById('nav-settings').classList.replace('text-blue-600', 'text-gray-400');
-
+        
         if(id === 'screen-home') document.getElementById('nav-home').classList.replace('text-gray-400', 'text-blue-600');
         if(id === 'screen-info-examen') document.getElementById('nav-exam').classList.replace('text-gray-400', 'text-blue-600');
-        if(id === 'screen-legal') document.getElementById('nav-legal').classList.replace('text-gray-400', 'text-blue-600');
+        if(id === 'screen-flashcards') document.getElementById('nav-practice').classList.replace('text-gray-400', 'text-blue-600');
         if(id === 'screen-settings') document.getElementById('nav-settings').classList.replace('text-gray-400', 'text-blue-600');
 
         // Initialize provinces game if on that screen
@@ -1876,7 +1876,7 @@
 
     function showFreeNotice(type, count) {
         document.getElementById('free-notice-title').innerText = `Modo Gratuito: ${type.replace(' Sección', '')}`;
-        
+
         let text = "";
         if (type === 'Podcast' || type === 'Podcasts Sección') {
             text = `Estás usando la versión Free de esta app. Esta versión está limitada y sólo podrás escuchar los primeros 5 minutos de estos podcasts. Suscríbete para desbloquear todo el contenido y escuchar las lecciones en audio de todos los temas.`;
@@ -1885,7 +1885,7 @@
         } else {
             text = `Estás usando la versión gratuita. Verás una muestra de ${count} preguntas predeterminadas. Suscríbete para desbloquear el banco completo de +100 preguntas y la selección aleatoria.`;
         }
-        
+
         document.getElementById('free-notice-text').innerText = text;
         document.getElementById('free-notice-modal').style.display = 'flex';
         // Store type to know what to start if they click "No todavía"
@@ -1897,7 +1897,7 @@
         const payloadStr = document.getElementById('free-notice-modal').dataset.payload;
         const payload = payloadStr ? JSON.parse(payloadStr) : {};
         document.getElementById('free-notice-modal').style.display = 'none';
-        
+
         if (type === 'Examen') {
             document.getElementById('exam-start-modal').style.display = 'flex';
         } else if (type === 'Tarjetas') {
@@ -2426,7 +2426,7 @@ function restartProvincesGame() {
                 return;
             }
         }
-        
+
         const frameContainer = document.getElementById('video-featured-frame-container');
 
         if(provider === 'wistia') {
@@ -2470,7 +2470,7 @@ function restartProvincesGame() {
             podcastItems.forEach((item, index) => {
                 if (allowedIndices.includes(index) && item.getAttribute('onclick')?.includes(vidId)) isAllowed = true;
             });
-            
+
             if (!isAllowed) {
                 showPremiumModal();
                 return;
