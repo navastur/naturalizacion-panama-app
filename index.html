@@ -856,6 +856,47 @@
         </div>
     </div>
 
+    <!-- SCREEN: SETTINGS -->
+    <div id="screen-settings" class="screen" style="background-color: #f8fafc;">
+        <div class="header" style="background: #64748b; border-radius: 0 0 15px 15px; padding: 20px; margin-bottom: 15px;">
+            <div class="flex items-center gap-4">
+                <button onclick="goHome()" class="text-white"><i class="fa-solid fa-arrow-left"></i></button>
+                <div class="flex flex-col">
+                    <h1 class="text-xs font-black uppercase tracking-[0.2em] text-slate-200">Configuración</h1>
+                    <h2 class="text-lg font-bold text-white leading-tight">Ajustes</h2>
+                </div>
+            </div>
+        </div>
+        <div class="p-6">
+            <div class="space-y-4">
+                <div class="card p-4 flex items-center justify-between">
+                    <div>
+                        <h3 class="font-bold text-gray-800">Reiniciar progreso</h3>
+                        <p class="text-xs text-gray-500">Borra todos tus puntos XP y respuestas.</p>
+                    </div>
+                    <button onclick="confirmReset()" class="bg-red-100 text-red-600 p-2 rounded-lg hover:bg-red-200">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </div>
+                
+                <div class="card p-4 flex items-center justify-between opacity-50">
+                    <div>
+                        <h3 class="font-bold text-gray-800">Modo Oscuro</h3>
+                        <p class="text-xs text-gray-500">Próximamente</p>
+                    </div>
+                    <div class="w-10 h-5 bg-gray-200 rounded-full relative">
+                        <div class="absolute left-1 top-1 w-3 h-3 bg-white rounded-full"></div>
+                    </div>
+                </div>
+
+                <div class="mt-8 text-center">
+                    <p class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">App Naturalización Panamá</p>
+                    <p class="text-[10px] text-gray-400">Versión 1.0.1</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Navigation Bar -->
     <!-- Fix for Git: added a blank comment line to force update -->
     <div class="nav-bar">
@@ -871,10 +912,10 @@
             <i class="fa-solid fa-chart-simple"></i>
             <p class="text-[10px]">Stats</p>
         </button>
-        <div class="text-gray-200 text-center cursor-not-allowed">
-            <i class="fa-solid fa-user"></i>
-            <p class="text-[10px]">Perfil</p>
-        </div>
+        <button onclick="showSettings()" id="nav-settings" class="text-gray-400 text-center">
+            <i class="fa-solid fa-gear"></i>
+            <p class="text-[10px]">Ajustes</p>
+        </button>
     </div>
 
 </div>
@@ -1233,6 +1274,25 @@
 
     function closeLevelUp() { document.getElementById('levelup-modal').style.display = 'none'; }
 
+    function showSettings() {
+        switchScreen('screen-settings');
+    }
+
+    function confirmReset() {
+        if (confirm('¿Estás seguro de que quieres borrar todo tu progreso? Esta acción no se puede deshacer.')) {
+            userData = {
+                xp: 0,
+                streak: 1,
+                lastDate: null,
+                mastery: {}
+            };
+            saveData();
+            updateDashboard();
+            goHome();
+            alert('Progreso reiniciado correctamente.');
+        }
+    }
+
     function switchScreen(id) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
@@ -1241,10 +1301,12 @@
         document.getElementById('nav-home').classList.replace('text-blue-600', 'text-gray-400');
         document.getElementById('nav-stats').classList.replace('text-blue-600', 'text-gray-400');
         if(document.getElementById('nav-legal')) document.getElementById('nav-legal').classList.replace('text-blue-600', 'text-gray-400');
+        if(document.getElementById('nav-settings')) document.getElementById('nav-settings').classList.replace('text-blue-600', 'text-gray-400');
         
         if(id === 'screen-home') document.getElementById('nav-home').classList.replace('text-gray-400', 'text-blue-600');
         if(id === 'screen-stats') document.getElementById('nav-stats').classList.replace('text-gray-400', 'text-blue-600');
         if(id === 'screen-legal') document.getElementById('nav-legal').classList.replace('text-gray-400', 'text-blue-600');
+        if(id === 'screen-settings') document.getElementById('nav-settings').classList.replace('text-gray-400', 'text-blue-600');
 
         // Initialize provinces game if on that screen
         if(id === 'screen-provincias') initProvincesGame();
