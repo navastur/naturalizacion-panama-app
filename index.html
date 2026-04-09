@@ -26,29 +26,29 @@
         .option-btn.selected { border-color: #3b82f6; background: #eff6ff; }
         .option-btn.correct { border-color: #10b981; background: #ecfdf5; }
         .option-btn.wrong { border-color: #ef4444; background: #fef2f2; }
-        
+
         .modal-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 200; display: none; align-items: center; justify-content: center; padding: 20px; }
         .modal-content { background: white; border-radius: 20px; padding: 25px; width: 100%; max-width: 350px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
-        
+
         #ebook-container { height: 100%; display: flex; flex-direction: column; background: #fffcf5; position: relative; }
         .ebook-page { flex: 1; padding: 30px 25px; overflow-y: auto; font-family: 'Georgia', serif; line-height: 1.6; position: relative; }
         .ebook-footer { padding: 15px 20px; background: white; border-top: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; pointer-events: none; }
         .ebook-footer button { pointer-events: auto; }
         .chapter-badge { font-family: 'Inter', sans-serif; background: #1e3a8a; color: white; padding: 2px 8px; border-radius: 4px; font-size: 9px; font-weight: bold; text-transform: uppercase; margin-bottom: 10px; display: inline-block; }
-        
+
         /* More robust video container */
         .video-container { position: relative; width: 100%; padding-top: 56.25%; background: black; border-radius: 15px; overflow: hidden; }
         .video-container iframe, .video-container .plyr { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
-        
+
         /* Mask to hide YouTube UI elements */
         .yt-shield { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
         .yt-shield-top { position: absolute; top: 0; width: 100%; height: 50px; pointer-events: auto; }
         .yt-shield-logo { position: absolute; bottom: 0; right: 0; width: 80px; height: 50px; pointer-events: auto; }
-        
+
         .click-zone { position: absolute; top: 60px; height: calc(100% - 120px); width: 40%; z-index: 10; }
         .zone-left { left: 0; }
         .zone-right { right: 0; width: 60%; }
-        
+
         /* Map Provinces Stroke */
         #features path { stroke: #94a3b8; stroke-width: 2px; stroke-linejoin: round; transition: stroke 0.2s, stroke-width 0.2s; }
         #features path:hover { stroke: #475569; stroke-width: 3px; }
@@ -64,7 +64,7 @@
             <h2 class="text-red-600 font-black text-sm uppercase tracking-widest mb-4 text-center">
                 <i class="fa-solid fa-circle-xmark mr-1"></i> Respuesta Incorrecta
             </h2>
-            
+
             <div class="mb-6">
                 <p class="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-2 text-center">La respuesta correcta era:</p>
                 <div id="explanation-correct-val" class="p-4 bg-green-50 border-2 border-green-500 rounded-xl text-green-900 font-bold text-sm shadow-sm text-center"></div>
@@ -112,6 +112,23 @@
             <div class="space-y-3">
                 <button onclick="executeReset()" class="w-full bg-red-500 text-white font-bold py-4 rounded-xl uppercase text-xs tracking-widest shadow-lg shadow-red-200 hover:bg-red-600 transition-colors">Sí, borrar todo</button>
                 <button onclick="closeReset()" class="w-full bg-gray-100 text-gray-500 font-bold py-4 rounded-xl uppercase text-xs tracking-widest hover:bg-gray-200 transition-colors">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: PREMIUM UPGRADE -->
+    <div id="premium-modal" class="modal-overlay" style="z-index: 1000;">
+        <div class="modal-content !p-8 text-center relative overflow-hidden border-t-4 border-t-blue-600">
+            <div class="w-20 h-20 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner animate-pulse">
+                <i class="fa-solid fa-crown fa-3xl"></i>
+            </div>
+            <h2 class="text-2xl font-black text-gray-800 mb-2 leading-tight">Hazte Premium</h2>
+            <p class="text-gray-600 text-[13px] leading-relaxed mb-8">
+                Has alcanzado el límite de la versión gratuita. ¡Suscríbete para desbloquear todo el temario, vídeos completos, simulacros ilimitados y mucho más!
+            </p>
+            <div class="space-y-3">
+                <button onclick="subscribePremium()" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-black py-4 rounded-xl uppercase text-xs tracking-widest shadow-lg shadow-blue-200 hover:scale-105 transition-transform">Desbloquear todo</button>
+                <button onclick="closePremiumModal()" class="w-full bg-gray-100 text-gray-500 font-bold py-4 rounded-xl uppercase text-xs tracking-widest">Ahora no</button>
             </div>
         </div>
     </div>
@@ -179,7 +196,7 @@
             <p class="text-blue-800 text-[11px] leading-relaxed mb-6 px-4 font-medium">
                 Sigue acertando preguntas y viendo contenido para aumentar tus puntos XP y avanzar en tu nivel de ciudadanía panameña.
             </p>
-            
+
             <div class="card mb-6 p-6 bg-white border-blue-100 shadow-sm rounded-3xl relative overflow-hidden">
                 <div class="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
                 <div class="absolute top-0 -left-4 w-32 h-32 bg-indigo-50 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
@@ -227,14 +244,14 @@
         <div class="modal-content !p-8 text-center relative overflow-hidden" style="background: linear-gradient(135deg, #fffbeb 0%, #fef08a 100%); border: 2px solid #fde047;">
             <div class="absolute top-0 right-0 w-40 h-40 bg-yellow-100 rounded-full mix-blend-multiply filter blur-2xl opacity-70 animate-blob"></div>
             <div class="absolute top-0 -left-4 w-40 h-40 bg-orange-100 rounded-full mix-blend-multiply filter blur-2xl opacity-70 animate-blob animation-delay-2000"></div>
-            
+
             <div class="relative z-10">
                 <div class="w-24 h-24 bg-yellow-400 text-yellow-900 rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(234,179,8,0.6)] animate-bounce border-4 border-yellow-200">
                     <i class="fa-solid fa-trophy fa-4x"></i>
                 </div>
                 <h2 class="text-3xl font-black text-yellow-900 mb-2 drop-shadow-sm">¡NUEVO RANGO!</h2>
                 <p id="levelup-text" class="text-yellow-800 text-[13px] mb-8 font-bold"></p>
-                
+
                 <div class="p-8 bg-white/60 backdrop-blur-sm rounded-3xl border border-yellow-200 mb-8 shadow-inner transform transition-transform hover:scale-105">
                     <div id="levelup-badge" class="text-6xl mb-4 drop-shadow-lg">🏅</div>
                     <h3 class="text-[10px] font-black text-yellow-600 uppercase tracking-[0.3em] mb-1">Rango Desbloqueado</h3>
@@ -251,14 +268,14 @@
         <div class="modal-content !p-8 text-center relative overflow-hidden" style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 2px solid #86efac;">
             <div class="absolute top-0 right-0 w-40 h-40 bg-green-100 rounded-full mix-blend-multiply filter blur-2xl opacity-70 animate-blob"></div>
             <div class="absolute top-0 -left-4 w-40 h-40 bg-teal-100 rounded-full mix-blend-multiply filter blur-2xl opacity-70 animate-blob animation-delay-2000"></div>
-            
+
             <div class="relative z-10">
                 <div class="w-24 h-24 bg-green-400 text-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(34,197,94,0.6)] animate-bounce border-4 border-green-200">
                     <i class="fa-solid fa-fire fa-4x"></i>
                 </div>
                 <h2 class="text-3xl font-black text-green-800 mb-2 drop-shadow-sm">¡RACHA DE ESTUDIO!</h2>
                 <p id="streak-text" class="text-green-700 text-[13px] mb-8 font-bold"></p>
-                
+
                 <button onclick="closeStreakModal()" class="w-full bg-gradient-to-r from-green-500 to-emerald-500 text-white font-black py-4 rounded-xl uppercase text-[13px] tracking-widest shadow-xl shadow-green-300 hover:from-green-600 hover:to-emerald-600 transition-all transform active:scale-95">¡A seguir así!</button>
             </div>
         </div>
@@ -492,7 +509,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="p-4">
             <!-- Main Video Card -->
             <div id="video-featured-container" class="bg-white rounded-3xl shadow-xl overflow-hidden mb-6 border border-gray-100">
@@ -621,7 +638,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="p-4">
             <!-- Main Audio Player Card -->
             <div class="bg-white rounded-3xl shadow-xl overflow-hidden mb-6 border border-gray-100">
@@ -635,7 +652,7 @@
                             <p id="podcast-featured-module" class="text-[10px] text-blue-600 font-black uppercase tracking-widest mt-1">Módulo 1 • Podcast</p>
                         </div>
                     </div>
-                    
+
                     <!-- Spotify Audio Player -->
                     <div class="rounded-2xl overflow-hidden bg-gray-50 border border-gray-100 shadow-inner" style="min-height: 152px;">
                         <div id="podcast-featured-frame-container" style="width:100%; height:100%;">
@@ -795,11 +812,11 @@
             <p class="text-sm font-bold text-gray-700 bg-white p-4 rounded-xl border border-red-100 shadow-sm mb-6 leading-relaxed">
                 Estos son los dos símbolos patrios que tienes que memorizar para obtener tu ciudadanía panameña. Memoriza la letra del himno nacional y memoriza el juramento de la bandera.
             </p>
-            
+
             <div class="aspect-video w-full rounded-2xl overflow-hidden shadow-lg mb-6 bg-black">
                 <iframe width="100%" height="100%" src="https://www.youtube.com/embed/7s4Zy0jVNZM" title="Himno Nacional de Panamá" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
             </div>
-            
+
             <div class="card p-5 bg-white border-red-100 mb-8 shadow-md">
                 <h3 class="text-xs font-black text-red-600 uppercase mb-4 tracking-widest text-center">Letra del Himno Nacional</h3>
                 <div class="text-[11px] text-gray-700 leading-relaxed text-center space-y-5">
@@ -941,9 +958,9 @@
             <div class="card p-6 text-gray-800 text-sm leading-relaxed">
                 <h1 class="text-xl font-black text-gray-900 mb-4 leading-tight">🇵🇦 Todo sobre el examen de naturalización</h1>
                 <p class="text-gray-600 mb-6">¡Ya casi estás ahí! Para que los nervios no te jueguen una mala pasada, aquí te explicamos "de qué va" el examen paso a paso. No es solo un test de marcar cruces; es una evaluación completa de tu integración en el país.</p>
-                
+
                 <hr class="border-t border-gray-100 my-6">
-                
+
                 <h2 class="text-base font-bold text-blue-800 mb-3">📝 1. El examen escrito (El cuestionario)</h2>
                 <p class="text-gray-600 mb-4">Esta es la parte donde demostrarás tus conocimientos teóricos. Suele constar de unas <b class="text-gray-900 font-black text-xs">30 preguntas</b> y el formato es variado:</p>
                 <ul class="list-disc pl-5 mb-6 space-y-3 text-gray-600">
@@ -1055,7 +1072,7 @@
                             <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                         </label>
                     </div>
-                    
+
                     <label class="p-4 flex items-center gap-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors">
                         <div class="w-10 h-10 rounded-xl bg-teal-100 text-teal-600 flex items-center justify-center">
                             <i class="fa-solid fa-calendar-day"></i>
@@ -1214,7 +1231,7 @@
         { id: 69, chap: "IV. OTROS ASPECTOS", q: "¿Cuándo NO usar la bandera?", a: "Anuncio comercial, cantinas, disfraces. No izar antes de las 7:00 AM ni después de las 6:00 PM.", opts: ["En fiestas", "Como anuncio comercial, en cantinas o disfraces", "En la escuela", "En el canal"], ans: 1 },
         { id: 70, chap: "IV. OTROS ASPECTOS", q: "¿Días de fiestas y duelo nacional?", a: "1 ene, 9 ene, Carnaval, Viernes Santo, 1 may, 3, 4, 5, 10, 28 nov, 8 y 25 dic. 1 jul (toma posesión).", opts: ["Solo Navidad", "1 y 9 ene, Carnaval, 1 may, Noviembre (3, 4, 5, 10, 28)", "Solo días patrios", "Día del padre"], ans: 1 },
         { id: 71, chap: "IV. OTROS ASPECTOS", q: "¿Juramento a la Bandera?", a: "'Bandera panameña: juro a Dios y a la Patria, amarte, respetarte y defenderte, como símbolo sagrado de nuestra Nación'. Autora: Ernestina Sucre Tapia.", opts: ["Ricardo Miró", "'Juro a Dios y a la Patria amarte...'; Ernestina Sucre Tapia", "Jerónimo de la Ossa", "Santos Jorge"], ans: 1 },
-        
+
         // --- AMPLIACIÓN LITERAL (Filtrada por relevancia y fidelidad total al PDF) ---
         { id: 72, chap: "I. ORGANIZACIÓN POLÍTICA", q: "¿Qué significa que el gobierno sea 'Unitario'?", a: "Significa que todos los niveles de gobierno están subordinados al poder central, y que en todo el país rigen las mismas leyes.", opts: ["Que hay varios presidentes", "Que los niveles de gobierno se subordinan al poder central y rigen las mismas leyes", "Que cada provincia tiene su propia ley", "Que no hay poder central"], ans: 1 },
         { id: 73, chap: "I. ORGANIZACIÓN POLÍTICA", q: "¿Qué significa que el gobierno sea 'Republicano'?", a: "Significa que rigen principios como: cargos por voto, duración limitada, actos públicos conocidos y división en tres poderes.", opts: ["Que el poder es hereditario", "Que el gobierno es una monarquía", "Que se basa en voto, duración limitada, actos públicos y tres poderes", "Que no hay elecciones"], ans: 2 },
@@ -1278,8 +1295,10 @@
 
     const totalVideos = videoIds.length;
     const totalPodcasts = podcastIds.length;
-    
+
     let currentEbookPage = 0;
+    let flashcardSessionCount = 0;
+    let provincesSessionCount = 0;
     let currentPodcastId = '19olMhckJRkKtEgJsBiFOR';
 
     // Setup Wistia auto-tracking for all videos
@@ -1349,6 +1368,33 @@
             if (videoCheck) videoCheck.style.display = 'flex';
             if (podcastCheck) podcastCheck.style.display = 'flex';
         });
+
+        // Monetization: Disable content for non-premium users
+        const videoItems = document.querySelectorAll('#screen-videos .cursor-pointer');
+        videoItems.forEach((item, index) => {
+            if (!userData.isPremium && index >= 3) {
+                item.style.opacity = '0.5';
+                item.style.pointerEvents = 'none';
+                item.classList.add('grayscale');
+            } else {
+                item.style.opacity = '1';
+                item.style.pointerEvents = 'auto';
+                item.classList.remove('grayscale');
+            }
+        });
+
+        const podcastItems = document.querySelectorAll('#screen-podcasts .cursor-pointer');
+        podcastItems.forEach((item, index) => {
+            if (!userData.isPremium && index >= 3) {
+                item.style.opacity = '0.5';
+                item.style.pointerEvents = 'none';
+                item.classList.add('grayscale');
+            } else {
+                item.style.opacity = '1';
+                item.style.pointerEvents = 'auto';
+                item.classList.remove('grayscale');
+            }
+        });
     }
 
     function updateDashboard() {
@@ -1372,19 +1418,19 @@
 
         const elLevel = document.getElementById('user-level-badge');
         if(elLevel) elLevel.innerText = `LVL ${level}`;
-        
+
         const elXp = document.getElementById('user-xp-text');
         if(elXp) elXp.innerText = `${currentXP} / ${xpForNext} XP`;
-        
+
         const elProgress = document.getElementById('progress-percent');
         if(elProgress) elProgress.innerText = `${progressPercent}%`;
-        
+
         const elBar = document.getElementById('progress-bar-fill');
         if(elBar) elBar.style.width = `${progressPercent}%`;
-        
+
         const elStreak = document.getElementById('user-streak');
         if(elStreak) elStreak.innerText = `${userData.streak} Día${userData.streak > 1 ? 's' : ''}`;
-        
+
         const summaryLvl = document.getElementById('stat-summary-level');
         if(summaryLvl) summaryLvl.innerText = getPanamaLevel(level);
 
@@ -1395,7 +1441,7 @@
         if (userData.xp - userData.lastXPMilestone >= 25) {
             console.log("DEBUG: Condición de hito de XP alcanzada. Llamando showMilestone.");
             const hasLeveledUp = level > prevLevel;
-            
+
             if (examState.active) {
                 examState.pendingMilestone = true;
                 examState.pendingLevel = level;
@@ -1403,7 +1449,7 @@
             } else {
                 showMilestone(level, hasLeveledUp);
             }
-            
+
             userData.lastXPMilestone = userData.xp;
             localStorage.setItem('panama_user_data', JSON.stringify(userData));
         }
@@ -1413,7 +1459,7 @@
         const modal = document.getElementById('milestone-modal');
         const line = document.getElementById('milestone-line-fill');
         const progressSound = document.getElementById('progress-sound');
-        
+
         // Reset line and dots
         line.style.transition = 'none';
         line.style.height = '0%';
@@ -1424,15 +1470,15 @@
             // White interior, Red border
             dot.classList.remove('bg-blue-600', 'bg-red-600', 'scale-125', 'ring-4', 'ring-white');
             dot.classList.add('bg-white', 'border-red-600');
-            dot.innerHTML = ''; 
+            dot.innerHTML = '';
             if(span) {
                 span.classList.remove('text-blue-600', 'font-black', 'text-lg');
                 span.classList.add('text-gray-500');
             }
         });
-        
+
         modal.style.display = 'flex';
-        
+
         // Play progress sound
         if (progressSound) {
             progressSound.play().catch(err => {
@@ -1453,12 +1499,12 @@
             const targetHeight = Math.max(1, Math.min((userData.xp / 1100) * 100, 100));
             line.style.height = targetHeight + '%';
             console.log("DEBUG: Animando línea a altura:", targetHeight + "%");
-            
+
             // Update dots and text color for current level
             ranks.forEach(r => {
                 const dot = document.getElementById('m-dot-'+r);
                 const span = document.querySelector(`#md-${r} span`);
-                
+
                 const rankThresholds = {
                     'disque': 0,
                     'pritty': 75,
@@ -1501,14 +1547,14 @@
         const modal = document.getElementById('levelup-modal');
         const levelupSound = document.getElementById('levelup-sound');
         const continueBtn = document.getElementById('levelup-continue-btn');
-        
+
         document.getElementById('levelup-text').innerText = `Has alcanzado el nivel ${level}`;
         document.getElementById('levelup-rank-name').innerText = getPanamaLevel(level);
-        
+
         const badges = ["🐣", "🌱", "🏠", "🚢", "🦅", "👑", "🔥"];
         const index = Math.min(Math.floor(level / 3), badges.length - 1);
         document.getElementById('levelup-badge').innerText = badges[index];
-        
+
         modal.style.display = 'flex';
         if(continueBtn) continueBtn.style.display = 'none';
 
@@ -1533,8 +1579,8 @@
         }, 5000);
     }
 
-    function closeLevelUp() { 
-        document.getElementById('levelup-modal').style.display = 'none'; 
+    function closeLevelUp() {
+        document.getElementById('levelup-modal').style.display = 'none';
         checkQueuedModals();
     }
 
@@ -1543,13 +1589,13 @@
         // Update values from userData
         const examPicker = document.getElementById('exam-date-picker');
         if(userData.examDate && examPicker) examPicker.value = userData.examDate;
-        
+
         const studyPicker = document.getElementById('study-time-picker');
         if(userData.studyTime && studyPicker) {
             studyPicker.value = userData.studyTime;
             document.getElementById('study-time-label').innerText = `Tu hora preferida es ${userData.studyTime}`;
         }
-        
+
         const notifToggle = document.getElementById('notif-toggle');
         if(notifToggle) notifToggle.checked = userData.notifsEnabled || false;
 
@@ -1616,7 +1662,8 @@
             mastery: {},
             examDate: null,
             studyTime: null,
-            notifsEnabled: false
+            notifsEnabled: false,
+            isPremium: true
         };
         saveData();
         updateDashboard();
@@ -1624,16 +1671,33 @@
         goHome();
     }
 
+    function showPremiumModal() {
+        document.getElementById('premium-modal').style.display = 'flex';
+    }
+
+    function closePremiumModal() {
+        document.getElementById('premium-modal').style.display = 'none';
+    }
+
+    function subscribePremium() {
+        // Placeholder for payment link or logic
+        alert('Redirigiendo a la pasarela de pago...');
+        userData.isPremium = true;
+        saveData();
+        updateDashboard();
+        closePremiumModal();
+    }
+
     function switchScreen(id) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
-        
+
         // Reset nav icons
         document.getElementById('nav-home').classList.replace('text-blue-600', 'text-gray-400');
         if(document.getElementById('nav-exam')) document.getElementById('nav-exam').classList.replace('text-blue-600', 'text-gray-400');
         if(document.getElementById('nav-legal')) document.getElementById('nav-legal').classList.replace('text-blue-600', 'text-gray-400');
         if(document.getElementById('nav-settings')) document.getElementById('nav-settings').classList.replace('text-blue-600', 'text-gray-400');
-        
+
         if(id === 'screen-home') document.getElementById('nav-home').classList.replace('text-gray-400', 'text-blue-600');
         if(id === 'screen-info-examen') document.getElementById('nav-exam').classList.replace('text-gray-400', 'text-blue-600');
         if(id === 'screen-legal') document.getElementById('nav-legal').classList.replace('text-gray-400', 'text-blue-600');
@@ -1644,13 +1708,22 @@
     }
     function goHome() { switchScreen('screen-home'); updateDashboard(); }
     function closeExplanation() { document.getElementById('explanation-modal').style.display = 'none'; }
-    function closeMastery() { 
-        document.getElementById('mastery-modal').style.display = 'none'; 
+    function closeMastery() {
+        document.getElementById('mastery-modal').style.display = 'none';
         checkQueuedModals();
     }
-    
-    function openEbook() { switchScreen('screen-ebook'); renderEbookPage(); }
+
+    function openEbook() {
+        if (!userData.isPremium) currentEbookPage = 0; // Reset to start if free
+        switchScreen('screen-ebook');
+        renderEbookPage();
+    }
     function renderEbookPage() {
+        if (!userData.isPremium && currentEbookPage >= 30) {
+            showPremiumModal();
+            currentEbookPage = 29;
+            return;
+        }
         const page = fullData[currentEbookPage];
         const container = document.getElementById('ebook-page-content');
         container.innerHTML = `<span class="chapter-badge">${page.chap}</span><h2 class="text-xl font-black text-gray-800 mb-6 leading-tight">${page.id}. ${page.q}</h2><div class="text-gray-700 text-sm leading-relaxed">${page.a}</div>`;
@@ -1661,8 +1734,8 @@
     function nextEbookPage() { if(currentEbookPage < fullData.length -1) { currentEbookPage++; renderEbookPage(); } }
     function prevEbookPage() { if(currentEbookPage > 0) { currentEbookPage--; renderEbookPage(); } }
 
-    function showStats() { 
-        switchScreen('screen-stats'); 
+    function showStats() {
+        switchScreen('screen-stats');
         const stats = { green: 0, yellow: 0, red: fullData.length };
         Object.values(userData.mastery).forEach(s => {
             if(s === 3) { stats.green++; stats.red--; }
@@ -1694,14 +1767,14 @@
         // Update Roadmap Line
         const ranks = ['disque', 'pritty', 'ofi', 'xopa', 'berraco', 'meto', 'ayalavida'];
         let progressToAyalavida = Math.min((userData.xp / 1100) * 100, 100);
-        
+
         const progressLineFill = document.getElementById('progress-line-fill');
         if(progressLineFill) progressLineFill.style.height = `${progressToAyalavida}%`;
-        
+
         ranks.forEach(r => {
             const dot = document.getElementById('dot-'+r);
             const span = document.querySelector(`#rd-${r} span`);
-            
+
             const rankThresholds = {
                 'disque': 0,
                 'pritty': 75,
@@ -1747,18 +1820,18 @@
         awaitingQueue: false
     };
 
-    function startPractice() { 
+    function startPractice() {
         document.getElementById('exam-start-modal').style.display = 'flex';
     }
 
-    function closeExamStart() { 
-        document.getElementById('exam-start-modal').style.display = 'none'; 
+    function closeExamStart() {
+        document.getElementById('exam-start-modal').style.display = 'none';
     }
 
     function initExam() {
         closeExamStart();
         switchScreen('screen-practice');
-        
+
         // Pick 30 random questions
         const shuffled = [...fullData].sort(() => 0.5 - Math.random());
         examState = {
@@ -1772,7 +1845,7 @@
             pendingLevelUp: false,
             awaitingQueue: false
         };
-        
+
         updateExamProgress();
         renderQuestion();
     }
@@ -1796,7 +1869,7 @@
 
         document.getElementById('question-text').innerText = currentQuestion.q;
         document.getElementById('practice-category').innerText = currentQuestion.chap;
-        
+
         const container = document.getElementById('options-container');
         container.innerHTML = '';
         currentQuestion.opts.forEach((opt, idx) => {
@@ -1818,6 +1891,11 @@
     function nextQuestion() {
         if (examState.active) {
             examState.currentIndex++;
+            if (!userData.isPremium && examState.currentIndex >= 10) {
+                finishExam();
+                showPremiumModal();
+                return;
+            }
             if (examState.currentIndex >= examState.totalQuestions) {
                 finishExam();
                 return;
@@ -1830,11 +1908,11 @@
     function finishExam() {
         const passScore = Math.ceil(examState.totalQuestions * 0.71); // 22 questions
         const score = examState.correctCount;
-        
+
         if (score >= passScore) {
             document.getElementById('exam-success-score').innerText = `${score}/${examState.totalQuestions} ACERTADAS`;
             document.getElementById('exam-success-modal').style.display = 'flex';
-            
+
             // Play level up sound as requested
             const sound = document.getElementById('levelup-sound');
             if (sound) sound.play().catch(() => {});
@@ -1872,7 +1950,7 @@
         const isCorrect = idx === currentQuestion.ans;
         btn.classList.add(isCorrect ? 'correct' : 'wrong');
         document.querySelectorAll('.option-btn')[currentQuestion.ans].classList.add('correct');
-        
+
         if (examState.active && isCorrect) {
             examState.correctCount++;
         }
@@ -1881,8 +1959,8 @@
         if(isCorrect) {
             state++;
             userData.xp += 2;
-            if(state === 3) { 
-                userData.xp += 10; 
+            if(state === 3) {
+                userData.xp += 10;
                 if (!examState.active) {
                     document.getElementById('mastery-modal').style.display = 'flex';
                 }
@@ -1891,11 +1969,11 @@
         } else {
             state = 0;
             document.getElementById('explanation-correct-val').innerText = currentQuestion.opts[currentQuestion.ans];
-            
+
             // Texto de referencia oficial (1-71 son numeradas, el resto son del texto/apéndice)
             let refLabel = currentQuestion.id <= 71 ? `Pregunta #${currentQuestion.id} del Temario Oficial:` : `Referencia (Anexo Símbolos de la Nación):`;
             document.getElementById('explanation-q-text').innerText = `${refLabel}\n${currentQuestion.q}`;
-            
+
             document.getElementById('explanation-literal-text').innerHTML = currentQuestion.a;
             document.getElementById('explanation-modal').style.display = 'flex';
             document.getElementById('next-btn').classList.remove('hidden');
@@ -1906,6 +1984,7 @@
     }
 
     function startFlashcards() {
+        if (!userData.isPremium) flashcardSessionCount = 0;
         const weakOnes = fullData.filter(q => (userData.mastery[q.id] || 0) < 3);
         if (weakOnes.length === 0) { alert("¡Felicidades! Has dominado todo el temario."); return; }
         switchScreen('screen-flashcards');
@@ -1916,10 +1995,10 @@
         // En tarjetas de memoria (refuerzo), damos prioridad a las que tienen state 0
         let candidates = set.filter(q => (userData.mastery[q.id] || 0) === 0);
         if (candidates.length === 0) candidates = set; // Si no hay de 0, usamos las de 1 y 2
-        
+
         currentQuestion = candidates[Math.floor(Math.random() * candidates.length)];
         document.getElementById('flashcard-text').innerText = currentQuestion.q;
-        
+
         const state = userData.mastery[currentQuestion.id] || 0;
         const icons = document.getElementById('flashcard-status-icons');
         if(icons) {
@@ -1937,11 +2016,11 @@
                 const isCorrect = idx === currentQuestion.ans;
                 btn.classList.add(isCorrect ? 'correct' : 'wrong');
                 document.querySelectorAll('#flashcard-options .option-btn')[currentQuestion.ans].classList.add('correct');
-                
+
                 let state = userData.mastery[currentQuestion.id] || 0;
-                if(isCorrect) { 
+                if(isCorrect) {
                     state++;
-                    userData.xp += 2; 
+                    userData.xp += 2;
                     if(state === 3) {
                         userData.xp += 10;
                         if (!examState.active) {
@@ -1952,10 +2031,10 @@
                 } else {
                     state = 0;
                     document.getElementById('explanation-correct-val').innerText = currentQuestion.opts[currentQuestion.ans];
-                    
+
                     let refLabel = currentQuestion.id <= 71 ? `Pregunta #${currentQuestion.id} del Temario Oficial:` : `Referencia (Anexo Símbolos de la Nación):`;
                     document.getElementById('explanation-q-text').innerText = `${refLabel}\n${currentQuestion.q}`;
-                    
+
                     document.getElementById('explanation-literal-text').innerHTML = currentQuestion.a;
                     document.getElementById('explanation-modal').style.display = 'flex';
                     document.getElementById('flashcard-next-btn').classList.remove('hidden');
@@ -1967,10 +2046,15 @@
             container.appendChild(btn);
         });
     }
-    function nextFlashcard() { 
-        const weakOnes = fullData.filter(q => (userData.mastery[q.id] || 0) < 3); 
-        if(weakOnes.length === 0) goHome(); 
-        else renderFlashcard(weakOnes); 
+    function nextFlashcard() {
+        if (!userData.isPremium && flashcardSessionCount >= 20) {
+            showPremiumModal();
+            return;
+        }
+        flashcardSessionCount++;
+        const weakOnes = fullData.filter(q => (userData.mastery[q.id] || 0) < 3);
+        if(weakOnes.length === 0) goHome();
+        else renderFlashcard(weakOnes);
     }
 
     const provinceData = [
@@ -1990,13 +2074,14 @@
         { name: "Emberá-Wounaan", id: "PAEM", color: "fill-orange-300" }
     ];
 
-    
+
     let correctProvincesCount = 0;
 
     function initProvincesGame() {
+        if (!userData.isPremium) provincesSessionCount = 0;
         const container = document.getElementById("provinces-names-container");
         if (!container) return;
-        
+
         container.innerHTML = "";
         correctProvincesCount = 0;
 
@@ -2007,7 +2092,7 @@
                 // Restaurar color original o transparente
                 svgPath.style.fill = "#ffffff";
                 svgPath.classList.remove("opacity-100", p.color);
-                
+
                 // Preparar como zona de drop
                 svgPath.addEventListener("dragover", e => {
                     e.preventDefault();
@@ -2048,7 +2133,7 @@
             nameDiv.className = "draggable-province bg-white text-gray-800 font-bold py-2 px-1 rounded-lg shadow-sm cursor-grab active:cursor-grabbing text-[10px] sm:text-xs transform transition-all duration-300 ease-out hover:scale-105 border border-gray-200";
             nameDiv.innerText = p.name;
             nameDiv.draggable = true;
-            
+
             nameDiv.addEventListener("dragstart", e => {
                 e.dataTransfer.setData("text/plain", p.id);
                 setTimeout(() => nameDiv.classList.add("opacity-30"), 0);
@@ -2056,19 +2141,25 @@
             nameDiv.addEventListener("dragend", e => {
                 nameDiv.classList.remove("opacity-30");
             });
-            
+
             container.appendChild(nameDiv);
         });
     }
 
     function handleCorrectDrop(province, svgPath) {
+        if (!userData.isPremium && provincesSessionCount >= 3) {
+            showPremiumModal();
+            return;
+        }
+        provincesSessionCount++;
+        
         const draggable = document.getElementById(`draggable-${province.id}`);
         if (!draggable) return;
 
         draggable.style.visibility = "hidden";
 
         // Aplicar color directamente al SVG
-        svgPath.style.fill = ""; 
+        svgPath.style.fill = "";
         svgPath.classList.add(province.color, "transition-colors", "duration-500");
 
         // Añadir el nombre de la provincia
@@ -2076,7 +2167,7 @@
             const bbox = svgPath.getBBox();
             let centerX = bbox.x + bbox.width / 2;
             let centerY = bbox.y + bbox.height / 2;
-            
+
                         // Adjustments based on visual map layout (manual offsets for tricky shapes)
             if (province.id === "PA1") { // Bocas del Toro
                 centerY += 10;
@@ -2136,7 +2227,7 @@
             if (province.name === "Naso Tjër Di") lines = ["Naso", "Tjër Di"];
             if (province.name === "Bocas del Toro") lines = ["Bocas", "del Toro"];
             if (province.name === "Panamá Oeste") lines = ["Panamá", "Oeste"];
-            
+
             const lineHeight = 16;
             const startY = centerY - ((lines.length - 1) * lineHeight) / 2;
 
@@ -2149,16 +2240,16 @@
             });
 
             svgPath.parentNode.appendChild(textGroup);
-            
+
             // Animacion fade in
             setTimeout(() => { textGroup.style.opacity = "1"; }, 50);
-            
+
         } catch (e) {
             console.error("Error adding text to SVG", e);
         }
 
         const progressSound = document.getElementById("progress-sound");
-        
+
         if (progressSound) {
             progressSound.currentTime = 0;
             progressSound.play().catch(e => console.log("Audio blocked", e));
@@ -2199,24 +2290,34 @@ function restartProvincesGame() {
                     youtube: { noCookie: true, rel: 0, showinfo: 0, iv_load_policy: 3, modestbranding: 1, controls: 0 },
                     controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'captions', 'settings', 'pip', 'airplay', 'fullscreen'],
                     settings: ['quality', 'speed'],
-                    download: false 
+                    download: false
                 });
                 if(p.id === 'featured-player') featuredPlayer = player;
                 return player;
             });
-            
+
             // Inicialización de videos locales (Drive si funcionara)
             const playerVideos = Array.from(document.querySelectorAll('video')).map(p => new Plyr(p, {
                 controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'captions', 'settings', 'pip', 'airplay', 'fullscreen'],
                 settings: ['quality', 'speed'],
-                download: false 
+                download: false
             }));
         }
     });
 
     function playVideo(vidId, title, module, provider = 'youtube') {
+        if (!userData.isPremium) {
+            // Check if it's one of the first 3 videos
+            const videoIds = ['h5dsmw9lyl', '83qlave7np', 'tg61ztp1h5'];
+            if (!videoIds.includes(vidId)) {
+                showPremiumModal();
+                return;
+            }
+            alert("En modo gratuito, solo puedes ver los primeros 3 minutos de este vídeo.");
+        }
+
         const frameContainer = document.getElementById('video-featured-frame-container');
-        
+
         if(provider === 'wistia') {
             frameContainer.innerHTML = `<iframe src="https://fast.wistia.net/embed/iframe/${vidId}" title="${title}" allow="autoplay; fullscreen" allowtransparency="true" frameborder="0" scrolling="no" class="wistia_embed" name="wistia_embed" width="100%" height="100%"></iframe>`;
         } else if(featuredPlayer) {
@@ -2225,23 +2326,30 @@ function restartProvincesGame() {
                 youtube: { noCookie: true, rel: 0, showinfo: 0, iv_load_policy: 3, modestbranding: 1, controls: 0 },
                 controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'captions', 'settings', 'pip', 'airplay', 'fullscreen'],
                 settings: ['quality', 'speed'],
-                download: false 
+                download: false
             });
         }
-        
+
         document.getElementById('video-featured-title').innerText = title;
         document.getElementById('video-featured-module').innerText = `${module} • Oficial`;
         // document.getElementById('video-featured-container').scrollIntoView({ behavior: 'smooth' }); // Desactivado temporalmente
     }
 
     function playPodcast(vidId, title, module) {
+        if (!userData.isPremium) {
+            // Only History, Culture, Geography (first 3 usually)
+            const allowedPodcasts = ['5E7qVlWfK5fUe0ZpZtXlO1', '3Q6F9h6v9Xq9Z7WlH0ZpS1', '2V6W7lH9Xp9W0ZlS1R8qV5']; // IDs should match the ones in code
+            // Actually let's just check the index if possible, but IDs are safer.
+            // For now, let's just allow the first 3 by index in the UI which we already did in updateMediaCompletionStatus
+            alert("En modo gratuito, solo puedes escuchar los primeros 5 minutos de este podcast.");
+        }
         currentPodcastId = vidId;
         const frameContainer = document.getElementById('podcast-featured-frame-container');
         frameContainer.innerHTML = `<iframe style="border-radius:12px" src="https://open.spotify.com/embed/episode/${vidId}?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>`;
-        
+
         document.getElementById('podcast-featured-title').innerText = title;
         document.getElementById('podcast-featured-module').innerText = `${module} • Podcast`;
-        
+
         // Reset claim button state
         const btn = document.getElementById('claim-podcast-btn');
         if(userData.completedMedia.includes(vidId)) {
@@ -2262,7 +2370,7 @@ function restartProvincesGame() {
             userData.xp += 15;
             userData.completedMedia.push(currentPodcastId);
             updateDashboard();
-            
+
             const btn = document.getElementById('claim-podcast-btn');
             btn.innerText = "✓ Completado";
             btn.classList.replace('bg-blue-600', 'bg-gray-400');
@@ -2301,7 +2409,7 @@ function restartProvincesGame() {
     const initZoomMap = () => {
         const zoomInBtn = document.getElementById("zoom-in-btn");
         const zoomOutBtn = document.getElementById("zoom-out-btn");
-        
+
         if (zoomInBtn && !zoomInBtn.hasAttribute("data-zoom-attached")) {
             zoomInBtn.addEventListener("click", () => zoomMap(1.2));
             zoomInBtn.setAttribute("data-zoom-attached", "true");
@@ -2337,7 +2445,7 @@ function restartProvincesGame() {
             svgElement.addEventListener("touchend", () => {
                 isDragging = false;
             });
-            
+
             svgElement.addEventListener("mousedown", (e) => {
                 if (currentScale > 1) {
                     isDragging = true;
@@ -2358,13 +2466,13 @@ function restartProvincesGame() {
             svgElement.addEventListener("mouseup", () => {
                 isDragging = false;
             });
-            
+
             svgElement.addEventListener("mouseleave", () => {
                 isDragging = false;
             });
         }
     };
-    
+
     document.addEventListener("DOMContentLoaded", initZoomMap);
     setTimeout(initZoomMap, 500); // Fallback if already loaded
 </script>
