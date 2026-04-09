@@ -1388,8 +1388,9 @@
 
         // Monetization: Disable content for non-premium users
         const videoItems = document.querySelectorAll('#screen-videos .cursor-pointer');
+        const allowedVideoIndices = [0, 3, 4]; // Videos 1, 4 and 5 (0-indexed)
         videoItems.forEach((item, index) => {
-            if (!userData.isPremium && index >= 3) {
+            if (!userData.isPremium && !allowedVideoIndices.includes(index)) {
                 item.style.opacity = '0.5';
                 item.style.pointerEvents = 'none';
                 item.classList.add('grayscale');
@@ -2418,8 +2419,8 @@ function restartProvincesGame() {
 
     function playVideo(vidId, title, module, provider = 'youtube', skipNotice = false) {
         if (!userData.isPremium) {
-            const videoIds = ['h5dsmw9lyl', '83qlave7np', 'tg61ztp1h5'];
-            if (!videoIds.includes(vidId)) {
+            const allowedVideoIds = ['h5dsmw9lyl', 'oko1duw3j1', '6jqx7i0fcp']; // Videos 1, 4 and 5
+            if (!allowedVideoIds.includes(vidId)) {
                 showPremiumModal();
                 return;
             }
