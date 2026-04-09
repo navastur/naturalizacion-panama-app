@@ -858,40 +858,97 @@
 
     <!-- SCREEN: SETTINGS -->
     <div id="screen-settings" class="screen" style="background-color: #f8fafc;">
-        <div class="header" style="background: #64748b; border-radius: 0 0 15px 15px; padding: 20px; margin-bottom: 15px;">
+        <div class="header" style="background: #334155; border-radius: 0 0 15px 15px; padding: 20px; margin-bottom: 15px;">
             <div class="flex items-center gap-4">
                 <button onclick="goHome()" class="text-white"><i class="fa-solid fa-arrow-left"></i></button>
                 <div class="flex flex-col">
-                    <h1 class="text-xs font-black uppercase tracking-[0.2em] text-slate-200">Configuración</h1>
+                    <h1 class="text-xs font-black uppercase tracking-[0.2em] text-slate-300">Configuración</h1>
                     <h2 class="text-lg font-bold text-white leading-tight">Ajustes</h2>
                 </div>
             </div>
         </div>
-        <div class="p-6">
-            <div class="space-y-4">
-                <div class="card p-4 flex items-center justify-between">
-                    <div>
-                        <h3 class="font-bold text-gray-800">Reiniciar progreso</h3>
-                        <p class="text-xs text-gray-500">Borra todos tus puntos XP y respuestas.</p>
-                    </div>
-                    <button onclick="confirmReset()" class="bg-red-100 text-red-600 p-2 rounded-lg hover:bg-red-200">
-                        <i class="fa-solid fa-trash"></i>
+        <div class="p-4 pb-24">
+            <div class="space-y-6">
+                <!-- Share & Rate -->
+                <div class="card p-0 overflow-hidden">
+                    <button onclick="shareApp()" class="w-full p-4 flex items-center gap-4 hover:bg-gray-50 border-b border-gray-100 transition-colors">
+                        <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center">
+                            <i class="fa-solid fa-share-nodes"></i>
+                        </div>
+                        <div class="text-left flex-1">
+                            <h3 class="font-bold text-gray-800 text-sm">Comparte esta app</h3>
+                            <p class="text-[10px] text-gray-500">Comparte esta aplicación con tus amigo/as.</p>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-gray-300 text-xs"></i>
+                    </button>
+                    <button onclick="rateApp()" class="w-full p-4 flex items-center gap-4 hover:bg-gray-50 transition-colors">
+                        <div class="w-10 h-10 rounded-xl bg-yellow-100 text-yellow-600 flex items-center justify-center">
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                        <div class="text-left flex-1">
+                            <h3 class="font-bold text-gray-800 text-sm">Puntúa esta App</h3>
+                            <p class="text-[10px] text-gray-500">Puntúa esta app en la Tienda de Apps.</p>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-gray-300 text-xs"></i>
                     </button>
                 </div>
-                
-                <div class="card p-4 flex items-center justify-between opacity-50">
-                    <div>
-                        <h3 class="font-bold text-gray-800">Modo Oscuro</h3>
-                        <p class="text-xs text-gray-500">Próximamente</p>
+
+                <!-- Notifications & Study Plan -->
+                <div class="card p-0 overflow-hidden">
+                    <div class="p-4 flex items-center gap-4 border-b border-gray-100">
+                        <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center">
+                            <i class="fa-solid fa-bell"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-gray-800 text-sm">Notificaciones</h3>
+                            <p class="text-[10px] text-gray-500">Activa alertas para recordatorios de estudio.</p>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="notif-toggle" class="sr-only peer" onchange="toggleNotifications()">
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                        </label>
                     </div>
-                    <div class="w-10 h-5 bg-gray-200 rounded-full relative">
-                        <div class="absolute left-1 top-1 w-3 h-3 bg-white rounded-full"></div>
+                    
+                    <div class="p-4 flex items-center gap-4 border-b border-gray-100">
+                        <div class="w-10 h-10 rounded-xl bg-teal-100 text-teal-600 flex items-center justify-center">
+                            <i class="fa-solid fa-calendar-day"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-gray-800 text-sm">Fecha de tu examen</h3>
+                            <p class="text-[10px] text-gray-500">Organizate para llegar bien preparado.</p>
+                        </div>
+                        <input type="date" id="exam-date-picker" onchange="setExamDate(this.value)" class="text-xs font-bold text-blue-600 bg-transparent border-none focus:ring-0 p-0 text-right">
+                    </div>
+
+                    <div class="p-4 flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center">
+                            <i class="fa-solid fa-clock"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-gray-800 text-sm">Hora preferida para estudiar</h3>
+                            <p class="text-[10px] text-gray-500" id="study-time-label">Tu hora preferida es --:--</p>
+                        </div>
+                        <input type="time" id="study-time-picker" onchange="setStudyTime(this.value)" class="text-xs font-bold text-blue-600 bg-transparent border-none focus:ring-0 p-0 text-right">
                     </div>
                 </div>
 
+                <!-- Danger Zone -->
+                <div class="card p-0 overflow-hidden">
+                    <button onclick="confirmReset()" class="w-full p-4 flex items-center gap-4 hover:bg-red-50 transition-colors">
+                        <div class="w-10 h-10 rounded-xl bg-red-100 text-red-600 flex items-center justify-center">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </div>
+                        <div class="text-left flex-1">
+                            <h3 class="font-bold text-red-600 text-sm">Reiniciar progreso</h3>
+                            <p class="text-[10px] text-red-400">Borra todos tus puntos XP y respuestas.</p>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-red-200 text-xs"></i>
+                    </button>
+                </div>
+
                 <div class="mt-8 text-center">
-                    <p class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">App Naturalización Panamá</p>
-                    <p class="text-[10px] text-gray-400">Versión 1.0.1</p>
+                    <p class="text-[10px] text-gray-400 uppercase font-black tracking-widest mb-1">App Naturalización Panamá</p>
+                    <p class="text-[10px] text-gray-400 font-bold">Hecho con ❤️ en Panamá • v1.0.1</p>
                 </div>
             </div>
         </div>
@@ -1276,6 +1333,54 @@
 
     function showSettings() {
         switchScreen('screen-settings');
+        // Update values from userData
+        const examPicker = document.getElementById('exam-date-picker');
+        if(userData.examDate && examPicker) examPicker.value = userData.examDate;
+        
+        const studyPicker = document.getElementById('study-time-picker');
+        if(userData.studyTime && studyPicker) {
+            studyPicker.value = userData.studyTime;
+            document.getElementById('study-time-label').innerText = `Tu hora preferida es ${userData.studyTime}`;
+        }
+        
+        const notifToggle = document.getElementById('notif-toggle');
+        if(notifToggle) notifToggle.checked = userData.notifsEnabled || false;
+    }
+
+    function shareApp() {
+        if (navigator.share) {
+            navigator.share({
+                title: 'App Naturalización Panamá',
+                text: '¡Mira esta app para preparar el examen de naturalización de Panamá!',
+                url: window.location.href
+            }).catch(console.error);
+        } else {
+            alert('Copia este enlace para compartir: ' + window.location.href);
+        }
+    }
+
+    function rateApp() {
+        // Placeholder for store URLs
+        window.open('https://play.google.com/store', '_blank');
+    }
+
+    function toggleNotifications() {
+        userData.notifsEnabled = document.getElementById('notif-toggle').checked;
+        saveData();
+        if (userData.notifsEnabled) {
+            alert('Notificaciones activadas (cuando estén disponibles en tu navegador).');
+        }
+    }
+
+    function setExamDate(val) {
+        userData.examDate = val;
+        saveData();
+    }
+
+    function setStudyTime(val) {
+        userData.studyTime = val;
+        document.getElementById('study-time-label').innerText = `Tu hora preferida es ${val}`;
+        saveData();
     }
 
     function confirmReset() {
