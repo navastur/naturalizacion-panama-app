@@ -2430,14 +2430,29 @@ function restartProvincesGame() {
         const frameContainer = document.getElementById('video-featured-frame-container');
 
         if(provider === 'wistia') {
-            frameContainer.innerHTML = `<iframe src="https://fast.wistia.net/embed/iframe/${vidId}" title="${title}" allow="autoplay; fullscreen" allowtransparency="true" frameborder="0" scrolling="no" class="wistia_embed" name="wistia_embed" width="100%" height="100%"></iframe>`;
-        } else if(featuredPlayer) {
+            frameContainer.innerHTML = `<div class="wistia_embed wistia_async_${vidId}" style="height:100%;width:100%">&nbsp;</div>`;
+            window._wq = window._wq || [];
+            _wq.push({ id: vidId, onReady: function(video) {
+                video.bind('timechange', function(t) {
+                    if (!userData.isPremium && t >= 180) {
+                        video.pause();
+                        showPremiumModal();
+                    }
+                });
+            }});
+        } else {
             frameContainer.innerHTML = `<div class="plyr__video-embed" id="featured-player"><iframe src="https://www.youtube-nocookie.com/embed/${vidId}?origin=https://navastur.github.io&amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1&amp;controls=0" allowfullscreen allowtransparency allow="autoplay"></iframe></div>`;
-            new Plyr('#featured-player', {
+            const player = new Plyr('#featured-player', {
                 youtube: { noCookie: true, rel: 0, showinfo: 0, iv_load_policy: 3, modestbranding: 1, controls: 0 },
                 controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'captions', 'settings', 'pip', 'airplay', 'fullscreen'],
                 settings: ['quality', 'speed'],
                 download: false
+            });
+            player.on('timeupdate', (event) => {
+                if (!userData.isPremium && event.detail.plyr.currentTime >= 180) {
+                    event.detail.plyr.pause();
+                    showPremiumModal();
+                }
             });
         }
 
