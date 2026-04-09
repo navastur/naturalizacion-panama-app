@@ -858,11 +858,11 @@
 
     <!-- SCREEN: SETTINGS -->
     <div id="screen-settings" class="screen" style="background-color: #f8fafc;">
-        <div class="header" style="background: #334155; border-radius: 0 0 15px 15px; padding: 20px; margin-bottom: 15px;">
+        <div class="header">
             <div class="flex items-center gap-4">
                 <button onclick="goHome()" class="text-white"><i class="fa-solid fa-arrow-left"></i></button>
                 <div class="flex flex-col">
-                    <h1 class="text-xs font-black uppercase tracking-[0.2em] text-slate-300">Configuración</h1>
+                    <h1 class="text-xs font-black uppercase tracking-[0.2em] text-blue-100 opacity-80">Configuración</h1>
                     <h2 class="text-lg font-bold text-white leading-tight">Ajustes</h2>
                 </div>
             </div>
@@ -909,7 +909,7 @@
                         </label>
                     </div>
                     
-                    <div class="p-4 flex items-center gap-4 border-b border-gray-100">
+                    <label class="p-4 flex items-center gap-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors">
                         <div class="w-10 h-10 rounded-xl bg-teal-100 text-teal-600 flex items-center justify-center">
                             <i class="fa-solid fa-calendar-day"></i>
                         </div>
@@ -917,10 +917,10 @@
                             <h3 class="font-bold text-gray-800 text-sm">Fecha de tu examen</h3>
                             <p class="text-[10px] text-gray-500">Organizate para llegar bien preparado.</p>
                         </div>
-                        <input type="date" id="exam-date-picker" onchange="setExamDate(this.value)" class="text-xs font-bold text-blue-600 bg-transparent border-none focus:ring-0 p-0 text-right">
-                    </div>
+                        <input type="date" id="exam-date-picker" onchange="setExamDate(this.value)" onclick="this.showPicker && this.showPicker()" class="text-xs font-bold text-blue-600 bg-transparent border-none focus:ring-0 p-0 text-right w-24">
+                    </label>
 
-                    <div class="p-4 flex items-center gap-4">
+                    <label class="p-4 flex items-center gap-4 cursor-pointer hover:bg-gray-50 transition-colors">
                         <div class="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center">
                             <i class="fa-solid fa-clock"></i>
                         </div>
@@ -928,8 +928,8 @@
                             <h3 class="font-bold text-gray-800 text-sm">Hora preferida para estudiar</h3>
                             <p class="text-[10px] text-gray-500" id="study-time-label">Tu hora preferida es --:--</p>
                         </div>
-                        <input type="time" id="study-time-picker" onchange="setStudyTime(this.value)" class="text-xs font-bold text-blue-600 bg-transparent border-none focus:ring-0 p-0 text-right">
-                    </div>
+                        <input type="time" id="study-time-picker" onchange="setStudyTime(this.value)" onclick="this.showPicker && this.showPicker()" class="text-xs font-bold text-blue-600 bg-transparent border-none focus:ring-0 p-0 text-right w-16">
+                    </label>
                 </div>
 
                 <!-- Danger Zone -->
