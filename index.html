@@ -804,7 +804,8 @@
             <div class="card mb-8 p-6">
                 <div class="text-center mb-6">
                     <h2 class="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">¿Cómo de panameño eres ya?</h2>
-                    <p class="text-2xl font-black text-orange-600" id="stats-total-xp">0 XP</p>
+                    <p class="text-xs font-bold text-gray-400 uppercase tracking-tighter">Puntos conseguidos:</p>
+                    <p class="text-lg font-black text-orange-600" id="stats-total-xp">0 XP</p>
                 </div>
                 <div class="space-y-0 relative max-w-[200px] mx-auto">
                     <div class="absolute left-[11px] top-2 bottom-2 w-0.5 bg-gray-100"></div>
@@ -842,10 +843,13 @@
             </div>
 
             <h2 class="text-xs font-black text-gray-400 uppercase tracking-widest mb-4 text-center">Tu dominio de las preguntas del examen</h2>
-            <div class="grid grid-cols-3 gap-3 mb-6 text-center">
+            <div class="grid grid-cols-2 gap-3 mb-6 text-center">
+                <div class="card p-3 flex flex-col justify-center bg-green-50 border-green-100 col-span-2">
+                    <span class="text-2xl font-black text-green-600" id="stats-percentage">0%</span>
+                    <p class="text-[9px] text-green-700 font-bold uppercase tracking-wider">del temario dominado</p>
+                </div>
                 <div class="card p-2"><span class="text-green-600 font-black text-xl" id="stats-green">0</span><p class="text-[7px] text-gray-400 uppercase">Dominadas</p></div>
                 <div class="card p-2"><span class="text-yellow-500 font-black text-xl" id="stats-yellow">0</span><p class="text-[7px] text-gray-400 uppercase">En Aprendizaje</p></div>
-                <div class="card p-2"><span class="text-red-500 font-black text-xl" id="stats-red">0</span><p class="text-[7px] text-gray-400 uppercase">Por Iniciar</p></div>
             </div>
         </div>
     </div>
@@ -1273,6 +1277,13 @@
         if(statsYellow) statsYellow.innerText = stats.yellow;
         const statsRed = document.getElementById('stats-red');
         if(statsRed) statsRed.innerText = stats.red;
+
+        const statsPercentage = document.getElementById('stats-percentage');
+        if(statsPercentage) {
+            const percentage = fullData.length > 0 ? Math.round((stats.green / fullData.length) * 100) : 0;
+            statsPercentage.innerText = `${percentage}%`;
+        }
+
         const statsTotalXp = document.getElementById('stats-total-xp');
         if(statsTotalXp) statsTotalXp.innerText = `${userData.xp} XP`;
         const statsStreak = document.getElementById('stats-streak');
