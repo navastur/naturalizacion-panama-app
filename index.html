@@ -186,6 +186,23 @@
         </div>
     </div>
 
+    <!-- MODAL: FREE MODE NOTICE -->
+    <div id="free-notice-modal" class="modal-overlay" style="z-index: 1100;">
+        <div class="modal-content !p-8 text-center border-t-4 border-t-orange-400">
+            <div class="w-16 h-16 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
+                <i class="fa-solid fa-lock-open fa-2xl"></i>
+            </div>
+            <h2 class="text-xl font-black text-gray-800 mb-2 leading-tight" id="free-notice-title">Versión Gratuita</h2>
+            <p class="text-gray-600 text-[12px] leading-relaxed mb-8 bg-orange-50 p-4 rounded-xl border border-orange-100 text-left" id="free-notice-text">
+                Estás usando la versión gratuita de la app. Verás una muestra limitada de preguntas predeterminadas.
+            </p>
+            <div class="space-y-3">
+                <button onclick="showPremiumModal()" class="w-full bg-blue-600 text-white font-bold py-4 rounded-xl uppercase text-xs tracking-widest shadow-lg shadow-blue-200">Suscribirse ahora</button>
+                <button onclick="closeFreeNotice()" class="w-full bg-gray-100 text-gray-500 font-bold py-4 rounded-xl uppercase text-xs tracking-widest">No todavía</button>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL FOR XP MILESTONE -->
     <div id="milestone-modal" class="modal-overlay" style="z-index: 300;">
         <div class="modal-content !p-6 text-center" style="background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border: 2px solid #bfdbfe;">
@@ -1832,7 +1849,29 @@
     };
 
     function startPractice() {
-        document.getElementById('exam-start-modal').style.display = 'flex';
+        if (!userData.isPremium) {
+            showFreeNotice('Examen', 10);
+        } else {
+            document.getElementById('exam-start-modal').style.display = 'flex';
+        }
+    }
+
+    function showFreeNotice(type, count) {
+        document.getElementById('free-notice-title').innerText = `Modo Gratuito: ${type}`;
+        document.getElementById('free-notice-text').innerText = `Estás usando la versión gratuita. Verás una muestra de ${count} preguntas predeterminadas. Suscríbete para desbloquear el banco completo de +100 preguntas y la selección aleatoria.`;
+        document.getElementById('free-notice-modal').style.display = 'flex';
+        // Store type to know what to start if they click "No todavía"
+        document.getElementById('free-notice-modal').dataset.type = type;
+    }
+
+    function closeFreeNotice() {
+        const type = document.getElementById('free-notice-modal').dataset.type;
+        document.getElementById('free-notice-modal').style.display = 'none';
+        if (type === 'Examen') {
+            document.getElementById('exam-start-modal').style.display = 'flex';
+        } else if (type === 'Tarjetas') {
+            startFlashcards(true); // true means skip notice
+        }
     }
 
     function closeExamStart() {
@@ -1843,14 +1882,22 @@
         closeExamStart();
         switchScreen('screen-practice');
 
-        // Pick 30 random questions
-        const shuffled = [...fullData].sort(() => 0.5 - Math.random());
+        let selectedQuestions = [];
+        if (!userData.isPremium) {
+            // Predetermined set of 10 questions for Free mode
+            selectedQuestions = fullData.slice(0, 10);
+        } else {
+            // Pick 30 random questions
+            const shuffled = [...fullData].sort(() => 0.5 - Math.random());
+            selectedQuestions = shuffled.slice(0, examState.totalQuestions);
+        }
+
         examState = {
             active: true,
-            questions: shuffled.slice(0, examState.totalQuestions),
+            questions: selectedQuestions,
             currentIndex: 0,
             correctCount: 0,
-            totalQuestions: 30,
+            totalQuestions: selectedQuestions.length,
             pendingMilestone: false,
             pendingLevel: 0,
             pendingLevelUp: false,
@@ -1994,20 +2041,36 @@
         document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
     }
 
-    function startFlashcards() {
-        if (!userData.isPremium) flashcardSessionCount = 0;
-        const weakOnes = fullData.filter(q => (userData.mastery[q.id] || 0) < 3);
-        if (weakOnes.length === 0) { alert("¡Felicidades! Has dominado todo el temario."); return; }
-        switchScreen('screen-flashcards');
-        renderFlashcard(weakOnes);
+    function startFlashcards(skipNotice = false) {
+        if (!userData.isPremium) {
+            if (!skipNotice) {
+                showFreeNotice('Tarjetas', 20);
+                return;
+            }
+            flashcardSessionCount = 0;
+            // Predetermined set for Free mode: first 20
+            const freeSet = fullData.slice(0, 20);
+            switchScreen('screen-flashcards');
+            renderFlashcard(freeSet);
+        } else {
+            const weakOnes = fullData.filter(q => (userData.mastery[q.id] || 0) < 3);
+            if (weakOnes.length === 0) { alert("¡Felicidades! Has dominado todo el temario."); return; }
+            switchScreen('screen-flashcards');
+            renderFlashcard(weakOnes);
+        }
     }
 
     function renderFlashcard(set) {
-        // En tarjetas de memoria (refuerzo), damos prioridad a las que tienen state 0
-        let candidates = set.filter(q => (userData.mastery[q.id] || 0) === 0);
-        if (candidates.length === 0) candidates = set; // Si no hay de 0, usamos las de 1 y 2
-
-        currentQuestion = candidates[Math.floor(Math.random() * candidates.length)];
+        if (!userData.isPremium) {
+            // Sequential for Free mode based on session count
+            currentQuestion = set[flashcardSessionCount % set.length];
+        } else {
+            // En tarjetas de memoria (refuerzo), damos prioridad a las que tienen state 0
+            let candidates = set.filter(q => (userData.mastery[q.id] || 0) === 0);
+            if (candidates.length === 0) candidates = set; // Si no hay de 0, usamos las de 1 y 2
+            currentQuestion = candidates[Math.floor(Math.random() * candidates.length)];
+        }
+        
         document.getElementById('flashcard-text').innerText = currentQuestion.q;
 
         const state = userData.mastery[currentQuestion.id] || 0;
