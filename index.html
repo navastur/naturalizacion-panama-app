@@ -1079,6 +1079,23 @@
                     </label>
                 </div>
 
+                <!-- Monetization Test -->
+                <div class="card p-0 overflow-hidden">
+                    <div class="p-4 flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-xl bg-gray-100 text-gray-600 flex items-center justify-center">
+                            <i class="fa-solid fa-unlock-keyhole"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-gray-800 text-sm">Ver app en modo free</h3>
+                            <p class="text-[10px] text-gray-500">Activa esta opción para simular la versión gratuita.</p>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="free-mode-toggle" class="sr-only peer" onchange="toggleFreeMode()">
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                        </label>
+                    </div>
+                </div>
+
                 <!-- Danger Zone -->
                 <div class="card p-0 overflow-hidden">
                     <button onclick="confirmReset()" class="w-full p-4 flex items-center gap-4 hover:bg-red-50 transition-colors">
@@ -1249,8 +1266,9 @@
     ];
 
 
-    let userData = JSON.parse(localStorage.getItem('panama_user_data')) || { xp: 0, streak: 1, mastery: {}, completedMedia: [], lastXPMilestone: 0, lastLoginDate: null };
+    let userData = JSON.parse(localStorage.getItem('panama_user_data')) || { xp: 0, streak: 1, mastery: {}, completedMedia: [], lastXPMilestone: 0, lastLoginDate: null, isPremium: true };
     if (!userData.completedMedia) userData.completedMedia = [];
+    if (userData.isPremium === undefined) userData.isPremium = true;
     if (userData.lastXPMilestone === undefined) userData.lastXPMilestone = userData.xp;
     if (!userData.lastLoginDate) userData.lastLoginDate = new Date().toISOString().slice(0, 10); // Inicializar con la fecha de hoy si es nuevo usuario
 
@@ -1534,6 +1552,16 @@
         
         const notifToggle = document.getElementById('notif-toggle');
         if(notifToggle) notifToggle.checked = userData.notifsEnabled || false;
+
+        const freeToggle = document.getElementById('free-mode-toggle');
+        if(freeToggle) freeToggle.checked = !userData.isPremium;
+    }
+
+    function toggleFreeMode() {
+        userData.isPremium = !document.getElementById('free-mode-toggle').checked;
+        saveData();
+        console.log("Premium status:", userData.isPremium);
+        updateDashboard(); // Refresh UI if necessary
     }
 
     function shareApp() {
