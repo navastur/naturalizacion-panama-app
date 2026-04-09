@@ -1269,7 +1269,15 @@
         if (userData.xp - userData.lastXPMilestone >= 25) {
             console.log("DEBUG: Condición de hito de XP alcanzada. Llamando showMilestone.");
             const hasLeveledUp = level > prevLevel;
-            showMilestone(level, hasLeveledUp);
+            
+            if (examState.active) {
+                examState.pendingMilestone = true;
+                examState.pendingLevel = level;
+                examState.pendingLevelUp = hasLeveledUp;
+            } else {
+                showMilestone(level, hasLeveledUp);
+            }
+            
             userData.lastXPMilestone = userData.xp;
             localStorage.setItem('panama_user_data', JSON.stringify(userData));
         }
@@ -1399,7 +1407,10 @@
         }, 5000);
     }
 
-    function closeLevelUp() { document.getElementById('levelup-modal').style.display = 'none'; }
+    function closeLevelUp() { 
+        document.getElementById('levelup-modal').style.display = 'none'; 
+        checkQueuedModals();
+    }
 
     function showSettings() {
         switchScreen('screen-settings');
@@ -1497,7 +1508,10 @@
     }
     function goHome() { switchScreen('screen-home'); updateDashboard(); }
     function closeExplanation() { document.getElementById('explanation-modal').style.display = 'none'; }
-    function closeMastery() { document.getElementById('mastery-modal').style.display = 'none'; }
+    function closeMastery() { 
+        document.getElementById('mastery-modal').style.display = 'none'; 
+        checkQueuedModals();
+    }
     
     function openEbook() { switchScreen('screen-ebook'); renderEbookPage(); }
     function renderEbookPage() {
@@ -1590,7 +1604,12 @@
         questions: [],
         currentIndex: 0,
         correctCount: 0,
-        totalQuestions: 30
+        totalQuestions: 30,
+        pendingMastery: false,
+        pendingMilestone: false,
+        pendingLevel: 0,
+        pendingLevelUp: false,
+        awaitingQueue: false
     };
 
     function startPractice() { 
@@ -1612,7 +1631,12 @@
             questions: shuffled.slice(0, examState.totalQuestions),
             currentIndex: 0,
             correctCount: 0,
-            totalQuestions: 30
+            totalQuestions: 30,
+            pendingMastery: false,
+            pendingMilestone: false,
+            pendingLevel: 0,
+            pendingLevelUp: false,
+            awaitingQueue: false
         };
         
         updateExamProgress();
@@ -1685,16 +1709,32 @@
             document.getElementById('exam-fail-modal').style.display = 'flex';
         }
         examState.active = false;
+        examState.awaitingQueue = true;
     }
 
     function closeExamSuccess() {
         document.getElementById('exam-success-modal').style.display = 'none';
-        goHome();
+        checkQueuedModals();
     }
 
     function closeExamFail() {
         document.getElementById('exam-fail-modal').style.display = 'none';
-        goHome();
+        checkQueuedModals();
+    }
+
+    function checkQueuedModals() {
+        if (examState.pendingMastery) {
+            examState.pendingMastery = false;
+            document.getElementById('mastery-modal').style.display = 'flex';
+        } else if (examState.pendingMilestone) {
+            const level = examState.pendingLevel;
+            const hasLeveledUp = examState.pendingLevelUp;
+            examState.pendingMilestone = false;
+            showMilestone(level, hasLeveledUp);
+        } else if (examState.awaitingQueue) {
+            examState.awaitingQueue = false;
+            goHome();
+        }
     }
 
     function handleAnswer(idx, btn) {
@@ -1712,7 +1752,11 @@
             userData.xp += 2;
             if(state === 3) { 
                 userData.xp += 10; 
-                document.getElementById('mastery-modal').style.display = 'flex';
+                if (examState.active) {
+                    examState.pendingMastery = true;
+                } else {
+                    document.getElementById('mastery-modal').style.display = 'flex';
+                }
             }
             document.getElementById('next-btn').classList.remove('hidden');
         } else {
@@ -1771,7 +1815,11 @@
                     userData.xp += 2; 
                     if(state === 3) {
                         userData.xp += 10;
-                        document.getElementById('mastery-modal').style.display = 'flex';
+                        if (examState.active) {
+                            examState.pendingMastery = true;
+                        } else {
+                            document.getElementById('mastery-modal').style.display = 'flex';
+                        }
                     }
                     document.getElementById('flashcard-next-btn').classList.remove('hidden');
                 } else {
