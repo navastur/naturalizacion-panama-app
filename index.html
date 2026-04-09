@@ -1605,7 +1605,6 @@
         currentIndex: 0,
         correctCount: 0,
         totalQuestions: 30,
-        pendingMastery: false,
         pendingMilestone: false,
         pendingLevel: 0,
         pendingLevelUp: false,
@@ -1632,7 +1631,6 @@
             currentIndex: 0,
             correctCount: 0,
             totalQuestions: 30,
-            pendingMastery: false,
             pendingMilestone: false,
             pendingLevel: 0,
             pendingLevelUp: false,
@@ -1723,10 +1721,7 @@
     }
 
     function checkQueuedModals() {
-        if (examState.pendingMastery) {
-            examState.pendingMastery = false;
-            document.getElementById('mastery-modal').style.display = 'flex';
-        } else if (examState.pendingMilestone) {
+        if (examState.pendingMilestone) {
             const level = examState.pendingLevel;
             const hasLeveledUp = examState.pendingLevelUp;
             examState.pendingMilestone = false;
@@ -1752,9 +1747,7 @@
             userData.xp += 2;
             if(state === 3) { 
                 userData.xp += 10; 
-                if (examState.active) {
-                    examState.pendingMastery = true;
-                } else {
+                if (!examState.active) {
                     document.getElementById('mastery-modal').style.display = 'flex';
                 }
             }
@@ -1815,9 +1808,7 @@
                     userData.xp += 2; 
                     if(state === 3) {
                         userData.xp += 10;
-                        if (examState.active) {
-                            examState.pendingMastery = true;
-                        } else {
+                        if (!examState.active) {
                             document.getElementById('mastery-modal').style.display = 'flex';
                         }
                     }
