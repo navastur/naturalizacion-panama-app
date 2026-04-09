@@ -116,6 +116,59 @@
         </div>
     </div>
 
+    <!-- MODAL: EXAM START -->
+    <div id="exam-start-modal" class="modal-overlay">
+        <div class="modal-content !p-8 text-center border-t-4 border-t-blue-500">
+            <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
+                <i class="fa-solid fa-file-signature fa-2xl"></i>
+            </div>
+            <h2 class="text-xl font-black text-gray-800 mb-2 leading-tight">Simulacro de<br>Examen</h2>
+            <p class="text-gray-600 text-[12px] leading-relaxed mb-8 bg-blue-50 p-4 rounded-xl border border-blue-100 text-left">
+                Este simulacro consta de <span class="font-bold text-blue-700">30 preguntas</span> aleatorias de todo el temario. <br><br>Para aprobar, necesitas acertar al menos el <span class="font-bold text-blue-700">71% (22 preguntas)</span>. ¿Estás listo?
+            </p>
+            <div class="space-y-3">
+                <button onclick="initExam()" class="w-full bg-blue-600 text-white font-bold py-4 rounded-xl uppercase text-xs tracking-widest shadow-lg shadow-blue-200">Empezar ahora</button>
+                <button onclick="closeExamStart()" class="w-full bg-gray-100 text-gray-500 font-bold py-4 rounded-xl uppercase text-xs tracking-widest">Ahora no</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: EXAM RESULT (SUCCESS) -->
+    <div id="exam-success-modal" class="modal-overlay">
+        <div class="modal-content !p-8 text-center border-t-4 border-t-green-500">
+            <div class="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner animate-bounce">
+                <i class="fa-solid fa-trophy fa-3xl"></i>
+            </div>
+            <h2 class="text-2xl font-black text-gray-800 mb-2 leading-tight">¡ENHORABUENA!</h2>
+            <div class="inline-block bg-green-50 px-4 py-2 rounded-full border border-green-200 mb-6">
+                <p class="text-sm font-black text-green-600 uppercase tracking-widest" id="exam-success-score">30/30 ACERTADAS</p>
+            </div>
+            <p class="text-gray-600 text-[12px] leading-relaxed mb-8 bg-gray-50 p-4 rounded-xl border border-gray-100 text-center font-medium">
+                ¡Has superado el simulacro de examen con éxito! Estás cada vez más cerca de conseguir tu ciudadanía panameña. ¡Sigue así, berraco!
+            </p>
+            <button onclick="closeExamSuccess()" class="w-full bg-green-500 text-white font-bold py-4 rounded-xl uppercase text-xs tracking-widest shadow-lg shadow-green-200">¡Excelente!</button>
+        </div>
+    </div>
+
+    <!-- MODAL: EXAM RESULT (FAILURE) -->
+    <div id="exam-fail-modal" class="modal-overlay">
+        <div class="modal-content !p-8 text-center border-t-4 border-t-red-500">
+            <div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
+                <i class="fa-solid fa-book-open-reader fa-2xl"></i>
+            </div>
+            <h2 class="text-xl font-black text-gray-800 mb-2 leading-tight">Sigue Estudiando</h2>
+            <div class="inline-block bg-red-50 px-4 py-2 rounded-full border border-red-200 mb-6">
+                <p class="text-sm font-black text-red-600 uppercase tracking-widest" id="exam-fail-score">15/30 ACERTADAS</p>
+            </div>
+            <p class="text-gray-600 text-[12px] leading-relaxed mb-8 bg-gray-50 p-4 rounded-xl border border-gray-100 text-left">
+                No has alcanzado el 71% necesario para aprobar, pero ¡no te rindas! Te animamos a repasar las <span class="font-bold">lecciones en vídeo</span> y escuchar los <span class="font-bold">podcasts</span> para reforzar tus conocimientos. ¡Tú puedes!
+            </p>
+            <div class="space-y-3">
+                <button onclick="closeExamFail()" class="w-full bg-red-500 text-white font-bold py-4 rounded-xl uppercase text-xs tracking-widest shadow-lg shadow-red-200">Reintentar luego</button>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL FOR XP MILESTONE -->
     <div id="milestone-modal" class="modal-overlay" style="z-index: 300;">
         <div class="modal-content !p-6 text-center" style="background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border: 2px solid #bfdbfe;">
@@ -390,7 +443,15 @@
             </div>
         </div>
 
-        <div class="p-6">
+        <!-- Progress Bar for Exam -->
+        <div class="px-6 mt-4">
+            <div class="w-full bg-gray-200 h-2 rounded-full overflow-hidden">
+                <div id="exam-progress-bar" class="bg-red-500 h-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+            <p id="exam-progress-text" class="text-[9px] font-black text-gray-400 uppercase tracking-widest mt-1 text-right">Pregunta 0 de 30</p>
+        </div>
+
+        <div class="p-6 pt-2">
             <h2 id="question-text" class="text-xl font-bold text-gray-800 leading-tight mb-8">Cargando pregunta...</h2>
             <div id="options-container" class="space-y-3"></div>
             <button id="next-btn" onclick="nextQuestion()" class="w-full bg-green-500 text-white font-bold py-4 rounded-xl mt-8 shadow-lg hidden uppercase text-xs tracking-widest">Siguiente Pregunta</button>
@@ -1524,11 +1585,57 @@
     }
 
     let currentQuestion = null;
-    function startPractice() { switchScreen('screen-practice'); nextQuestion(); }
-    function nextQuestion() {
-        const available = fullData.filter(q => (userData.mastery[q.id] || 0) < 3);
-        if (available.length === 0) { alert("¡Felicidades! Has dominado todas las preguntas."); goHome(); return; }
-        currentQuestion = available[Math.floor(Math.random() * available.length)];
+    let examState = {
+        active: false,
+        questions: [],
+        currentIndex: 0,
+        correctCount: 0,
+        totalQuestions: 30
+    };
+
+    function startPractice() { 
+        document.getElementById('exam-start-modal').style.display = 'flex';
+    }
+
+    function closeExamStart() { 
+        document.getElementById('exam-start-modal').style.display = 'none'; 
+    }
+
+    function initExam() {
+        closeExamStart();
+        switchScreen('screen-practice');
+        
+        // Pick 30 random questions
+        const shuffled = [...fullData].sort(() => 0.5 - Math.random());
+        examState = {
+            active: true,
+            questions: shuffled.slice(0, examState.totalQuestions),
+            currentIndex: 0,
+            correctCount: 0,
+            totalQuestions: 30
+        };
+        
+        updateExamProgress();
+        renderQuestion();
+    }
+
+    function updateExamProgress() {
+        const bar = document.getElementById('exam-progress-bar');
+        const text = document.getElementById('exam-progress-text');
+        const progress = (examState.currentIndex / examState.totalQuestions) * 100;
+        if(bar) bar.style.width = `${progress}%`;
+        if(text) text.innerText = `Pregunta ${examState.currentIndex + 1} de ${examState.totalQuestions}`;
+    }
+
+    function renderQuestion() {
+        if (!examState.active) {
+            const available = fullData.filter(q => (userData.mastery[q.id] || 0) < 3);
+            if (available.length === 0) { alert("¡Felicidades! Has dominado todas las preguntas."); goHome(); return; }
+            currentQuestion = available[Math.floor(Math.random() * available.length)];
+        } else {
+            currentQuestion = examState.questions[examState.currentIndex];
+        }
+
         document.getElementById('question-text').innerText = currentQuestion.q;
         document.getElementById('practice-category').innerText = currentQuestion.chap;
         
@@ -1550,11 +1657,55 @@
         document.getElementById('next-btn').classList.add('hidden');
     }
 
+    function nextQuestion() {
+        if (examState.active) {
+            examState.currentIndex++;
+            if (examState.currentIndex >= examState.totalQuestions) {
+                finishExam();
+                return;
+            }
+            updateExamProgress();
+        }
+        renderQuestion();
+    }
+
+    function finishExam() {
+        const passScore = Math.ceil(examState.totalQuestions * 0.71); // 22 questions
+        const score = examState.correctCount;
+        
+        if (score >= passScore) {
+            document.getElementById('exam-success-score').innerText = `${score}/${examState.totalQuestions} ACERTADAS`;
+            document.getElementById('exam-success-modal').style.display = 'flex';
+            
+            // Play level up sound as requested
+            const sound = document.getElementById('levelup-sound');
+            if (sound) sound.play().catch(() => {});
+        } else {
+            document.getElementById('exam-fail-score').innerText = `${score}/${examState.totalQuestions} ACERTADAS`;
+            document.getElementById('exam-fail-modal').style.display = 'flex';
+        }
+        examState.active = false;
+    }
+
+    function closeExamSuccess() {
+        document.getElementById('exam-success-modal').style.display = 'none';
+        goHome();
+    }
+
+    function closeExamFail() {
+        document.getElementById('exam-fail-modal').style.display = 'none';
+        goHome();
+    }
+
     function handleAnswer(idx, btn) {
         const isCorrect = idx === currentQuestion.ans;
         btn.classList.add(isCorrect ? 'correct' : 'wrong');
         document.querySelectorAll('.option-btn')[currentQuestion.ans].classList.add('correct');
         
+        if (examState.active && isCorrect) {
+            examState.correctCount++;
+        }
+
         let state = userData.mastery[currentQuestion.id] || 0;
         if(isCorrect) {
             state++;
