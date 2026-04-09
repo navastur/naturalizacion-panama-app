@@ -1677,10 +1677,16 @@
 
     function closePremiumModal() {
         document.getElementById('premium-modal').style.display = 'none';
-        // If the user reaches a limit in specific screens, send them home
-        const currentActiveScreen = document.querySelector('.screen.active');
-        if (currentActiveScreen && (currentActiveScreen.id === 'screen-practice' || currentActiveScreen.id === 'screen-flashcards' || currentActiveScreen.id === 'screen-provincias')) {
-            goHome();
+        
+        // If the user is in a limited section and is still FREE, send them home
+        if (!userData.isPremium) {
+            const screensToExit = ['screen-practice', 'screen-flashcards', 'screen-provincias'];
+            screensToExit.forEach(screenId => {
+                const el = document.getElementById(screenId);
+                if (el && el.classList.contains('active')) {
+                    goHome();
+                }
+            });
         }
     }
 
