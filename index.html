@@ -118,17 +118,56 @@
 
     <!-- MODAL: PREMIUM UPGRADE -->
     <div id="premium-modal" class="modal-overlay" style="z-index: 1000;">
-        <div class="modal-content !p-8 text-center relative overflow-hidden border-t-4 border-t-blue-600">
-            <div class="w-20 h-20 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner animate-pulse">
-                <i class="fa-solid fa-crown fa-3xl"></i>
+        <div class="modal-content !p-6 !max-w-[400px] relative overflow-hidden border-t-4 border-t-blue-600 bg-slate-50">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
+                    <i class="fa-solid fa-crown fa-2xl"></i>
+                </div>
+                <h2 class="text-xl font-black text-gray-800 leading-tight">Aprueba el examen de ciudadanía Panameña al primer intento</h2>
             </div>
-            <h2 class="text-2xl font-black text-gray-800 mb-2 leading-tight">Hazte Premium</h2>
-            <p class="text-gray-600 text-[13px] leading-relaxed mb-8">
-                Has alcanzado el límite de la versión gratuita. ¡Suscríbete para desbloquear todo el temario, vídeos completos, simulacros ilimitados y mucho más!
-            </p>
+            
+            <div class="space-y-3 mb-8">
+                <!-- Option 1: Monthly -->
+                <label class="card !p-4 flex items-center gap-4 cursor-pointer hover:border-blue-400 transition-colors border-2 border-transparent bg-white has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50">
+                    <input type="radio" name="premium-plan" value="monthly" class="w-5 h-5 text-blue-600 focus:ring-blue-500" checked>
+                    <div class="flex-1 text-left">
+                        <div class="flex justify-between items-center mb-0.5">
+                            <h3 class="font-black text-gray-800 text-sm">Suscripción mensual</h3>
+                            <span class="font-black text-blue-600">$34.95</span>
+                        </div>
+                        <p class="text-[10px] text-gray-500 font-bold uppercase tracking-tight">Acceso ilimitado por un mes</p>
+                    </div>
+                </label>
+
+                <!-- Option 2: 3 Months -->
+                <label class="card !p-4 flex items-center gap-4 cursor-pointer hover:border-blue-400 transition-colors border-2 border-transparent bg-white has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-green-500 text-white text-[8px] font-black px-2 py-1 rounded-bl-lg uppercase tracking-widest shadow-sm">15% OFF</div>
+                    <input type="radio" name="premium-plan" value="3months" class="w-5 h-5 text-blue-600 focus:ring-blue-500">
+                    <div class="flex-1 text-left">
+                        <div class="flex justify-between items-center mb-0.5">
+                            <h3 class="font-black text-gray-800 text-sm">3 meses</h3>
+                            <span class="font-black text-blue-600">$89.85</span>
+                        </div>
+                        <p class="text-[10px] text-green-600 font-black uppercase tracking-tight">Pruebalo gratis durante 3 días. Oferta por tiempo limitado</p>
+                    </div>
+                </label>
+
+                <!-- Option 3: Lifetime -->
+                <label class="card !p-4 flex items-center gap-4 cursor-pointer hover:border-blue-400 transition-colors border-2 border-transparent bg-white has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50">
+                    <input type="radio" name="premium-plan" value="lifetime" class="w-5 h-5 text-blue-600 focus:ring-blue-500">
+                    <div class="flex-1 text-left">
+                        <div class="flex justify-between items-center mb-0.5">
+                            <h3 class="font-black text-gray-800 text-sm">Tiempo Ilimitado</h3>
+                            <span class="font-black text-blue-600">$149</span>
+                        </div>
+                        <p class="text-[10px] text-orange-600 font-black uppercase tracking-tight">La mejor oferta. Acceso ilimitado de por vida</p>
+                    </div>
+                </label>
+            </div>
+
             <div class="space-y-3">
-                <button onclick="subscribePremium()" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-black py-4 rounded-xl uppercase text-xs tracking-widest shadow-lg shadow-blue-200 hover:scale-105 transition-transform">Desbloquear todo</button>
-                <button onclick="closePremiumModal()" class="w-full bg-gray-100 text-gray-500 font-bold py-4 rounded-xl uppercase text-xs tracking-widest">Ahora no</button>
+                <button onclick="subscribePremium()" class="w-full bg-blue-600 text-white font-black py-4 rounded-xl uppercase text-xs tracking-widest shadow-lg shadow-blue-200 hover:bg-blue-700 transition-all active:scale-95">Continuar</button>
+                <button onclick="closePremiumModal()" class="w-full bg-transparent text-gray-400 font-bold py-2 rounded-xl uppercase text-[10px] tracking-widest hover:text-gray-600 transition-colors">Ahora no</button>
             </div>
         </div>
     </div>
