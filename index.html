@@ -1402,8 +1402,9 @@
         });
 
         const podcastItems = document.querySelectorAll('#screen-podcasts .cursor-pointer');
+        const allowedPodcastIndices = [0, 3, 4]; // Podcasts 1, 4 and 5 (0-indexed)
         podcastItems.forEach((item, index) => {
-            if (!userData.isPremium && index >= 3) {
+            if (!userData.isPremium && !allowedPodcastIndices.includes(index)) {
                 item.style.opacity = '0.5';
                 item.style.pointerEvents = 'none';
                 item.classList.add('grayscale');
@@ -2447,11 +2448,12 @@ function restartProvincesGame() {
 
     function playPodcast(vidId, title, module, skipNotice = false) {
         if (!userData.isPremium) {
-            // Only allow first 3 podcasts by index check
+            // Only allow podcasts 1, 4, 5 by index check
             const podcastItems = document.querySelectorAll('#screen-podcasts .cursor-pointer');
+            const allowedIndices = [0, 3, 4];
             let isAllowed = false;
             podcastItems.forEach((item, index) => {
-                if (index < 3 && item.getAttribute('onclick')?.includes(vidId)) isAllowed = true;
+                if (allowedIndices.includes(index) && item.getAttribute('onclick')?.includes(vidId)) isAllowed = true;
             });
             
             if (!isAllowed) {
