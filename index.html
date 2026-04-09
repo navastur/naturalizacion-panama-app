@@ -1694,7 +1694,7 @@
 
     function closePremiumModal() {
         document.getElementById('premium-modal').style.display = 'none';
-        
+
         // If the user is in a limited section and is still FREE, send them home
         if (!userData.isPremium) {
             const screensToExit = ['screen-practice', 'screen-flashcards', 'screen-provincias'];
@@ -1866,11 +1866,17 @@
 
     function closeFreeNotice() {
         const type = document.getElementById('free-notice-modal').dataset.type;
+        const payload = JSON.parse(document.getElementById('free-notice-modal').dataset.payload || '{}');
         document.getElementById('free-notice-modal').style.display = 'none';
+
         if (type === 'Examen') {
             document.getElementById('exam-start-modal').style.display = 'flex';
         } else if (type === 'Tarjetas') {
             startFlashcards(true); // true means skip notice
+        } else if (type === 'Vídeo') {
+            playVideo(payload.vidId, payload.title, payload.module, payload.provider, true);
+        } else if (type === 'Podcast') {
+            playPodcast(payload.vidId, payload.title, payload.module, true);
         }
     }
 
@@ -2070,7 +2076,7 @@
             if (candidates.length === 0) candidates = set; // Si no hay de 0, usamos las de 1 y 2
             currentQuestion = candidates[Math.floor(Math.random() * candidates.length)];
         }
-        
+
         document.getElementById('flashcard-text').innerText = currentQuestion.q;
 
         const state = userData.mastery[currentQuestion.id] || 0;
@@ -2226,7 +2232,7 @@
             return;
         }
         provincesSessionCount++;
-        
+
         const draggable = document.getElementById(`draggable-${province.id}`);
         if (!draggable) return;
 
@@ -2379,7 +2385,7 @@ function restartProvincesGame() {
         }
     });
 
-    function playVideo(vidId, title, module, provider = 'youtube') {
+    function playVideo(vidId, title, module, provider = 'youtube', skipNotice = false) {
         if (!userData.isPremium) {
             // Check if it's one of the first 3 videos
             const videoIds = ['h5dsmw9lyl', '83qlave7np', 'tg61ztp1h5'];
@@ -2387,9 +2393,13 @@ function restartProvincesGame() {
                 showPremiumModal();
                 return;
             }
-            alert("En modo gratuito, solo puedes ver los primeros 3 minutos de este vídeo.");
+            if (!skipNotice) {
+                document.getElementById('free-notice-modal').dataset.payload = JSON.stringify({vidId, title, module, provider});
+                showFreeNotice('Vídeo', '3 minutos');
+                return;
+            }
         }
-
+        
         const frameContainer = document.getElementById('video-featured-frame-container');
 
         if(provider === 'wistia') {
@@ -2409,13 +2419,25 @@ function restartProvincesGame() {
         // document.getElementById('video-featured-container').scrollIntoView({ behavior: 'smooth' }); // Desactivado temporalmente
     }
 
-    function playPodcast(vidId, title, module) {
+    function playPodcast(vidId, title, module, skipNotice = false) {
         if (!userData.isPremium) {
-            // Only History, Culture, Geography (first 3 usually)
-            const allowedPodcasts = ['5E7qVlWfK5fUe0ZpZtXlO1', '3Q6F9h6v9Xq9Z7WlH0ZpS1', '2V6W7lH9Xp9W0ZlS1R8qV5']; // IDs should match the ones in code
-            // Actually let's just check the index if possible, but IDs are safer.
-            // For now, let's just allow the first 3 by index in the UI which we already did in updateMediaCompletionStatus
-            alert("En modo gratuito, solo puedes escuchar los primeros 5 minutos de este podcast.");
+            // Only allow first 3 podcasts by index check
+            const podcastItems = document.querySelectorAll('#screen-podcasts .cursor-pointer');
+            let isAllowed = false;
+            podcastItems.forEach((item, index) => {
+                if (index < 3 && item.getAttribute('onclick')?.includes(vidId)) isAllowed = true;
+            });
+            
+            if (!isAllowed) {
+                showPremiumModal();
+                return;
+            }
+
+            if (!skipNotice) {
+                document.getElementById('free-notice-modal').dataset.payload = JSON.stringify({vidId, title, module});
+                showFreeNotice('Podcast', '5 minutos');
+                return;
+            }
         }
         currentPodcastId = vidId;
         const frameContainer = document.getElementById('podcast-featured-frame-container');
