@@ -1858,7 +1858,15 @@
 
     function showFreeNotice(type, count) {
         document.getElementById('free-notice-title').innerText = `Modo Gratuito: ${type}`;
-        document.getElementById('free-notice-text').innerText = `Estás usando la versión gratuita. Verás una muestra de ${count} preguntas predeterminadas. Suscríbete para desbloquear el banco completo de +100 preguntas y la selección aleatoria.`;
+        
+        let text = "";
+        if (type === 'Podcast') {
+            text = `Estás usando la versión Free de esta app. Esta versión está limitada y sólo podrás escuchar los primeros 5 minutos de estos podcasts. Suscríbete para desbloquear todo el contenido y escuchar las lecciones en audio de todos los temas.`;
+        } else {
+            text = `Estás usando la versión gratuita. Verás una muestra de ${count} preguntas predeterminadas. Suscríbete para desbloquear el banco completo de +100 preguntas y la selección aleatoria.`;
+        }
+        
+        document.getElementById('free-notice-text').innerText = text;
         document.getElementById('free-notice-modal').style.display = 'flex';
         // Store type to know what to start if they click "No todavía"
         document.getElementById('free-notice-modal').dataset.type = type;
