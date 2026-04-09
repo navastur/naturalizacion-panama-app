@@ -99,6 +99,23 @@
         </div>
     </div>
 
+    <!-- MODAL FOR RESET PROGRESS -->
+    <div id="reset-modal" class="modal-overlay">
+        <div class="modal-content !p-8 text-center border-t-4 border-t-red-500">
+            <div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
+                <i class="fa-solid fa-trash-can fa-2xl"></i>
+            </div>
+            <h2 class="text-xl font-black text-gray-800 mb-2 leading-tight">¿Reiniciar<br>Progreso?</h2>
+            <p class="text-gray-600 text-[11px] leading-relaxed mb-8 bg-red-50 p-4 rounded-xl border border-red-100 text-left">
+                Esta acción borrará todos tus puntos XP, niveles y respuestas guardadas. <span class="font-black text-red-600">No podrás deshacer esta acción.</span>
+            </p>
+            <div class="space-y-3">
+                <button onclick="executeReset()" class="w-full bg-red-500 text-white font-bold py-4 rounded-xl uppercase text-xs tracking-widest shadow-lg shadow-red-200 hover:bg-red-600 transition-colors">Sí, borrar todo</button>
+                <button onclick="closeReset()" class="w-full bg-gray-100 text-gray-500 font-bold py-4 rounded-xl uppercase text-xs tracking-widest hover:bg-gray-200 transition-colors">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL FOR XP MILESTONE -->
     <div id="milestone-modal" class="modal-overlay" style="z-index: 300;">
         <div class="modal-content !p-6 text-center" style="background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border: 2px solid #bfdbfe;">
@@ -1384,18 +1401,27 @@
     }
 
     function confirmReset() {
-        if (confirm('¿Estás seguro de que quieres borrar todo tu progreso? Esta acción no se puede deshacer.')) {
-            userData = {
-                xp: 0,
-                streak: 1,
-                lastDate: null,
-                mastery: {}
-            };
-            saveData();
-            updateDashboard();
-            goHome();
-            alert('Progreso reiniciado correctamente.');
-        }
+        document.getElementById('reset-modal').style.display = 'flex';
+    }
+
+    function closeReset() {
+        document.getElementById('reset-modal').style.display = 'none';
+    }
+
+    function executeReset() {
+        userData = {
+            xp: 0,
+            streak: 1,
+            lastDate: null,
+            mastery: {},
+            examDate: null,
+            studyTime: null,
+            notifsEnabled: false
+        };
+        saveData();
+        updateDashboard();
+        closeReset();
+        goHome();
     }
 
     function switchScreen(id) {
