@@ -125,7 +125,7 @@
                 </div>
                 <h2 class="text-xl font-black text-gray-800 leading-tight">Aprueba el examen de ciudadanía Panameña al primer intento</h2>
             </div>
-            
+
             <div class="space-y-4 mb-8">
                 <!-- Option 1: Monthly -->
                 <label class="card !py-6 flex items-center gap-4 cursor-pointer hover:border-blue-400 transition-colors border-2 border-transparent bg-white has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50">
@@ -337,12 +337,43 @@
         </div>
     </div>
 
+    <!-- SCREEN: ONBOARDING -->
+    <div id="screen-onboarding" class="screen" style="background-color: #f8fafc; padding-bottom: 0;">
+        <div class="flex flex-col items-center justify-center min-h-screen p-8 text-center">
+            <div class="w-32 h-32 bg-white rounded-full shadow-xl flex items-center justify-center mb-8 border-4 border-blue-600">
+                <span style="font-size: 64px;">🇵🇦</span>
+            </div>
+
+            <h1 class="text-2xl font-black text-gray-900 mb-2 leading-tight">Bienvenido a la App Test de Naturalización Panamá</h1>
+            <p class="text-gray-500 text-sm mb-10 font-bold uppercase tracking-widest">Ayúdanos a personalizar tu experiencia</p>
+
+            <div class="w-full max-w-sm space-y-6">
+                <div class="text-left">
+                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">Tu Nombre</label>
+                    <input type="text" id="onboarding-name" placeholder="Ej. Luis" class="w-full p-4 rounded-2xl border-2 border-gray-100 focus:border-blue-600 focus:ring-0 outline-none transition-all font-bold text-gray-800">
+                </div>
+
+                <div class="text-left">
+                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">Fecha de tu examen</label>
+                    <input type="date" id="onboarding-exam-date" class="w-full p-4 rounded-2xl border-2 border-gray-100 focus:border-blue-600 focus:ring-0 outline-none transition-all font-bold text-gray-800">
+                </div>
+
+                <div class="text-left">
+                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">Hora de estudio</label>
+                    <input type="time" id="onboarding-study-time" value="20:00" class="w-full p-4 rounded-2xl border-2 border-gray-100 focus:border-blue-600 focus:ring-0 outline-none transition-all font-bold text-gray-800">
+                </div>
+
+                <button onclick="completeOnboarding()" class="w-full bg-blue-600 text-white font-black py-5 rounded-2xl uppercase text-sm tracking-widest shadow-xl shadow-blue-200 hover:bg-blue-700 transition-all active:scale-95 mt-4">¡Empecemos!</button>
+            </div>
+        </div>
+    </div>
+
     <!-- SCREEN: HOME -->
-    <div id="screen-home" class="screen active">
+    <div id="screen-home" class="screen">
         <div class="header">
             <div class="flex justify-between items-start mb-6">
                 <div>
-                    <h1 class="text-xl font-bold">¡Hola, Luis! <span id="user-level-badge" class="bg-yellow-400 text-blue-900 px-1.5 py-0.5 rounded text-[10px] font-black uppercase">LVL 1</span></h1>
+                    <h1 class="text-xl font-bold">¡Hola, <span id="user-name-home">Usuario</span>! <span id="user-level-badge" class="bg-yellow-400 text-blue-900 px-1.5 py-0.5 rounded text-[10px] font-black uppercase">LVL 1</span></h1>
                     <p class="text-blue-100 text-xs">Camino a la ciudadanía 🇵🇦</p>
                 </div>
                 <div class="flex flex-col items-end gap-2">
@@ -1339,10 +1370,12 @@
     ];
 
 
-    let userData = JSON.parse(localStorage.getItem('panama_user_data')) || { xp: 0, streak: 1, mastery: {}, completedMedia: [], lastXPMilestone: 0, lastLoginDate: null, isPremium: true };
+    let userData = JSON.parse(localStorage.getItem('panama_user_data')) || { xp: 0, streak: 1, mastery: {}, completedMedia: [], lastXPMilestone: 0, lastLoginDate: null, isPremium: true, onboardingComplete: false, name: 'Usuario', examDate: '', studyTime: '20:00', notifsEnabled: true };
     if (!userData.completedMedia) userData.completedMedia = [];
     if (userData.isPremium === undefined) userData.isPremium = true;
     if (userData.lastXPMilestone === undefined) userData.lastXPMilestone = userData.xp;
+    if (userData.onboardingComplete === undefined) userData.onboardingComplete = false;
+    if (userData.notifsEnabled === undefined) userData.notifsEnabled = true;
     if (!userData.lastLoginDate) userData.lastLoginDate = new Date().toISOString().slice(0, 10); // Inicializar con la fecha de hoy si es nuevo usuario
 
     // Definir los totales de videos y podcasts globalmente
@@ -1473,6 +1506,9 @@
 
         const masteredCount = Object.values(userData.mastery).filter(s => s === 3).length;
         const progressPercent = Math.round((masteredCount / fullData.length) * 100);
+
+        const elName = document.getElementById('user-name-home');
+        if(elName) elName.innerText = userData.name || 'Usuario';
 
         const elLevel = document.getElementById('user-level-badge');
         if(elLevel) elLevel.innerText = `LVL ${level}`;
@@ -1760,13 +1796,21 @@
     function switchScreen(id) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
-
+        
+        // Navigation Bar Visibility
+        const navBar = document.querySelector('.nav-bar');
+        if (id === 'screen-onboarding') {
+            if (navBar) navBar.style.display = 'none';
+        } else {
+            if (navBar) navBar.style.display = 'flex';
+        }
+        
         // Reset nav icons
         document.getElementById('nav-home').classList.replace('text-blue-600', 'text-gray-400');
         if(document.getElementById('nav-exam')) document.getElementById('nav-exam').classList.replace('text-blue-600', 'text-gray-400');
         if(document.getElementById('nav-practice')) document.getElementById('nav-practice').classList.replace('text-blue-600', 'text-gray-400');
         if(document.getElementById('nav-settings')) document.getElementById('nav-settings').classList.replace('text-blue-600', 'text-gray-400');
-        
+
         if(id === 'screen-home') document.getElementById('nav-home').classList.replace('text-gray-400', 'text-blue-600');
         if(id === 'screen-info-examen') document.getElementById('nav-exam').classList.replace('text-gray-400', 'text-blue-600');
         if(id === 'screen-flashcards') document.getElementById('nav-practice').classList.replace('text-gray-400', 'text-blue-600');
@@ -1776,6 +1820,35 @@
         if(id === 'screen-provincias') initProvincesGame();
     }
     function goHome() { switchScreen('screen-home'); updateDashboard(); }
+
+    function completeOnboarding() {
+        const name = document.getElementById('onboarding-name').value.trim();
+        const examDate = document.getElementById('onboarding-exam-date').value;
+        const studyTime = document.getElementById('onboarding-study-time').value;
+
+        if (!name) {
+            alert('Por favor, introduce tu nombre para personalizar la experiencia.');
+            return;
+        }
+
+        userData.name = name;
+        userData.examDate = examDate;
+        userData.studyTime = studyTime;
+        userData.onboardingComplete = true;
+        userData.notifsEnabled = true;
+
+        saveData();
+        updateDashboard();
+
+        // Sync notifications if native
+        if (typeof PanamaNotifications !== 'undefined') {
+            PanamaNotifications.updateDailyReminder();
+            PanamaNotifications.scheduleExamReminders();
+        }
+
+        goHome();
+    }
+
     function closeExplanation() { document.getElementById('explanation-modal').style.display = 'none'; }
     function closeMastery() {
         document.getElementById('mastery-modal').style.display = 'none';
@@ -2426,6 +2499,13 @@ function restartProvincesGame() {
         document.getElementById('provinces-names-container').classList.remove('hidden');
         document.getElementById('provinces-game-complete').classList.add('hidden');
         initProvincesGame(); // Reiniciar el juego
+    }
+
+    // Initialization logic
+    if (!userData.onboardingComplete) {
+        switchScreen('screen-onboarding');
+    } else {
+        switchScreen('screen-home');
     }
 
     updateDashboard();
