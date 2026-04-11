@@ -71,6 +71,7 @@ Crear una aplicación web para ayudar a los usuarios a prepararse para el examen
     *   **Recordatorios Diarios:** Programación dinámica basada en `userData.studyTime`.
     *   **Estrategia de Conversión (Free):** Implementación de recordatorios de examen a los 60, 45, 30, 25, 20, 15 y 10 días para incitar a la suscripción Premium.
     *   **Reactividad:** Se parchearon las funciones globales (`setStudyTime`, `setExamDate`, `toggleNotifications`, `toggleFreeMode`) para que las notificaciones se actualicen instantáneamente al cambiar los ajustes.
+    *   **Corrección de Errores:** Se definió la función `saveData()` que faltaba y estaba causando errores en el Onboarding.
 
 *   **2026-04-09:**
     *   **Lógica Free vs Premium:** Implementación de límites de contenido (Examen: 10 q, Temario: 30 p, Videos/Podcast: 1, 4, 5 habilitados, otros bloqueados).
