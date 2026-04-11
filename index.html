@@ -1678,6 +1678,10 @@
         checkQueuedModals();
     }
 
+    function saveData() {
+        localStorage.setItem('panama_user_data', JSON.stringify(userData));
+    }
+
     function showSettings() {
         switchScreen('screen-settings');
         // Update values from userData
