@@ -60,6 +60,10 @@ Crear una aplicación web para ayudar a los usuarios a prepararse para el examen
 ## 6. Log de Cambios
 
 *   **2026-04-11:**
+    *   **Onboarding de Usuario:** Implementación de una pantalla de bienvenida (`screen-onboarding`) para nuevos usuarios.
+        *   Solicita Nombre, Fecha de Examen y Hora de Estudio para personalizar la experiencia.
+        *   El nombre se vincula dinámicamente al saludo de la Home.
+        *   La barra de navegación se oculta durante este proceso inicial.
     *   **Notificaciones Push y Locales:** Se integró el objeto `PanamaNotifications` en `logic_prototype.js`.
     *   **Manejo de Permisos:** Lógica unificada para Android 13+ e iOS.
     *   **Recordatorios Diarios:** Programación dinámica basada en `userData.studyTime`.
