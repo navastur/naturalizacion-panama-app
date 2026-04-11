@@ -52,6 +52,7 @@ Crear una aplicación web para ayudar a los usuarios a prepararse para el examen
         *   Modal personalizado para notificaciones en primer plano.
         *   Recordatorios diarios basados en la hora de estudio.
         *   **Lógica de Upsell Free:** Notificaciones automáticas cuando faltan 60, 45, 30, 25, 20, 15 y 10 días para el examen (solo usuarios Free).
+    *   **Onboarding y Personalización:** Pantalla de bienvenida para nuevos usuarios que captura Nombre, Fecha de Examen y Hora de Estudio.
 
 *   **Problemas pendientes y depuración:**
     *   **El array `userData.completedMedia` no está acumulando correctamente los IDs de videos/podcasts:** Aún se necesita depuración con la salida de la consola del usuario.
@@ -62,8 +63,9 @@ Crear una aplicación web para ayudar a los usuarios a prepararse para el examen
 *   **2026-04-11:**
     *   **Onboarding de Usuario:** Implementación de una pantalla de bienvenida (`screen-onboarding`) para nuevos usuarios.
         *   Solicita Nombre, Fecha de Examen y Hora de Estudio para personalizar la experiencia.
-        *   El nombre se vincula dinámicamente al saludo de la Home.
+        *   El nombre se vincula dinámicamente al saludo de la Home ("¡Hola, [Nombre]!").
         *   La barra de navegación se oculta durante este proceso inicial.
+        *   Se activan las notificaciones por defecto al completar el proceso.
     *   **Notificaciones Push y Locales:** Se integró el objeto `PanamaNotifications` en `logic_prototype.js`.
     *   **Manejo de Permisos:** Lógica unificada para Android 13+ e iOS.
     *   **Recordatorios Diarios:** Programación dinámica basada en `userData.studyTime`.
