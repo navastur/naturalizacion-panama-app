@@ -232,3 +232,235 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 });
+
+/**
+ * --- SISTEMA DE NOTIFICACIONES (CAPACITOR) ---
+ * Lógica unificada para Push y Notificaciones Locales (Recordatorios)
+ */
+const PanamaNotifications = {
+    async init() {
+        // Verificar si Capacitor está disponible (entorno nativo)
+        if (typeof Capacitor === 'undefined' || Capacitor.getPlatform() === 'web') {
+            console.log("Notificaciones: Entorno web detectado, modo nativo desactivado.");
+            return;
+        }
+
+        const PushNotifications = Capacitor.Plugins.PushNotifications;
+        const LocalNotifications = Capacitor.Plugins.LocalNotifications;
+
+        console.log(`Iniciando sistema de notificaciones en ${Capacitor.getPlatform()}`);
+
+        // 1. Solicitar Permisos (Manejo Android 13+ e iOS)
+        let permStatus = await PushNotifications.checkPermissions();
+        
+        if (permStatus.receive === 'prompt') {
+            permStatus = await PushNotifications.requestPermissions();
+        }
+
+        if (permStatus.receive !== 'granted') {
+            console.warn("Permisos de notificación denegados por el usuario.");
+            return;
+        }
+
+        // 2. Registro para Push Notifications (FCM/APNs)
+        try {
+            await PushNotifications.register();
+        } catch (e) {
+            console.error("Error al registrar para Push:", e);
+        }
+
+        // 3. Listeners de Registro
+        PushNotifications.addListener('registration', (token) => {
+            console.log('Registration Token (Cópialo para pruebas):', token.value);
+            // Aquí enviarías el token a tu base de datos
+        });
+
+        PushNotifications.addListener('registrationError', (error) => {
+            console.error('Error en el registro de token:', error);
+        });
+
+        // 4. Listeners de Recepción (Foreground)
+        PushNotifications.addListener('pushNotificationReceived', (notification) => {
+            console.log('Notificación recibida en primer plano:', notification);
+            // Disparar modal interno para que el usuario lo vea aunque la app esté abierta
+            this.showInAppModal(notification.title, notification.body);
+        });
+
+        // 5. Configurar Recordatorios (Local)
+        this.updateDailyReminder();
+        this.scheduleExamReminders();
+    },
+
+    /**
+     * Programa una notificación local recurrente según la preferencia del usuario
+     */
+    async updateDailyReminder() {
+        if (typeof Capacitor === 'undefined' || Capacitor.getPlatform() === 'web') return;
+        const LocalNotifications = Capacitor.Plugins.LocalNotifications;
+
+        // Se asume que 'userData' es global y accesible (desde index.html)
+        if (typeof userData === 'undefined' || !userData.notifsEnabled || !userData.studyTime) {
+            console.log("Notificaciones desactivadas o falta hora de estudio.");
+            await LocalNotifications.cancel({ notifications: [{ id: 101 }] });
+            return;
+        }
+
+        try {
+            const [hours, minutes] = userData.studyTime.split(':').map(Number);
+            
+            // Primero limpiamos cualquier recordatorio previo con el mismo ID
+            await LocalNotifications.cancel({ notifications: [{ id: 101 }] });
+
+            await LocalNotifications.schedule({
+                notifications: [
+                    {
+                        title: "Hora de estudiar 🇵🇦",
+                        body: "Es la hora de estudiar para tu examen de naturalización. Responde algunas preguntas y sigue progresando para obtener la nacionalidad de Panamá.",
+                        id: 101,
+                        schedule: {
+                            on: {
+                                hour: hours,
+                                minute: minutes
+                            },
+                            repeats: true,
+                            allowWhileIdle: true
+                        },
+                        sound: null,
+                        attachments: null,
+                        actionTypeId: "",
+                        extra: null
+                    }
+                ]
+            });
+            console.log(`Recordatorio diario programado para las ${userData.studyTime}`);
+        } catch (e) {
+            console.error("Error al programar notificación local:", e);
+        }
+    },
+
+    /**
+     * Lógica Premium Upsell: Recordatorios basados en la fecha del examen (Solo usuarios FREE)
+     */
+    async scheduleExamReminders() {
+        if (typeof Capacitor === 'undefined' || Capacitor.getPlatform() === 'web') return;
+        const LocalNotifications = Capacitor.Plugins.LocalNotifications;
+
+        const milestoneIds = [260, 245, 230, 225, 220, 215, 210];
+        
+        // Limpiar recordatorios existentes antes de reprogramar
+        await LocalNotifications.cancel({ notifications: milestoneIds.map(id => ({ id })) });
+
+        if (typeof userData === 'undefined' || userData.isPremium || !userData.examDate || !userData.notifsEnabled) {
+            return;
+        }
+
+        const milestones = [60, 45, 30, 25, 20, 15, 10];
+        const examDate = new Date(userData.examDate);
+        const now = new Date();
+        const notifications = [];
+
+        milestones.forEach(days => {
+            const reminderDate = new Date(examDate.getTime());
+            reminderDate.setDate(examDate.getDate() - days);
+            
+            // Programar a las 10:00 AM para mayor visibilidad
+            reminderDate.setHours(10, 0, 0, 0);
+
+            if (reminderDate > now) {
+                notifications.push({
+                    title: "Examen de Naturalización 🇵🇦",
+                    body: `Ya sólo quedan ${days} días para tu examen de naturalización de Panamá. No te arriesgues y suscríbete para desbloquear todas las preguntas.`,
+                    id: 200 + days,
+                    schedule: { at: reminderDate, allowWhileIdle: true }
+                });
+            }
+        });
+
+        if (notifications.length > 0) {
+            await LocalNotifications.schedule({ notifications });
+            console.log(`${notifications.length} recordatorios de examen (Upsell Free) programados.`);
+        }
+    },
+
+    /**
+     * Modal interno personalizado para notificaciones en primer plano
+     */
+    showInAppModal(title, body) {
+        const modalDiv = document.createElement('div');
+        modalDiv.id = 'notif-in-app-modal';
+        modalDiv.style.cssText = `
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); z-index: 99999; display: flex;
+            align-items: center; justify-content: center; padding: 20px;
+            backdrop-filter: blur(4px);
+        `;
+        
+        modalDiv.innerHTML = `
+            <div style="background: white; border-radius: 24px; padding: 30px; width: 100%; max-width: 340px; text-align: center; border-top: 6px solid #2563eb; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);">
+                <div style="width: 64px; height: 64px; background: #dbeafe; color: #2563eb; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                    <i class="fa-solid fa-bell-concierge fa-2xl"></i>
+                </div>
+                <h2 style="font-size: 18px; font-weight: 900; color: #111827; margin-bottom: 12px; line-height: 1.2;">${title}</h2>
+                <p style="font-size: 13px; color: #4b5563; margin-bottom: 30px; line-height: 1.6;">${body}</p>
+                <button id="close-notif-btn" style="width: 100%; background: #2563eb; color: white; font-weight: 800; padding: 16px; border-radius: 14px; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; border: none; cursor: pointer; box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.4);">Entendido</button>
+            </div>
+        `;
+        
+        document.body.appendChild(modalDiv);
+        document.getElementById('close-notif-btn').onclick = () => {
+            document.body.removeChild(modalDiv);
+        };
+    }
+};
+
+// Ejecutar inicialización al cargar el DOM si estamos en entorno nativo
+document.addEventListener('DOMContentLoaded', () => {
+    // Retraso de 2 segundos para asegurar que Capacitor está listo
+    setTimeout(() => {
+        if (typeof Capacitor !== 'undefined' && Capacitor.getPlatform() !== 'web') {
+            PanamaNotifications.init();
+        }
+    }, 2000);
+});
+
+
+/**
+ * Reactividad: Aseguramos que las notificaciones se actualicen cuando el usuario cambia
+ * sus ajustes en tiempo real sin reiniciar la app.
+ */
+setTimeout(() => {
+    if (typeof setStudyTime === 'function') {
+        const originalSetStudyTime = setStudyTime;
+        window.setStudyTime = function(val) {
+            originalSetStudyTime(val);
+            if (typeof PanamaNotifications !== 'undefined') PanamaNotifications.updateDailyReminder();
+        };
+    }
+
+    if (typeof toggleNotifications === 'function') {
+        const originalToggleNotifications = toggleNotifications;
+        window.toggleNotifications = function() {
+            originalToggleNotifications();
+            if (typeof PanamaNotifications !== 'undefined') {
+                PanamaNotifications.updateDailyReminder();
+                PanamaNotifications.scheduleExamReminders();
+            }
+        };
+    }
+
+    if (typeof setExamDate === 'function') {
+        const originalSetExamDate = setExamDate;
+        window.setExamDate = function(val) {
+            originalSetExamDate(val);
+            if (typeof PanamaNotifications !== 'undefined') PanamaNotifications.scheduleExamReminders();
+        };
+    }
+
+    if (typeof toggleFreeMode === 'function') {
+        const originalToggleFreeMode = toggleFreeMode;
+        window.toggleFreeMode = function() {
+            originalToggleFreeMode();
+            if (typeof PanamaNotifications !== 'undefined') PanamaNotifications.scheduleExamReminders();
+        };
+    }
+}, 3000);
