@@ -686,7 +686,7 @@
                 </div>
 
                 <!-- Video 5 -->
-                <div onclick="playVideo('636316/9a2bb347-13f0-4f3d-864a-0a752c8e5714', 'Cultura General', 'Módulo 4', 'bunny')" class="bg-white p-4 rounded-2xl flex items-center gap-4 shadow-sm border border-gray-50 active:scale-95 transition-transform cursor-pointer">
+                <div id="video-check-container-assets/videos/cultura_general.mp4" onclick="playVideo('assets/videos/cultura_general.mp4', 'Cultura General', 'Módulo 4', 'local')" class="bg-white p-4 rounded-2xl flex items-center gap-4 shadow-sm border border-gray-50 active:scale-95 transition-transform cursor-pointer">
                     <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center text-green-600 shadow-inner">
                         <i class="fa-solid fa-play"></i>
                     </div>
@@ -694,7 +694,7 @@
                         <h4 class="text-sm font-bold text-gray-800">5. Cultura General</h4>
                         <p class="text-[10px] text-gray-400 font-medium uppercase">Módulo 4 • Datos</p>
                     </div>
-                    <div id="video-check-636316/9a2bb347-13f0-4f3d-864a-0a752c8e5714" class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center text-green-600" style="display: none;">
+                    <div id="video-check-assets/videos/cultura_general.mp4" class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center text-green-600" style="display: none;">
                         <i class="fa-solid fa-check text-[10px]"></i>
                     </div>
                 </div>
@@ -1381,7 +1381,7 @@
     if (!userData.lastLoginDate) userData.lastLoginDate = new Date().toISOString().slice(0, 10); // Inicializar con la fecha de hoy si es nuevo usuario
 
     // Definir los totales de videos y podcasts globalmente
-    const videoIds = ['assets/videos/geografia.mp4', 'assets/videos/politica_1.mp4', '636316/9dba4160-62dc-482a-98f4-56fa0d446e73', '636316/c641b8f2-02e5-46d4-8eab-1b16b5f20328', '636316/9a2bb347-13f0-4f3d-864a-0a752c8e5714', 'assets/videos/simbolos_patrios.mp4', '636316/0bf9f153-1646-4246-9ef2-5be0640b0b35'];
+    const videoIds = ['assets/videos/geografia.mp4', 'assets/videos/politica_1.mp4', '636316/9dba4160-62dc-482a-98f4-56fa0d446e73', '636316/c641b8f2-02e5-46d4-8eab-1b16b5f20328', 'assets/videos/cultura_general.mp4', 'assets/videos/simbolos_patrios.mp4', '636316/0bf9f153-1646-4246-9ef2-5be0640b0b35'];
     const podcastIds = ['19olMhckJRkKtEgJsBiFOR', '6fhWkXeZxyBl1NECp3W0K1', '1dYqjQJYRHcETC1arFwO82', '1942OKLMwkdPWZxZm07ODS', '5WWXAf3pEDqQyaRj6YntxX'];
 
     const totalVideos = videoIds.length;
