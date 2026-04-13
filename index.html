@@ -729,30 +729,52 @@
         </div>
 
         <div class="p-4">
-            <!-- Main Audio Player Card -->
-            <div class="bg-white rounded-3xl shadow-xl overflow-hidden mb-6 border border-gray-100">
-                <div class="p-6 pb-4">
-                    <div class="flex items-center gap-4 mb-6">
-                        <div class="w-16 h-16 bg-blue-600 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-blue-100">
-                            <i class="fa-solid fa-microphone-lines fa-2x"></i>
+            <!-- Main Audio Player Card (Spotify-like Style) -->
+            <div id="custom-audio-player" class="bg-[#2c3e50] rounded-3xl shadow-2xl overflow-hidden mb-6 border border-gray-700">
+                <div class="p-6">
+                    <div class="flex items-center gap-5">
+                        <!-- Thumbnail/Image -->
+                        <div class="w-24 h-24 flex-shrink-0 rounded-2xl overflow-hidden shadow-lg border border-gray-600 bg-black">
+                            <img src="https://images.unsplash.com/photo-1593011326463-305886673322?q=80&w=300&auto=format&fit=crop" alt="Panama Canal" class="w-full h-full object-cover">
                         </div>
-                        <div>
-                            <h3 id="podcast-featured-title" class="text-base font-bold text-gray-900">Geografía de Panamá</h3>
-                            <p id="podcast-featured-module" class="text-[10px] text-blue-600 font-black uppercase tracking-widest mt-1">Módulo 1 • Podcast</p>
-                        </div>
-                    </div>
-
-                    <!-- Spotify Audio Player -->
-                    <div class="rounded-2xl overflow-hidden bg-gray-50 border border-gray-100 shadow-inner" style="min-height: 152px;">
-                        <div id="podcast-featured-frame-container" style="width:100%; height:100%;">
-                            <iframe style="border-radius:12px" src="https://open.spotify.com/embed/episode/19olMhckJRkKtEgJsBiFOR?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                        
+                        <!-- Info -->
+                        <div class="flex-1 overflow-hidden">
+                            <h3 id="podcast-featured-title" class="text-xl font-black text-white truncate leading-tight">Geografía de Panamá</h3>
+                            <p class="text-sm font-bold text-gray-400 mt-1 uppercase tracking-tight">Naturalización Panamá</p>
                         </div>
                     </div>
 
-                    <div class="mt-4 flex justify-between items-center">
-                        <span class="text-[9px] font-black text-gray-300 uppercase tracking-widest">Reproduciendo ahora</span>
-                        <button onclick="claimPodcastXP()" id="claim-podcast-btn" class="bg-blue-600 text-white px-3 py-1 rounded-full text-[10px] font-black shadow-lg shadow-blue-100 transition-transform active:scale-95">
-                            Marcar como Completado (+15 XP)
+                    <!-- Hidden Native Audio (Logic only) -->
+                    <div id="podcast-featured-frame-container" class="hidden"></div>
+
+                    <!-- Custom Controls UI -->
+                    <div class="mt-8">
+                        <!-- Progress Bar -->
+                        <div class="w-full bg-gray-700 h-1.5 rounded-full overflow-hidden mb-3">
+                            <div id="custom-audio-progress" class="bg-white h-full transition-all duration-100" style="width: 0%"></div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center gap-4">
+                                <button onclick="seekAudio(-15)" class="text-gray-400 hover:text-white transition-colors">
+                                    <i class="fa-solid fa-backward-step fa-lg"></i>
+                                </button>
+                                <button id="custom-play-pause-btn" onclick="togglePodcastPlayback()" class="w-12 h-12 bg-white text-[#2c3e50] rounded-full flex items-center justify-center shadow-lg transform active:scale-90 transition-all">
+                                    <i class="fa-solid fa-play fa-xl ml-1"></i>
+                                </button>
+                                <button onclick="seekAudio(15)" class="text-gray-400 hover:text-white transition-colors">
+                                    <i class="fa-solid fa-forward-step fa-lg"></i>
+                                </button>
+                            </div>
+                            <span id="custom-audio-time" class="text-xs font-black text-white tracking-widest">00:00</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 flex justify-between items-center pt-4 border-t border-gray-700/50">
+                        <p id="podcast-featured-module" class="text-[9px] text-gray-500 font-black uppercase tracking-[0.2em]">Módulo 1 • Podcast</p>
+                        <button onclick="claimPodcastXP()" id="claim-podcast-btn" class="bg-blue-600 text-white px-3 py-1.5 rounded-full text-[9px] font-black shadow-lg shadow-blue-900/40 transition-all active:scale-95 hover:bg-blue-500">
+                            MARCAR COMPLETADO (+15 XP)
                         </button>
                     </div>
                 </div>
@@ -2718,6 +2740,25 @@ function restartProvincesGame() {
         // document.getElementById('video-featured-container').scrollIntoView({ behavior: 'smooth' }); // Desactivado temporalmente
     }
 
+    function togglePodcastPlayback() {
+        const audio = document.getElementById('local-podcast-player');
+        const btn = document.getElementById('custom-play-pause-btn');
+        if (!audio) return;
+
+        if (audio.paused) {
+            audio.play();
+            btn.innerHTML = '<i class="fa-solid fa-pause fa-xl"></i>';
+        } else {
+            audio.pause();
+            btn.innerHTML = '<i class="fa-solid fa-play fa-xl ml-1"></i>';
+        }
+    }
+
+    function seekAudio(seconds) {
+        const audio = document.getElementById('local-podcast-player');
+        if (audio) audio.currentTime += seconds;
+    }
+
     function playPodcast(vidId, title, module, skipNotice = false) {
         if (!userData.isPremium) {
             // Permitir podcasts 1, 4, 5 (local o spotify)
@@ -2732,23 +2773,39 @@ function restartProvincesGame() {
         
         // Determinar si es local o Spotify
         if (vidId.endsWith('.mp3')) {
-            frameContainer.innerHTML = `<audio id="local-podcast-player" controls autoplay style="width:100%; border-radius:12px;">
+            frameContainer.innerHTML = `<audio id="local-podcast-player" controls autoplay playsinline style="display:none;">
                 <source src="${vidId}" type="audio/mpeg">
-                Tu navegador no soporta el elemento de video.
             </audio>`;
             
             const aPlayer = document.getElementById('local-podcast-player');
+            const progressFill = document.getElementById('custom-audio-progress');
+            const timeDisplay = document.getElementById('custom-audio-time');
+            const playBtn = document.getElementById('custom-play-pause-btn');
             
-            // Limitación de 5 minutos para usuarios Free
+            playBtn.innerHTML = '<i class="fa-solid fa-pause fa-xl"></i>';
+
+            // Limitación de 5 minutos para usuarios Free + UI Sync
             aPlayer.ontimeupdate = function() {
+                // Sync UI
+                if (aPlayer.duration) {
+                    const percent = (aPlayer.currentTime / aPlayer.duration) * 100;
+                    progressFill.style.width = `${percent}%`;
+                    
+                    const mins = Math.floor(aPlayer.currentTime / 60);
+                    const secs = Math.floor(aPlayer.currentTime % 60);
+                    timeDisplay.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                }
+
                 if (!userData.isPremium && aPlayer.currentTime >= 300) {
                     aPlayer.pause();
+                    playBtn.innerHTML = '<i class="fa-solid fa-play fa-xl ml-1"></i>';
                     showPremiumModal();
                 }
             };
 
             // XP Tracking al terminar
             aPlayer.onended = function() {
+                playBtn.innerHTML = '<i class="fa-solid fa-play fa-xl ml-1"></i>';
                 console.log("DEBUG: Podcast local finalizado:", vidId);
                 if(!userData.completedMedia.includes(vidId)) {
                     userData.xp += 15;
@@ -2758,6 +2815,8 @@ function restartProvincesGame() {
                 }
             };
         } else {
+            // Revert basic UI for Spotify if needed, but for now we prioritize local
+            frameContainer.classList.remove('hidden');
             frameContainer.innerHTML = `<iframe style="border-radius:12px" src="https://open.spotify.com/embed/episode/${vidId}?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>`;
         }
 
@@ -2767,14 +2826,12 @@ function restartProvincesGame() {
         // Reset claim button state
         const btn = document.getElementById('claim-podcast-btn');
         if(userData.completedMedia.includes(vidId)) {
-            btn.innerText = "✓ Completado";
+            btn.innerText = "✓ COMPLETADO";
             btn.classList.replace('bg-blue-600', 'bg-gray-400');
-            btn.classList.replace('shadow-blue-100', 'shadow-gray-100');
             btn.disabled = true;
         } else {
-            btn.innerText = "Marcar como Completado (+15 XP)";
+            btn.innerText = "MARCAR COMPLETADO (+15 XP)";
             btn.classList.replace('bg-gray-400', 'bg-blue-600');
-            btn.classList.replace('shadow-gray-100', 'shadow-blue-100');
             btn.disabled = false;
         }
     }
