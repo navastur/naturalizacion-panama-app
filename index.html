@@ -766,7 +766,7 @@
 
             <div class="space-y-3">
                 <!-- Podcast 1 -->
-                <div onclick="playPodcast('19olMhckJRkKtEgJsBiFOR', 'Geografía de Panamá', 'Módulo 1')" class="bg-white p-4 rounded-2xl flex items-center gap-4 shadow-sm border border-gray-50 active:scale-95 transition-transform cursor-pointer">
+                <div id="podcast-check-container-assets/videos/geografia_podcast.mp3" onclick="playPodcast('assets/videos/geografia_podcast.mp3', 'Geografía de Panamá', 'Módulo 1')" class="bg-white p-4 rounded-2xl flex items-center gap-4 shadow-sm border border-gray-50 active:scale-95 transition-transform cursor-pointer">
                     <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 shadow-inner">
                         <i class="fa-solid fa-play"></i>
                     </div>
@@ -774,7 +774,7 @@
                         <h4 class="text-sm font-bold text-gray-800">1. Geografía de Panamá</h4>
                         <p class="text-[10px] text-gray-400 font-medium uppercase">Audio • Temario Oficial</p>
                     </div>
-                    <div id="podcast-check-19olMhckJRkKtEgJsBiFOR" class="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-blue-600" style="display: none;">
+                    <div id="podcast-check-assets/videos/geografia_podcast.mp3" class="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-blue-600" style="display: none;">
                         <i class="fa-solid fa-check text-[10px]"></i>
                     </div>
                 </div>
@@ -1385,7 +1385,7 @@
 
     // Definir los totales de videos y podcasts globalmente
     const videoIds = ['assets/videos/geografia.mp4', 'assets/videos/politica_1.mp4', 'assets/videos/politica_2.mp4', 'assets/videos/historia.mp4', 'assets/videos/cultura_general.mp4', 'assets/videos/simbolos_patrios.mp4', 'assets/videos/himno.mp4'];
-    const podcastIds = ['19olMhckJRkKtEgJsBiFOR', '6fhWkXeZxyBl1NECp3W0K1', '1dYqjQJYRHcETC1arFwO82', '1942OKLMwkdPWZxZm07ODS', 'assets/videos/cultura_general_podcast.mp3'];
+    const podcastIds = ['assets/videos/geografia_podcast.mp3', '6fhWkXeZxyBl1NECp3W0K1', '1dYqjQJYRHcETC1arFwO82', '1942OKLMwkdPWZxZm07ODS', 'assets/videos/cultura_general_podcast.mp3'];
 
     const totalVideos = videoIds.length;
     const totalPodcasts = podcastIds.length;
@@ -2721,7 +2721,7 @@ function restartProvincesGame() {
     function playPodcast(vidId, title, module, skipNotice = false) {
         if (!userData.isPremium) {
             // Permitir podcasts 1, 4, 5 (local o spotify)
-            const allowedIds = ['assets/videos/cultura_general_podcast.mp3', '19olMhckJRkKtEgJsBiFOR', '1942OKLMwkdPWZxZm07ODS', '5WWXAf3pEDqQyaRj6YntxX'];
+            const allowedIds = ['assets/videos/geografia_podcast.mp3', 'assets/videos/cultura_general_podcast.mp3', '19olMhckJRkKtEgJsBiFOR', '1942OKLMwkdPWZxZm07ODS', '5WWXAf3pEDqQyaRj6YntxX'];
             if (!allowedIds.includes(vidId)) {
                 showPremiumModal();
                 return;
