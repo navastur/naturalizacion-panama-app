@@ -61,6 +61,8 @@ Crear una aplicación web para ayudar a los usuarios a prepararse para el examen
 ## 6. Log de Cambios
 
 *   **2026-04-13:**
+    *   **Vídeos Locales:** Se cambió el approach para el vídeo de Geografía, pasando de streaming (Bunny.net) a un recurso local (`assets/videos/geografia.mp4`). Se implementó un reproductor nativo de HTML5 con soporte para la limitación de 3 minutos y tracking de XP.
+    *   **Corrección de XP y Seguimiento:** Se actualizaron los IDs en el array global `videoIds` y se implementó el evento `ended` de Bunny.net para otorgar correctamente los 25 XP al finalizar los vídeos.
     *   **Actualización del Himno Nacional:** Se sustituyó el reproductor de YouTube por el de Bunny.net (`mediadelivery.net`) en la sección del himno.
     *   **Cambio de Reproductor de Vídeo (Geografía):** Se sustituyó el reproductor de Wistia por el de Bunny.net (`mediadelivery.net`) para el vídeo de Geografía.
     *   **Eliminación de Plyr:** Se removieron todas las referencias y la carga de la librería Plyr.io de `index.html`.
