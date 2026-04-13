@@ -1797,6 +1797,11 @@
     }
 
     function switchScreen(id) {
+        // Detener vídeos de Bunny al cambiar de pantalla
+        document.querySelectorAll('iframe[src*="mediadelivery.net"]').forEach(iframe => {
+            iframe.contentWindow.postMessage(JSON.stringify({ method: 'pause' }), '*');
+        });
+
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         
