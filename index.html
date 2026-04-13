@@ -2579,7 +2579,7 @@ function restartProvincesGame() {
                     }
 
                     // XP Tracking al terminar el vídeo
-                    if (data.event === 'ended') {
+                    if (data.event === 'ended' || data.type === 'ended') {
                         console.log("DEBUG: Video finalizado detectado para ID:", vidId);
                         if(!userData.completedMedia.includes(vidId)) {
                             userData.xp += 25;
