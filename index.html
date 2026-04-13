@@ -2743,11 +2743,20 @@ function restartProvincesGame() {
     function togglePodcastPlayback() {
         const audio = document.getElementById('local-podcast-player');
         const btn = document.getElementById('custom-play-pause-btn');
-        if (!audio) return;
+        if (!audio) {
+            console.log("No audio element found");
+            return;
+        }
 
         if (audio.paused) {
-            audio.play().catch(e => console.error("Error al reproducir audio:", e));
-            btn.innerHTML = '<i class="fa-solid fa-pause fa-xl"></i>';
+            console.log("Attempting to play audio...");
+            audio.play().then(() => {
+                console.log("Playback started successfully");
+                btn.innerHTML = '<i class="fa-solid fa-pause fa-xl"></i>';
+            }).catch(e => {
+                console.error("Playback failed:", e);
+                alert("Error al reproducir. Intenta pulsar de nuevo o refrescar.");
+            });
         } else {
             audio.pause();
             btn.innerHTML = '<i class="fa-solid fa-play fa-xl ml-1"></i>';
@@ -2773,7 +2782,7 @@ function restartProvincesGame() {
         
         // Determinar si es local o Spotify
         if (vidId.endsWith('.mp3')) {
-            frameContainer.innerHTML = `<audio id="local-podcast-player" preload="auto" playsinline style="display:none;">
+            frameContainer.innerHTML = `<audio id="local-podcast-player" preload="metadata" playsinline style="display:none;">
                 <source src="${vidId}" type="audio/mpeg">
             </audio>`;
             
@@ -2782,15 +2791,15 @@ function restartProvincesGame() {
             const timeDisplay = document.getElementById('custom-audio-time');
             const playBtn = document.getElementById('custom-play-pause-btn');
             
-            // Forzar reproducción inmediata
-            setTimeout(() => {
-                aPlayer.play().then(() => {
-                    playBtn.innerHTML = '<i class="fa-solid fa-pause fa-xl"></i>';
-                }).catch(e => {
-                    console.log("Auto-play prevenido por el navegador, esperando clic.");
-                    playBtn.innerHTML = '<i class="fa-solid fa-play fa-xl ml-1"></i>';
-                });
-            }, 100);
+            // Reset UI state
+            progressFill.style.width = '0%';
+            timeDisplay.innerText = '00:00';
+            playBtn.innerHTML = '<i class="fa-solid fa-play fa-xl ml-1"></i>';
+
+            // Escuchar carga de metadatos para inicializar duración
+            aPlayer.onloadedmetadata = function() {
+                console.log("Audio metadata loaded. Duration:", aPlayer.duration);
+            };
 
             // Limitación de 5 minutos para usuarios Free + UI Sync
             aPlayer.ontimeupdate = function() {
