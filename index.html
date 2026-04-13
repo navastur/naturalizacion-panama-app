@@ -1797,15 +1797,11 @@
     }
 
     function switchScreen(id) {
-        // Detener vídeos de Bunny al cambiar de pantalla
+        // Detener vídeos de Bunny al cambiar de pantalla mediante recarga del src
         document.querySelectorAll('iframe[src*="mediadelivery.net"]').forEach(iframe => {
-            try {
-                iframe.contentWindow.postMessage('{"method":"pause"}', '*');
-                // Alternativa por si el JSON no es aceptado directamente
-                iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
-            } catch (e) {
-                console.error("Error al pausar video:", e);
-            }
+            const currentSrc = iframe.src;
+            iframe.src = '';
+            iframe.src = currentSrc;
         });
 
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
