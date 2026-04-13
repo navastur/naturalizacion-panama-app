@@ -602,7 +602,7 @@
                 <div class="p-3">
                     <div class="video-container shadow-inner">
                         <div id="video-featured-frame-container">
-                            <video id="local-video-player" width="100%" height="100%" controls autoplay playsinline style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover;">
+                            <video id="local-video-player" width="100%" height="100%" controls autoplay playsinline x-webkit-airplay="deny" disableRemotePlayback style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover;">
                                 <source src="assets/videos/geografia.mp4" type="video/mp4">
                                 Tu navegador no soporta el elemento de video.
                             </video>
@@ -2565,7 +2565,7 @@ function restartProvincesGame() {
         const frameContainer = document.getElementById('video-featured-frame-container');
 
         if(provider === 'local') {
-            frameContainer.innerHTML = `<video id="local-video-player" width="100%" height="100%" controls autoplay playsinline style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover;">
+            frameContainer.innerHTML = `<video id="local-video-player" width="100%" height="100%" controls autoplay playsinline x-webkit-airplay="deny" disableRemotePlayback style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover;">
                 <source src="${vidId}" type="video/mp4">
                 Tu navegador no soporta el elemento de video.
             </video>`;
@@ -2583,9 +2583,10 @@ function restartProvincesGame() {
             // XP Tracking al terminar
             vPlayer.onended = function() {
                 console.log("DEBUG: Video local finalizado:", vidId);
-                if(!userData.completedMedia.includes(vidId)) {
+                const normalizedId = vidId.split('?')[0]; // Limpiar posibles queries
+                if(!userData.completedMedia.includes(normalizedId)) {
                     userData.xp += 25;
-                    userData.completedMedia.push(vidId);
+                    userData.completedMedia.push(normalizedId);
                     saveData();
                     updateDashboard();
                     alert("¡Video completado! +25 XP");
