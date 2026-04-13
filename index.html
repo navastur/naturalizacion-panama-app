@@ -2553,6 +2553,33 @@ function restartProvincesGame() {
         }
     });
 
+    // Lógica para video por defecto en la sección de videos
+    document.addEventListener('DOMContentLoaded', () => {
+        const defaultVideo = document.getElementById('local-video-player');
+        if (defaultVideo) {
+            // Limitación de 3 minutos para usuarios Free
+            defaultVideo.ontimeupdate = function() {
+                if (!userData.isPremium && defaultVideo.currentTime >= 180) {
+                    defaultVideo.pause();
+                    showPremiumModal();
+                }
+            };
+
+            // XP Tracking al terminar
+            defaultVideo.onended = function() {
+                const vidId = "assets/videos/geografia.mp4";
+                console.log("DEBUG: Video local (default) finalizado:", vidId);
+                if(!userData.completedMedia.includes(vidId)) {
+                    userData.xp += 25;
+                    userData.completedMedia.push(vidId);
+                    saveData();
+                    updateDashboard();
+                    alert("¡Video completado! +25 XP");
+                }
+            };
+        }
+    });
+
     function playVideo(vidId, title, module, provider = 'youtube', skipNotice = false) {
         if (!userData.isPremium) {
             const allowedVideoIds = ['636316/44b8a4d5-06a4-4580-a716-27015b40496b', 'h5dsmw9lyl', 'oko1duw3j1', '6jqx7i0fcp']; // Bunny (Geografía), Wistia 1, 4 and 5
