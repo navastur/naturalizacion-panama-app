@@ -635,7 +635,7 @@
                         <h4 class="text-sm font-bold text-gray-800">1. Geografía de Panamá</h4>
                         <p class="text-[10px] text-gray-400 font-medium uppercase">Módulo 1 • Completo</p>
                     </div>
-                    <div id="video-check-h5dsmw9lyl" class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center text-green-600" style="display: none;">
+                    <div id="video-check-636316/44b8a4d5-06a4-4580-a716-27015b40496b" class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center text-green-600" style="display: none;">
                         <i class="fa-solid fa-check text-[10px]"></i>
                     </div>
                 </div>
@@ -649,7 +649,7 @@
                         <h4 class="text-sm font-bold text-gray-800">2. Sistema Político (I)</h4>
                         <p class="text-[10px] text-gray-400 font-medium uppercase">Módulo 2 • Cívica</p>
                     </div>
-                    <div id="video-check-83qlave7np" class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center text-green-600" style="display: none;">
+                    <div id="video-check-636316/73ed21ed-41b2-4c00-b16a-f1d0d640d95c" class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center text-green-600" style="display: none;">
                         <i class="fa-solid fa-check text-[10px]"></i>
                     </div>
                 </div>
@@ -663,7 +663,7 @@
                         <h4 class="text-sm font-bold text-gray-800">3. Sistema Político (II)</h4>
                         <p class="text-[10px] text-gray-400 font-medium uppercase">Módulo 2 • Cívica</p>
                     </div>
-                    <div id="video-check-tg61ztp1h5" class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center text-green-600" style="display: none;">
+                    <div id="video-check-636316/9dba4160-62dc-482a-98f4-56fa0d446e73" class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center text-green-600" style="display: none;">
                         <i class="fa-solid fa-check text-[10px]"></i>
                     </div>
                 </div>
@@ -677,7 +677,7 @@
                         <h4 class="text-sm font-bold text-gray-800">4. Historia de Panamá</h4>
                         <p class="text-[10px] text-gray-400 font-medium uppercase">Módulo 3 • Épocas</p>
                     </div>
-                    <div id="video-check-oko1duw3j1" class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center text-green-600" style="display: none;">
+                    <div id="video-check-636316/c641b8f2-02e5-46d4-8eab-1b16b5f20328" class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center text-green-600" style="display: none;">
                         <i class="fa-solid fa-check text-[10px]"></i>
                     </div>
                 </div>
@@ -691,7 +691,7 @@
                         <h4 class="text-sm font-bold text-gray-800">5. Cultura General</h4>
                         <p class="text-[10px] text-gray-400 font-medium uppercase">Módulo 4 • Datos</p>
                     </div>
-                    <div id="video-check-6jqx7i0fcp" class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center text-green-600" style="display: none;">
+                    <div id="video-check-636316/9a2bb347-13f0-4f3d-864a-0a752c8e5714" class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center text-green-600" style="display: none;">
                         <i class="fa-solid fa-check text-[10px]"></i>
                     </div>
                 </div>
@@ -705,7 +705,7 @@
                         <h4 class="text-sm font-bold text-gray-800">6. Símbolos Patrios</h4>
                         <p class="text-[10px] text-gray-400 font-medium uppercase">Módulo 4 • Identidad</p>
                     </div>
-                    <div id="video-check-hry856lx2o" class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center text-green-600" style="display: none;">
+                    <div id="video-check-636316/401cab65-c984-44aa-8425-dd02f1515ba0" class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center text-green-600" style="display: none;">
                         <i class="fa-solid fa-check text-[10px]"></i>
                     </div>
                 </div>
@@ -2562,10 +2562,11 @@ function restartProvincesGame() {
             frameContainer.innerHTML = `<iframe id="bunny-player" src="https://player.mediadelivery.net/embed/${vidId}?autoplay=true" loading="lazy" style="border:0;position:absolute;top:0;height:100%;width:100%;" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;" allowfullscreen="true"></iframe>`;
             
             // Lógica para el reproductor de Bunny.net (3 minutos para usuarios Free + XP Tracking)
-            window.addEventListener('message', function(event) {
+            if (window._bunnyListener) window.removeEventListener('message', window._bunnyListener);
+            window._bunnyListener = function(event) {
                 if (event.origin !== 'https://player.mediadelivery.net') return;
                 try {
-                    const data = JSON.parse(event.data);
+                    const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
                     
                     // Limitación de 3 minutos
                     if (data.event === 'timeupdate' && !userData.isPremium && data.value >= 180) {
@@ -2581,11 +2582,13 @@ function restartProvincesGame() {
                         if(!userData.completedMedia.includes(vidId)) {
                             userData.xp += 25;
                             userData.completedMedia.push(vidId);
+                            saveData();
                             updateDashboard();
                         }
                     }
                 } catch (e) {}
-            }, { once: false });
+            };
+            window.addEventListener('message', window._bunnyListener);
         } else if(provider === 'wistia') {
             frameContainer.innerHTML = `<div class="wistia_embed wistia_async_${vidId}" style="height:100%;width:100%">&nbsp;</div>`;
             window._wq = window._wq || [];
