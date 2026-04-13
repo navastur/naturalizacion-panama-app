@@ -900,7 +900,7 @@
             </p>
 
             <div class="aspect-video w-full rounded-2xl overflow-hidden shadow-lg mb-6 bg-black relative">
-                <iframe src="https://player.mediadelivery.net/embed/636316/0bf9f153-1646-4246-9ef2-5be0640b0b35?autoplay=true&loop=false&muted=false&preload=true&responsive=true" loading="lazy" style="border:0;position:absolute;top:0;height:100%;width:100%;" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;" allowfullscreen="true"></iframe>
+                <iframe id="bunny-himno-player" src="https://player.mediadelivery.net/embed/636316/0bf9f153-1646-4246-9ef2-5be0640b0b35?autoplay=true&loop=false&muted=false&preload=true&responsive=true" loading="lazy" style="border:0;position:absolute;top:0;height:100%;width:100%;" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;" allowfullscreen="true"></iframe>
             </div>
 
             <div class="card p-5 bg-white border-red-100 mb-8 shadow-md">
@@ -1799,7 +1799,13 @@
     function switchScreen(id) {
         // Detener vídeos de Bunny al cambiar de pantalla
         document.querySelectorAll('iframe[src*="mediadelivery.net"]').forEach(iframe => {
-            iframe.contentWindow.postMessage(JSON.stringify({ method: 'pause' }), '*');
+            try {
+                iframe.contentWindow.postMessage('{"method":"pause"}', '*');
+                // Alternativa por si el JSON no es aceptado directamente
+                iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+            } catch (e) {
+                console.error("Error al pausar video:", e);
+            }
         });
 
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
