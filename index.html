@@ -822,7 +822,7 @@
                 </div>
 
                 <!-- Podcast 5 -->
-                <div onclick="playPodcast('5WWXAf3pEDqQyaRj6YntvX', 'Cultura General', 'Módulo 4')" class="bg-white p-4 rounded-2xl flex items-center gap-4 shadow-sm border border-gray-50 active:scale-95 transition-transform cursor-pointer">
+                <div id="podcast-check-container-assets/videos/cultura_general_podcast.mp3" onclick="playPodcast('assets/videos/cultura_general_podcast.mp3', 'Cultura General', 'Módulo 4')" class="bg-white p-4 rounded-2xl flex items-center gap-4 shadow-sm border border-gray-50 active:scale-95 transition-transform cursor-pointer">
                     <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 shadow-inner">
                         <i class="fa-solid fa-play"></i>
                     </div>
@@ -830,7 +830,7 @@
                         <h4 class="text-sm font-bold text-gray-800">5. Cultura General</h4>
                         <p class="text-[10px] text-gray-400 font-medium uppercase">Audio • Tradiciones y Datos</p>
                     </div>
-                    <div id="podcast-check-5WWXAf3pEDqQyaRj6YntvX" class="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-blue-600" style="display: none;">
+                    <div id="podcast-check-assets/videos/cultura_general_podcast.mp3" class="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-blue-600" style="display: none;">
                         <i class="fa-solid fa-check text-[10px]"></i>
                     </div>
                 </div>
@@ -1385,7 +1385,7 @@
 
     // Definir los totales de videos y podcasts globalmente
     const videoIds = ['assets/videos/geografia.mp4', 'assets/videos/politica_1.mp4', 'assets/videos/politica_2.mp4', 'assets/videos/historia.mp4', 'assets/videos/cultura_general.mp4', 'assets/videos/simbolos_patrios.mp4', 'assets/videos/himno.mp4'];
-    const podcastIds = ['19olMhckJRkKtEgJsBiFOR', '6fhWkXeZxyBl1NECp3W0K1', '1dYqjQJYRHcETC1arFwO82', '1942OKLMwkdPWZxZm07ODS', '5WWXAf3pEDqQyaRj6YntxX'];
+    const podcastIds = ['19olMhckJRkKtEgJsBiFOR', '6fhWkXeZxyBl1NECp3W0K1', '1dYqjQJYRHcETC1arFwO82', '1942OKLMwkdPWZxZm07ODS', 'assets/videos/cultura_general_podcast.mp3'];
 
     const totalVideos = videoIds.length;
     const totalPodcasts = podcastIds.length;
@@ -1810,8 +1810,9 @@
             iframe.src = currentSrc;
         });
 
-        // Detener vídeos locales al cambiar de pantalla
+        // Detener vídeos y audios locales al cambiar de pantalla
         document.querySelectorAll('video').forEach(v => v.pause());
+        document.querySelectorAll('audio').forEach(a => a.pause());
 
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
@@ -2719,22 +2720,46 @@ function restartProvincesGame() {
 
     function playPodcast(vidId, title, module, skipNotice = false) {
         if (!userData.isPremium) {
-            // Only allow podcasts 1, 4, 5 by index check
-            const podcastItems = document.querySelectorAll('#screen-podcasts .cursor-pointer');
-            const allowedIndices = [0, 3, 4];
-            let isAllowed = false;
-            podcastItems.forEach((item, index) => {
-                if (allowedIndices.includes(index) && item.getAttribute('onclick')?.includes(vidId)) isAllowed = true;
-            });
-
-            if (!isAllowed) {
+            // Permitir podcasts 1, 4, 5 (local o spotify)
+            const allowedIds = ['assets/videos/cultura_general_podcast.mp3', '19olMhckJRkKtEgJsBiFOR', '1942OKLMwkdPWZxZm07ODS', '5WWXAf3pEDqQyaRj6YntxX'];
+            if (!allowedIds.includes(vidId)) {
                 showPremiumModal();
                 return;
             }
         }
         currentPodcastId = vidId;
         const frameContainer = document.getElementById('podcast-featured-frame-container');
-        frameContainer.innerHTML = `<iframe style="border-radius:12px" src="https://open.spotify.com/embed/episode/${vidId}?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>`;
+        
+        // Determinar si es local o Spotify
+        if (vidId.endsWith('.mp3')) {
+            frameContainer.innerHTML = `<audio id="local-podcast-player" controls autoplay style="width:100%; border-radius:12px;">
+                <source src="${vidId}" type="audio/mpeg">
+                Tu navegador no soporta el elemento de video.
+            </audio>`;
+            
+            const aPlayer = document.getElementById('local-podcast-player');
+            
+            // Limitación de 5 minutos para usuarios Free
+            aPlayer.ontimeupdate = function() {
+                if (!userData.isPremium && aPlayer.currentTime >= 300) {
+                    aPlayer.pause();
+                    showPremiumModal();
+                }
+            };
+
+            // XP Tracking al terminar
+            aPlayer.onended = function() {
+                console.log("DEBUG: Podcast local finalizado:", vidId);
+                if(!userData.completedMedia.includes(vidId)) {
+                    userData.xp += 15;
+                    userData.completedMedia.push(vidId);
+                    saveData();
+                    updateDashboard();
+                }
+            };
+        } else {
+            frameContainer.innerHTML = `<iframe style="border-radius:12px" src="https://open.spotify.com/embed/episode/${vidId}?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>`;
+        }
 
         document.getElementById('podcast-featured-title').innerText = title;
         document.getElementById('podcast-featured-module').innerText = `${module} • Podcast`;
