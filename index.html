@@ -7,8 +7,7 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🇵🇦</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
-    <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
+
     <script src="https://fast.wistia.net/assets/external/E-v1.js" async></script>
     <style>
         body { background-color: #f3f4f6; font-family: 'Inter', sans-serif; height: 100vh; overflow: hidden; }
@@ -38,7 +37,7 @@
 
         /* More robust video container */
         .video-container { position: relative; width: 100%; padding-top: 56.25%; background: black; border-radius: 15px; overflow: hidden; height: 0; }
-        .video-container iframe, .video-container .plyr, .video-container > div { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+        .video-container iframe, .video-container > div { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
 
         /* Mask to hide YouTube UI elements */
         .yt-shield { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
@@ -603,7 +602,7 @@
                 <div class="p-3">
                     <div class="video-container shadow-inner">
                         <div id="video-featured-frame-container">
-                            <iframe src="https://fast.wistia.net/embed/iframe/h5dsmw9lyl" title="Geografía de Panamá" allow="autoplay; fullscreen" allowtransparency="true" frameborder="0" scrolling="no" class="wistia_embed" name="wistia_embed" width="100%" height="100%"></iframe>
+                            <iframe src="https://player.mediadelivery.net/embed/636316/44b8a4d5-06a4-4580-a716-27015b40496b?autoplay=true&loop=false&muted=false&preload=true&responsive=true" loading="lazy" style="border:0;position:absolute;top:0;height:100%;width:100%;" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;" allowfullscreen="true"></iframe>
                         </div>
                     </div>
                 </div>
@@ -628,7 +627,7 @@
 
             <div class="space-y-3">
                 <!-- Video 1 -->
-                <div onclick="playVideo('h5dsmw9lyl', 'Geografía de Panamá', 'Módulo 1', 'wistia')" class="bg-white p-4 rounded-2xl flex items-center gap-4 shadow-sm border border-gray-50 active:scale-95 transition-transform cursor-pointer">
+                <div onclick="playVideo('636316/44b8a4d5-06a4-4580-a716-27015b40496b', 'Geografía de Panamá', 'Módulo 1', 'bunny')" class="bg-white p-4 rounded-2xl flex items-center gap-4 shadow-sm border border-gray-50 active:scale-95 transition-transform cursor-pointer">
                     <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center text-green-600 shadow-inner">
                         <i class="fa-solid fa-play"></i>
                     </div>
@@ -900,8 +899,8 @@
                 Estos son los dos símbolos patrios que tienes que memorizar para obtener tu ciudadanía panameña. Memoriza la letra del himno nacional y memoriza el juramento de la bandera.
             </p>
 
-            <div class="aspect-video w-full rounded-2xl overflow-hidden shadow-lg mb-6 bg-black">
-                <iframe width="100%" height="100%" src="https://www.youtube.com/embed/7s4Zy0jVNZM" title="Himno Nacional de Panamá" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            <div class="aspect-video w-full rounded-2xl overflow-hidden shadow-lg mb-6 bg-black relative">
+                <iframe src="https://player.mediadelivery.net/embed/636316/0bf9f153-1646-4246-9ef2-5be0640b0b35?autoplay=true&loop=false&muted=false&preload=true&responsive=true" loading="lazy" style="border:0;position:absolute;top:0;height:100%;width:100%;" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;" allowfullscreen="true"></iframe>
             </div>
 
             <div class="card p-5 bg-white border-red-100 mb-8 shadow-md">
@@ -2543,7 +2542,7 @@ function restartProvincesGame() {
 
     function playVideo(vidId, title, module, provider = 'youtube', skipNotice = false) {
         if (!userData.isPremium) {
-            const allowedVideoIds = ['h5dsmw9lyl', 'oko1duw3j1', '6jqx7i0fcp']; // Videos 1, 4 and 5
+            const allowedVideoIds = ['636316/44b8a4d5-06a4-4580-a716-27015b40496b', 'h5dsmw9lyl', 'oko1duw3j1', '6jqx7i0fcp']; // Bunny (Geografía), Wistia 1, 4 and 5
             if (!allowedVideoIds.includes(vidId)) {
                 showPremiumModal();
                 return;
@@ -2552,7 +2551,24 @@ function restartProvincesGame() {
 
         const frameContainer = document.getElementById('video-featured-frame-container');
 
-        if(provider === 'wistia') {
+        if(provider === 'bunny') {
+            frameContainer.innerHTML = `<iframe id="bunny-player" src="https://player.mediadelivery.net/embed/${vidId}?autoplay=true" loading="lazy" style="border:0;position:absolute;top:0;height:100%;width:100%;" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;" allowfullscreen="true"></iframe>`;
+            
+            // Lógica para el reproductor de Bunny.net (3 minutos para usuarios Free)
+            window.addEventListener('message', function(event) {
+                if (event.origin !== 'https://player.mediadelivery.net') return;
+                try {
+                    const data = JSON.parse(event.data);
+                    if (data.event === 'timeupdate' && !userData.isPremium && data.value >= 180) {
+                        const iframe = document.getElementById('bunny-player');
+                        if (iframe) {
+                            iframe.contentWindow.postMessage(JSON.stringify({ method: 'pause' }), '*');
+                            showPremiumModal();
+                        }
+                    }
+                } catch (e) {}
+            });
+        } else if(provider === 'wistia') {
             frameContainer.innerHTML = `<div class="wistia_embed wistia_async_${vidId}" style="height:100%;width:100%">&nbsp;</div>`;
             window._wq = window._wq || [];
             _wq.push({ id: vidId, onReady: function(video) {

@@ -60,6 +60,13 @@ Crear una aplicación web para ayudar a los usuarios a prepararse para el examen
 
 ## 6. Log de Cambios
 
+*   **2026-04-13:**
+    *   **Actualización del Himno Nacional:** Se sustituyó el reproductor de YouTube por el de Bunny.net (`mediadelivery.net`) en la sección del himno.
+    *   **Cambio de Reproductor de Vídeo (Geografía):** Se sustituyó el reproductor de Wistia por el de Bunny.net (`mediadelivery.net`) para el vídeo de Geografía.
+    *   **Eliminación de Plyr:** Se removieron todas las referencias y la carga de la librería Plyr.io de `index.html`.
+    *   **Adaptación de Lógica Free:** Se implementó la restricción de 3 minutos (180 segundos) para el nuevo reproductor de Bunny.net mediante la API de `postMessage`.
+    *   **Actualización de `playVideo`:** Se modificó la función `playVideo` para soportar el proveedor `bunny` y gestionar la pausa automática en usuarios gratuitos.
+
 *   **2026-04-11:**
     *   **Onboarding de Usuario:** Implementación de una pantalla de bienvenida (`screen-onboarding`) para nuevos usuarios.
         *   Solicita Nombre, Fecha de Examen y Hora de Estudio para personalizar la experiencia.
