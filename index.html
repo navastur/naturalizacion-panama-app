@@ -1378,7 +1378,7 @@
     if (!userData.lastLoginDate) userData.lastLoginDate = new Date().toISOString().slice(0, 10); // Inicializar con la fecha de hoy si es nuevo usuario
 
     // Definir los totales de videos y podcasts globalmente
-    const videoIds = ['h5dsmw9lyl', '83qlave7np', 'tg61ztp1h5', 'oko1duw3j1', '6jqx7i0fcp', 'hry856lx2o'];
+    const videoIds = ['636316/44b8a4d5-06a4-4580-a716-27015b40496b', '636316/73ed21ed-41b2-4c00-b16a-f1d0d640d95c', '636316/9dba4160-62dc-482a-98f4-56fa0d446e73', '636316/c641b8f2-02e5-46d4-8eab-1b16b5f20328', '636316/9a2bb347-13f0-4f3d-864a-0a752c8e5714', '636316/401cab65-c984-44aa-8425-dd02f1515ba0'];
     const podcastIds = ['19olMhckJRkKtEgJsBiFOR', '6fhWkXeZxyBl1NECp3W0K1', '1dYqjQJYRHcETC1arFwO82', '1942OKLMwkdPWZxZm07ODS', '5WWXAf3pEDqQyaRj6YntxX'];
 
     const totalVideos = videoIds.length;
@@ -2561,20 +2561,31 @@ function restartProvincesGame() {
         if(provider === 'bunny') {
             frameContainer.innerHTML = `<iframe id="bunny-player" src="https://player.mediadelivery.net/embed/${vidId}?autoplay=true" loading="lazy" style="border:0;position:absolute;top:0;height:100%;width:100%;" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;" allowfullscreen="true"></iframe>`;
             
-            // Lógica para el reproductor de Bunny.net (3 minutos para usuarios Free)
+            // Lógica para el reproductor de Bunny.net (3 minutos para usuarios Free + XP Tracking)
             window.addEventListener('message', function(event) {
                 if (event.origin !== 'https://player.mediadelivery.net') return;
                 try {
                     const data = JSON.parse(event.data);
+                    
+                    // Limitación de 3 minutos
                     if (data.event === 'timeupdate' && !userData.isPremium && data.value >= 180) {
                         const iframe = document.getElementById('bunny-player');
                         if (iframe) {
-                            iframe.contentWindow.postMessage(JSON.stringify({ method: 'pause' }), '*');
+                            iframe.contentWindow.postMessage('{"method":"pause"}', '*');
                             showPremiumModal();
                         }
                     }
+
+                    // XP Tracking al terminar el vídeo
+                    if (data.event === 'ended') {
+                        if(!userData.completedMedia.includes(vidId)) {
+                            userData.xp += 25;
+                            userData.completedMedia.push(vidId);
+                            updateDashboard();
+                        }
+                    }
                 } catch (e) {}
-            });
+            }, { once: false });
         } else if(provider === 'wistia') {
             frameContainer.innerHTML = `<div class="wistia_embed wistia_async_${vidId}" style="height:100%;width:100%">&nbsp;</div>`;
             window._wq = window._wq || [];
