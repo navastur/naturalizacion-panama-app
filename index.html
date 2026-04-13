@@ -749,25 +749,30 @@
                     <div id="podcast-featured-frame-container" class="hidden"></div>
 
                     <!-- Custom Controls UI -->
-                    <div class="mt-8">
-                        <!-- Progress Bar -->
-                        <div class="w-full bg-gray-700 h-1.5 rounded-full overflow-hidden mb-3">
-                            <div id="custom-audio-progress" class="bg-white h-full transition-all duration-100" style="width: 0%"></div>
-                        </div>
-                        
-                        <div class="flex justify-between items-center">
-                            <div class="flex items-center gap-4">
-                                <button onclick="seekAudio(-15)" class="text-gray-400 hover:text-white transition-colors">
-                                    <i class="fa-solid fa-backward-step fa-lg"></i>
-                                </button>
-                                <button id="custom-play-pause-btn" onclick="togglePodcastPlayback()" class="w-12 h-12 bg-white text-[#2c3e50] rounded-full flex items-center justify-center shadow-lg transform active:scale-90 transition-all">
-                                    <i class="fa-solid fa-play fa-xl ml-1"></i>
-                                </button>
-                                <button onclick="seekAudio(15)" class="text-gray-400 hover:text-white transition-colors">
-                                    <i class="fa-solid fa-forward-step fa-lg"></i>
-                                </button>
+                    <div class="mt-6">
+                        <div class="flex items-center gap-4">
+                            <!-- Play/Pause Button -->
+                            <button id="custom-play-pause-btn" onclick="togglePodcastPlayback()" class="w-10 h-10 bg-white text-[#2c3e50] rounded-full flex items-center justify-center shadow-lg flex-shrink-0 transform active:scale-90 transition-all">
+                                <i class="fa-solid fa-play fa-lg ml-0.5"></i>
+                            </button>
+                            
+                            <!-- Progress & Timer in one row -->
+                            <div class="flex-1 flex flex-col gap-1.5">
+                                <div class="w-full bg-gray-700 h-1 rounded-full overflow-hidden">
+                                    <div id="custom-audio-progress" class="bg-white h-full transition-all duration-100" style="width: 0%"></div>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <div class="flex items-center gap-3">
+                                        <button onclick="seekAudio(-15)" class="text-gray-400 hover:text-white transition-colors">
+                                            <i class="fa-solid fa-rotate-left fa-xs"></i>
+                                        </button>
+                                        <button onclick="seekAudio(15)" class="text-gray-400 hover:text-white transition-colors">
+                                            <i class="fa-solid fa-rotate-right fa-xs"></i>
+                                        </button>
+                                    </div>
+                                    <span id="custom-audio-time" class="text-[9px] font-black text-gray-400 tracking-widest">00:00</span>
+                                </div>
                             </div>
-                            <span id="custom-audio-time" class="text-xs font-black text-white tracking-widest">00:00</span>
                         </div>
                     </div>
 
