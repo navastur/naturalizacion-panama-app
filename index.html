@@ -2563,6 +2563,7 @@ function restartProvincesGame() {
             
             // Lógica para el reproductor de Bunny.net (3 minutos para usuarios Free + XP Tracking)
             if (window._bunnyListener) window.removeEventListener('message', window._bunnyListener);
+            window._lastLogTime = 0; // Para el log cada 5 seg
             window._bunnyListener = function(event) {
                 // Bunny puede enviar mensajes desde dominios .net o .com según la región
                 if (!event.origin.includes('mediadelivery.net') && !event.origin.includes('bunnycdn.com')) return;
@@ -2570,13 +2571,20 @@ function restartProvincesGame() {
                 try {
                     const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
                     
+                    // DEBUG cada 5 segundos
+                    const now = Date.now();
+                    if (now - window._lastLogTime > 5000) {
+                        console.log("DEBUG: Bunny Heartbeat:", data);
+                        window._lastLogTime = now;
+                    }
+
                     // Eventos de progreso y finalización
                     const isTimeUpdate = data.event === 'timeupdate' || data.type === 'timeupdate' || data.status === 'playing';
                     const isEnded = data.event === 'ended' || data.type === 'ended' || data.status === 'completed';
                     
                     // Limitación de 3 minutos
                     if (isTimeUpdate && !userData.isPremium) {
-                        const currentTime = data.value || data.currentTime || 0;
+                        const currentTime = data.value || data.currentTime || data.seconds || 0;
                         if (currentTime >= 180) {
                             const iframe = document.getElementById('bunny-player');
                             if (iframe) {
@@ -2588,7 +2596,7 @@ function restartProvincesGame() {
 
                     // XP Tracking al terminar el vídeo
                     if (isEnded) {
-                        console.log("DEBUG: Video finalizado detectado para ID:", vidId);
+                        console.log("DEBUG: Video finalizado detectado para ID:", vidId, "Data:", data);
                         if(!userData.completedMedia.includes(vidId)) {
                             userData.xp += 25;
                             userData.completedMedia.push(vidId);
