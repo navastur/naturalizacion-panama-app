@@ -9,7 +9,16 @@ Crear una aplicación web para ayudar a los usuarios a prepararse para el examen
 ## 2. Stack Tecnológico
 
 *   **Frontend:** HTML, CSS (Tailwind CSS), JavaScript puro.
-*   **Contenido:** Datos de preguntas, respuestas y explicaciones incrustados directamente en el JavaScript del `index.html`. Videos de Wistia, podcasts de Spotify, sonidos genéricos (SoundHelix).
+*   **Contenido:** Datos de preguntas, respuestas y explicaciones incrustados directamente en el JavaScript del `index.html`. Videos de Wistia, *   **Contenido:** Datos de preguntas, respuestas y explicaciones incrustados directamente en el JavaScript del `index.html`. Videos de Wistia, podcasts de Spotify (antiguos, ahora migrados a nativo), sonidos genéricos (SoundHelix).
+*   **Podcasts Nativos Implementados (assets/video/):**
+    *   `historia_podcast.mp3`
+    *   `politica1_podcast.mp3`
+    *   `politica2_podcast.mp3`
+    *   `simbolos_patrios_podcast.mp3`
+*   **Actualizaciones del Reproductor de Podcasts:**
+    *   El reproductor principal ahora carga un podcast por defecto.
+    *   Se eliminaron todas las referencias a reproductores de Spotify.
+    *   Se ajustó el espaciado y el formato de los textos en el reproductor principal.
 *   **Persistencia de datos:** `localStorage` del navegador para almacenar el progreso del usuario (XP, rachas, dominio de preguntas, medios completados).
 *   **Despliegue/Acceso:** Repositorio de GitHub `naturalizacion-panama-app`. URL pública: `https://navastur.github.io/naturalizacion-panama-app/`.
 *   **Móvil (Local):** Entorno Capacitor para Android e iOS (no incluido en el repo).
