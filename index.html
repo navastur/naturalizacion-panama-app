@@ -2746,7 +2746,7 @@ function restartProvincesGame() {
         if (!audio) return;
 
         if (audio.paused) {
-            audio.play();
+            audio.play().catch(e => console.error("Error al reproducir audio:", e));
             btn.innerHTML = '<i class="fa-solid fa-pause fa-xl"></i>';
         } else {
             audio.pause();
@@ -2773,7 +2773,7 @@ function restartProvincesGame() {
         
         // Determinar si es local o Spotify
         if (vidId.endsWith('.mp3')) {
-            frameContainer.innerHTML = `<audio id="local-podcast-player" controls autoplay playsinline style="display:none;">
+            frameContainer.innerHTML = `<audio id="local-podcast-player" preload="auto" playsinline style="display:none;">
                 <source src="${vidId}" type="audio/mpeg">
             </audio>`;
             
@@ -2782,7 +2782,15 @@ function restartProvincesGame() {
             const timeDisplay = document.getElementById('custom-audio-time');
             const playBtn = document.getElementById('custom-play-pause-btn');
             
-            playBtn.innerHTML = '<i class="fa-solid fa-pause fa-xl"></i>';
+            // Forzar reproducción inmediata
+            setTimeout(() => {
+                aPlayer.play().then(() => {
+                    playBtn.innerHTML = '<i class="fa-solid fa-pause fa-xl"></i>';
+                }).catch(e => {
+                    console.log("Auto-play prevenido por el navegador, esperando clic.");
+                    playBtn.innerHTML = '<i class="fa-solid fa-play fa-xl ml-1"></i>';
+                });
+            }, 100);
 
             // Limitación de 5 minutos para usuarios Free + UI Sync
             aPlayer.ontimeupdate = function() {
