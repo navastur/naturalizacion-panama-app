@@ -2567,6 +2567,7 @@ function restartProvincesGame() {
                 if (event.origin !== 'https://player.mediadelivery.net') return;
                 try {
                     const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+                    console.log("DEBUG: Bunny Event:", data.event, data.value);
                     
                     // Limitación de 3 minutos
                     if (data.event === 'timeupdate' && !userData.isPremium && data.value >= 180) {
@@ -2579,11 +2580,13 @@ function restartProvincesGame() {
 
                     // XP Tracking al terminar el vídeo
                     if (data.event === 'ended') {
+                        console.log("DEBUG: Video finalizado detectado para ID:", vidId);
                         if(!userData.completedMedia.includes(vidId)) {
                             userData.xp += 25;
                             userData.completedMedia.push(vidId);
                             saveData();
                             updateDashboard();
+                            console.log("DEBUG: XP y Dashboard actualizados.");
                         }
                     }
                 } catch (e) {}
