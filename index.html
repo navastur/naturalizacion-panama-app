@@ -2564,30 +2564,37 @@ function restartProvincesGame() {
             // Lógica para el reproductor de Bunny.net (3 minutos para usuarios Free + XP Tracking)
             if (window._bunnyListener) window.removeEventListener('message', window._bunnyListener);
             window._bunnyListener = function(event) {
-                if (event.origin !== 'https://player.mediadelivery.net') return;
+                // Bunny puede enviar mensajes desde dominios .net o .com según la región
+                if (!event.origin.includes('mediadelivery.net') && !event.origin.includes('bunnycdn.com')) return;
+                
                 try {
                     const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
-                    console.log("DEBUG: Bunny Event:", data.event, data.value);
+                    
+                    // Eventos de progreso y finalización
+                    const isTimeUpdate = data.event === 'timeupdate' || data.type === 'timeupdate' || data.status === 'playing';
+                    const isEnded = data.event === 'ended' || data.type === 'ended' || data.status === 'completed';
                     
                     // Limitación de 3 minutos
-                    if (data.event === 'timeupdate' && !userData.isPremium && data.value >= 180) {
-                        const iframe = document.getElementById('bunny-player');
-                        if (iframe) {
-                            iframe.contentWindow.postMessage('{"method":"pause"}', '*');
-                            showPremiumModal();
+                    if (isTimeUpdate && !userData.isPremium) {
+                        const currentTime = data.value || data.currentTime || 0;
+                        if (currentTime >= 180) {
+                            const iframe = document.getElementById('bunny-player');
+                            if (iframe) {
+                                iframe.contentWindow.postMessage('{"method":"pause"}', '*');
+                                showPremiumModal();
+                            }
                         }
                     }
 
                     // XP Tracking al terminar el vídeo
-                    if (data.event === 'ended' || data.type === 'ended') {
+                    if (isEnded) {
                         console.log("DEBUG: Video finalizado detectado para ID:", vidId);
                         if(!userData.completedMedia.includes(vidId)) {
                             userData.xp += 25;
                             userData.completedMedia.push(vidId);
                             saveData();
                             updateDashboard();
-                            console.log("DEBUG: XP y Dashboard actualizados para:", vidId);
-                            alert("¡Video completado! +25 XP"); // Feedback visual directo
+                            alert("¡Video completado! +25 XP");
                         }
                     }
                 } catch (e) {}
