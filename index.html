@@ -2973,7 +2973,11 @@ function restartProvincesGame() {
         }
     };
 
-    document.addEventListener("DOMContentLoaded", initZoomMap);
+    document.addEventListener("DOMContentLoaded", () => {
+        initZoomMap();
+        // Precargar podcast por defecto (Geografía)
+        playPodcast('assets/podcasts/geografia_podcast.mp3', 'Geografía de Panamá', 'Módulo 1');
+    });
     setTimeout(initZoomMap, 500); // Fallback if already loaded
 </script>
     <audio id="progress-sound" src="assets/sounds/progress-sound.wav" preload="auto"></audio>
