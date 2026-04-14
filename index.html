@@ -11,11 +11,11 @@
     <script src="https://fast.wistia.net/assets/external/E-v1.js" async></script>
     <style>
         body { background-color: #f3f4f6; font-family: 'Inter', sans-serif; height: 100vh; overflow: hidden; }
-        .app-container { max-width: 450px; margin: 0 auto; background: white; height: 100%; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
+        .app-container { max-width: 450px; margin: 0 auto; background: white; height: 100%; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; }
         .screen { flex: 1; overflow-y: auto; display: none; padding-bottom: 80px; }
         .screen.active { display: block; }
         .header { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; padding: 25px 20px; border-bottom-right-radius: 30px; border-bottom-left-radius: 30px; }
-        .nav-bar { position: absolute; bottom: 0; left: 0; right: 0; width: 100%; display: flex; justify-content: space-around; padding: 12px 0; background: white; border-top: 1px solid #e5e7eb; z-index: 100; }
+        .nav-bar { position: absolute; bottom: 0; left: 0; width: 100%; display: flex; justify-content: space-around; padding: 12px 0; background: white; border-top: 1px solid #e5e7eb; z-index: 100; }
         .card { background: white; border-radius: 15px; padding: 15px; border: 1px solid #e5e7eb; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         .status-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
         .dot-red { background: #ef4444; }
