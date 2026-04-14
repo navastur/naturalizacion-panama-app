@@ -2812,10 +2812,14 @@ function restartProvincesGame() {
             const timeDisplay = document.getElementById('custom-audio-time');
             const playBtn = document.getElementById('custom-play-pause-btn');
             
-            // Reset UI state
-            progressFill.style.width = '0%';
-            timeDisplay.innerText = '00:00';
-            playBtn.innerHTML = '<i class="fa-solid fa-play fa-xl ml-1"></i>';
+            // Carga e inicio inmediato de reproducción (acción directa del usuario)
+            aPlayer.load();
+            aPlayer.play().then(() => {
+                playBtn.innerHTML = '<i class="fa-solid fa-pause fa-xl"></i>';
+                console.log("Playback started immediately by user action.");
+            }).catch(e => {
+                console.warn("Immediate playback failed, waiting for manual play:", e);
+            });
 
             // Escuchar carga de metadatos para inicializar duración
             aPlayer.onloadedmetadata = function() {
