@@ -759,7 +759,9 @@
                     </div>
 
                     <!-- Hidden Native Audio (Logic only) -->
-                    <div id="podcast-featured-frame-container" class="hidden"></div>
+                    <div id="podcast-featured-frame-container" class="hidden">
+                        <audio id="local-podcast-player" preload="metadata" playsinline style="display:none;"></audio>
+                    </div>
 
                     <div class="mt-4">
                         <div class="flex items-center gap-4">
@@ -880,7 +882,6 @@
                         <i class="fa-solid fa-check text-[10px]"></i>
                     </div>
                 </div>
-            </div>
             </div>
         </div>
     </div>
@@ -2797,12 +2798,60 @@ function restartProvincesGame() {
         if (audio) audio.currentTime += seconds;
     }
 
+    function initPersistentAudioListeners() {
+        const aPlayer = document.getElementById('local-podcast-player');
+        const progressFill = document.getElementById('custom-audio-progress');
+        const timeDisplay = document.getElementById('custom-audio-time');
+        const playBtn = document.getElementById('custom-play-pause-btn');
+        if (!aPlayer) return;
+
+        aPlayer.onloadedmetadata = function() {
+            console.log("Audio metadata loaded. Duration:", aPlayer.duration);
+        };
+
+        aPlayer.ontimeupdate = function() {
+            if (aPlayer.duration) {
+                const percent = (aPlayer.currentTime / aPlayer.duration) * 100;
+                progressFill.style.width = `${percent}%`;
+
+                const mins = Math.floor(aPlayer.currentTime / 60);
+                const secs = Math.floor(aPlayer.currentTime % 60);
+                timeDisplay.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            }
+
+            if (!userData.isPremium && aPlayer.currentTime >= 300) {
+                aPlayer.pause();
+                playBtn.innerHTML = '<i class="fa-solid fa-play fa-xl ml-1"></i>';
+                showPremiumModal();
+            }
+        };
+
+        aPlayer.onended = function() {
+            playBtn.innerHTML = '<i class="fa-solid fa-play fa-xl ml-1"></i>';
+            console.log("DEBUG: Podcast local finalizado:", currentPodcastId);
+
+            if(!userData.completedMedia.includes(currentPodcastId)) {
+                userData.xp += 15;
+                userData.completedMedia.push(currentPodcastId);
+                saveData();
+                updateDashboard();
+
+                const check = document.getElementById(`podcast-check-${currentPodcastId}`);
+                if(check) check.style.display = 'flex';
+
+                console.log("✨ XP de Podcast asignado automáticamente.");
+            }
+        };
+    }
+
+    // Inicializar listeners una sola vez cuando el DOM esté listo
+    initPersistentAudioListeners();
+
     function playPodcast(vidId, title, module, skipNotice = false) {
         if (!userData.isPremium) {
-            // Permitir solo Geografía, Historia y Política (I) para usuarios Free
             const allowedIds = [
-                'assets/podcasts/geografia_podcast.mp3', 
-                'assets/podcasts/historia_podcast.mp3', 
+                'assets/podcasts/geografia_podcast.mp3',
+                'assets/podcasts/historia_podcast.mp3',
                 'assets/podcasts/politica1_podcast.mp3'
             ];
             if (!allowedIds.includes(vidId)) {
@@ -2811,72 +2860,28 @@ function restartProvincesGame() {
             }
         }
         currentPodcastId = vidId;
-        const frameContainer = document.getElementById('podcast-featured-frame-container');
-        
-        // Determinar si es local
+
         if (vidId.endsWith('.mp3')) {
-            frameContainer.innerHTML = `<audio id="local-podcast-player" preload="metadata" playsinline style="display:none;">
-                <source src="${vidId}" type="audio/mpeg">
-            </audio>`;
-            
             const aPlayer = document.getElementById('local-podcast-player');
+            const playBtn = document.getElementById('custom-play-pause-btn');
             const progressFill = document.getElementById('custom-audio-progress');
             const timeDisplay = document.getElementById('custom-audio-time');
-            const playBtn = document.getElementById('custom-play-pause-btn');
-            
-            // Carga e inicio inmediato de reproducción (acción directa del usuario)
-            aPlayer.load();
+
+            // Resetear UI
+            progressFill.style.width = '0%';
+            timeDisplay.innerText = '00:00';
+
+            // Reutilizar el elemento <audio> persistente (clave para iOS)
+            aPlayer.src = vidId;
             aPlayer.play().then(() => {
                 playBtn.innerHTML = '<i class="fa-solid fa-pause fa-xl"></i>';
                 console.log("Playback started immediately by user action.");
             }).catch(e => {
                 console.warn("Immediate playback failed, waiting for manual play:", e);
-            });
-
-            // Escuchar carga de metadatos para inicializar duración
-            aPlayer.onloadedmetadata = function() {
-                console.log("Audio metadata loaded. Duration:", aPlayer.duration);
-            };
-
-            // Limitación de 5 minutos para usuarios Free + UI Sync
-            aPlayer.ontimeupdate = function() {
-                // Sync UI
-                if (aPlayer.duration) {
-                    const percent = (aPlayer.currentTime / aPlayer.duration) * 100;
-                    progressFill.style.width = `${percent}%`;
-                    
-                    const mins = Math.floor(aPlayer.currentTime / 60);
-                    const secs = Math.floor(aPlayer.currentTime % 60);
-                    timeDisplay.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-                }
-
-                if (!userData.isPremium && aPlayer.currentTime >= 300) {
-                    aPlayer.pause();
-                    playBtn.innerHTML = '<i class="fa-solid fa-play fa-xl ml-1"></i>';
-                    showPremiumModal();
-                }
-            };
-
-            // XP Tracking al terminar
-            aPlayer.onended = function() {
                 playBtn.innerHTML = '<i class="fa-solid fa-play fa-xl ml-1"></i>';
-                console.log("DEBUG: Podcast local finalizado:", vidId);
-                
-                if(!userData.completedMedia.includes(vidId)) {
-                    userData.xp += 15;
-                    userData.completedMedia.push(vidId);
-                    saveData();
-                    updateDashboard();
-                    
-                    // Mostrar check visual en la lista
-                    const check = document.getElementById(`podcast-check-${vidId}`);
-                    if(check) check.style.display = 'flex';
-                    
-                    console.log("✨ XP de Podcast asignado automáticamente.");
-                }
-            };
+            });
         } else {
-            // Revert basic UI for Spotify if needed, but for now we prioritize local
+            const frameContainer = document.getElementById('podcast-featured-frame-container');
             frameContainer.classList.remove('hidden');
         }
 
