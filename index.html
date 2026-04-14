@@ -2867,19 +2867,17 @@ function restartProvincesGame() {
             const progressFill = document.getElementById('custom-audio-progress');
             const timeDisplay = document.getElementById('custom-audio-time');
 
-            // Resetear UI
+            // Detener reproducción actual si hay una en curso
+            aPlayer.pause();
+
+            // Resetear UI a estado detenido
             progressFill.style.width = '0%';
             timeDisplay.innerText = '00:00';
+            playBtn.innerHTML = '<i class="fa-solid fa-play fa-xl ml-1"></i>';
 
-            // Reutilizar el elemento <audio> persistente (clave para iOS)
+            // Cargar el nuevo podcast sin reproducir (el usuario pulsa play)
             aPlayer.src = vidId;
-            aPlayer.play().then(() => {
-                playBtn.innerHTML = '<i class="fa-solid fa-pause fa-xl"></i>';
-                console.log("Playback started immediately by user action.");
-            }).catch(e => {
-                console.warn("Immediate playback failed, waiting for manual play:", e);
-                playBtn.innerHTML = '<i class="fa-solid fa-play fa-xl ml-1"></i>';
-            });
+            aPlayer.load();
         } else {
             const frameContainer = document.getElementById('podcast-featured-frame-container');
             frameContainer.classList.remove('hidden');
