@@ -760,7 +760,7 @@
                             <!-- Progress & Timer in one row -->
                             <div class="flex-1 flex flex-col gap-1.5">
                                 <div id="progress-container" class="w-full bg-gray-700 h-2 rounded-full overflow-hidden cursor-pointer relative" onclick="seekAudioTo(event)">
-                                    <div id="custom-audio-progress" class="bg-white h-full transition-all duration-100" style="width: 0%"></div>
+                                    <div id="custom-audio-progress" class="bg-white h-full transition-all duration-100 pointer-events-none" style="width: 0%"></div>
                                 </div>
                                 <div class="flex justify-between items-center">
                                     <div class="flex items-center gap-3">
@@ -2782,7 +2782,7 @@ function restartProvincesGame() {
         }
 
         const rect = container.getBoundingClientRect();
-        const offsetX = event.clientX - rect.left;
+        const offsetX = (event.touches ? event.touches[0].clientX : event.clientX) - rect.left;
         const width = rect.width;
         const percent = Math.min(Math.max(offsetX / width, 0), 1);
         
