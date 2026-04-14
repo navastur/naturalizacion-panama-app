@@ -2769,30 +2769,44 @@ function restartProvincesGame() {
     }
 
     function seekAudioTo(event) {
+        console.log("--- DEBUG SEEK EVENT ---");
         const container = document.getElementById('progress-container');
         const aPlayer = document.getElementById('podcast-audio-player');
         
-        // Usar una referencia más directa si el ID falla o no tiene duración
-        if (!aPlayer) return;
+        if (!aPlayer) { console.error("DEBUG: Audio element not found"); return; }
         
         const duration = aPlayer.duration;
+        const rect = container.getBoundingClientRect();
+        
+        // Detectar posición del clic (soporte ratón y táctil)
+        let clientX = event.clientX;
+        if (event.touches && event.touches.length > 0) {
+            clientX = event.touches[0].clientX;
+        } else if (event.changedTouches && event.changedTouches.length > 0) {
+            clientX = event.changedTouches[0].clientX;
+        }
+
+        const offsetX = clientX - rect.left;
+        const width = rect.width;
+        const percent = Math.min(Math.max(offsetX / width, 0), 1);
+        const newTime = percent * duration;
+
+        console.log("1. Duración Total:", duration, "s");
+        console.log("2. Clic en X (relativo al contenedor):", offsetX, "px");
+        console.log("3. Ancho de Barra:", width, "px");
+        console.log("4. Porcentaje Calculado:", (percent * 100).toFixed(2), "%");
+        console.log("5. Nueva Posición (s):", newTime);
+
         if (!container || !duration || isNaN(duration)) {
-            console.warn("Seek failed: Duration unknown or NaN.", duration);
+            console.warn("DEBUG: Seek abortado. Causas: container null, duration 0 o NaN.");
             return;
         }
 
-        const rect = container.getBoundingClientRect();
-        const offsetX = (event.touches ? event.touches[0].clientX : event.clientX) - rect.left;
-        const width = rect.width;
-        const percent = Math.min(Math.max(offsetX / width, 0), 1);
-        
-        const newTime = percent * duration;
-        console.log(`Seeking to: ${newTime}s (${(percent * 100).toFixed(2)}%)`);
         aPlayer.currentTime = newTime;
         
-        // Sincronizar UI inmediatamente
         const progressFill = document.getElementById('custom-audio-progress');
         if (progressFill) progressFill.style.width = `${percent * 100}%`;
+        console.log("--- FIN DEBUG ---");
     }
 
     function seekAudio(seconds) {
