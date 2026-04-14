@@ -2796,7 +2796,7 @@ function restartProvincesGame() {
     function playPodcast(vidId, title, module, skipNotice = false) {
         if (!userData.isPremium) {
             // Permitir podcasts 1, 4, 5 (local)
-            const allowedIds = ['assets/videos/geografia_podcast.mp3', 'assets/videos/cultura_general_podcast.mp3', '19olMhckJRkKtEgJsBiFOR', '1942OKLMwkdPWZxZm07ODS', '5WWXAf3pEDqQyaRj6YntxX'];
+            const allowedIds = ['assets/podcasts/geografia_podcast.mp3', 'assets/podcasts/cultura_general_podcast.mp3', 'assets/podcasts/historia_podcast.mp3', 'assets/podcasts/politica1_podcast.mp3', 'assets/podcasts/politica2_podcast.mp3', 'assets/podcasts/simbolos_patrios_podcast.mp3'];
             if (!allowedIds.includes(vidId)) {
                 showPremiumModal();
                 return;
