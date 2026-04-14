@@ -2771,8 +2771,13 @@ function restartProvincesGame() {
     function seekAudioTo(event) {
         const container = document.getElementById('progress-container');
         const aPlayer = document.getElementById('podcast-audio-player');
-        if (!container || !aPlayer || !aPlayer.duration) {
-            console.warn("Seek failed: Player not ready or duration unknown.");
+        
+        // Usar una referencia más directa si el ID falla o no tiene duración
+        if (!aPlayer) return;
+        
+        const duration = aPlayer.duration;
+        if (!container || !duration || isNaN(duration)) {
+            console.warn("Seek failed: Duration unknown or NaN.", duration);
             return;
         }
 
@@ -2781,8 +2786,8 @@ function restartProvincesGame() {
         const width = rect.width;
         const percent = Math.min(Math.max(offsetX / width, 0), 1);
         
-        const newTime = percent * aPlayer.duration;
-        console.log(`Seeking to: ${newTime}s (${percent * 100}%)`);
+        const newTime = percent * duration;
+        console.log(`Seeking to: ${newTime}s (${(percent * 100).toFixed(2)}%)`);
         aPlayer.currentTime = newTime;
         
         // Sincronizar UI inmediatamente
