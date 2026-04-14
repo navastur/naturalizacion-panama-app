@@ -2849,11 +2849,18 @@ function restartProvincesGame() {
             aPlayer.onended = function() {
                 playBtn.innerHTML = '<i class="fa-solid fa-play fa-xl ml-1"></i>';
                 console.log("DEBUG: Podcast local finalizado:", vidId);
+                
                 if(!userData.completedMedia.includes(vidId)) {
                     userData.xp += 15;
                     userData.completedMedia.push(vidId);
                     saveData();
                     updateDashboard();
+                    
+                    // Mostrar check visual en la lista
+                    const check = document.getElementById(`podcast-check-${vidId}`);
+                    if(check) check.style.display = 'flex';
+                    
+                    console.log("✨ XP de Podcast asignado automáticamente.");
                 }
             };
         } else {
