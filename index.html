@@ -1430,6 +1430,7 @@
     let flashcardSessionCount = 0;
     let provincesSessionCount = 0;
     let currentPodcastId = '19olMhckJRkKtEgJsBiFOR';
+    let pendingPodcastSrc = null;
 
     // Setup Wistia auto-tracking for all videos
     window._wq = window._wq || [];
@@ -2762,14 +2763,27 @@ function restartProvincesGame() {
             return;
         }
 
-        if (audio.paused) {
-            console.log("Attempting to play audio...");
+        // Si hay un src pendiente, aplicarlo AHORA (mismo gesto que play → iOS compatible)
+        if (pendingPodcastSrc) {
+            audio.src = pendingPodcastSrc;
+            pendingPodcastSrc = null;
+            console.log("Applied pending src, starting playback...");
             audio.play().then(() => {
+                btn.innerHTML = '<i class="fa-solid fa-pause fa-xl"></i>';
                 console.log("Playback started successfully");
+            }).catch(e => {
+                console.error("Playback failed:", e);
+                btn.innerHTML = '<i class="fa-solid fa-play fa-xl ml-1"></i>';
+            });
+            return;
+        }
+
+        // Toggle normal play/pause (mismo podcast, sin cambio de src)
+        if (audio.paused) {
+            audio.play().then(() => {
                 btn.innerHTML = '<i class="fa-solid fa-pause fa-xl"></i>';
             }).catch(e => {
                 console.error("Playback failed:", e);
-                alert("Error al reproducir. Intenta pulsar de nuevo o refrescar.");
             });
         } else {
             audio.pause();
@@ -2810,6 +2824,9 @@ function restartProvincesGame() {
         };
 
         aPlayer.ontimeupdate = function() {
+            // No actualizar UI si hay un cambio de podcast pendiente
+            if (pendingPodcastSrc) return;
+
             if (aPlayer.duration) {
                 const percent = (aPlayer.currentTime / aPlayer.duration) * 100;
                 progressFill.style.width = `${percent}%`;
@@ -2875,9 +2892,9 @@ function restartProvincesGame() {
             timeDisplay.innerText = '00:00';
             playBtn.innerHTML = '<i class="fa-solid fa-play fa-xl ml-1"></i>';
 
-            // Cargar el nuevo podcast sin reproducir (el usuario pulsa play)
-            aPlayer.src = vidId;
-            aPlayer.load();
+            // Marcar el nuevo src como pendiente (NO tocar el <audio> aquí).
+            // En iOS, src + play() deben ocurrir en el mismo gesto del usuario.
+            pendingPodcastSrc = vidId;
         } else {
             const frameContainer = document.getElementById('podcast-featured-frame-container');
             frameContainer.classList.remove('hidden');
