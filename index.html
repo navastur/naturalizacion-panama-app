@@ -759,8 +759,8 @@
                             
                             <!-- Progress & Timer in one row -->
                             <div class="flex-1 flex flex-col gap-1.5">
-                                <div class="w-full bg-gray-700 h-1 rounded-full overflow-hidden">
-                                    <div id="custom-audio-progress" class="bg-white h-full transition-all duration-100" style="width: 0%"></div>
+                                <div id="progress-container" class="w-full bg-gray-700 h-2 rounded-full overflow-hidden cursor-pointer relative" onclick="seekAudioTo(event)">
+                                    <div id="custom-audio-progress" class="bg-white h-full transition-all duration-100 pointer-events-none" style="width: 0%"></div>
                                 </div>
                                 <div class="flex justify-between items-center">
                                     <div class="flex items-center gap-3">
@@ -2798,6 +2798,22 @@ function restartProvincesGame() {
             audio.pause();
             btn.innerHTML = '<i class="fa-solid fa-play fa-xl ml-1"></i>';
         }
+    }
+
+    function seekAudioTo(event) {
+        const aPlayer = document.getElementById('local-podcast-player');
+        const container = document.getElementById('progress-container');
+        
+        if (!aPlayer || !container || !aPlayer.duration || isNaN(aPlayer.duration)) {
+            return;
+        }
+        
+        const rect = container.getBoundingClientRect();
+        const clientX = event.touches ? event.touches[0].clientX : event.clientX;
+        const percent = Math.min(Math.max((clientX - rect.left) / rect.width, 0), 1);
+        
+        aPlayer.currentTime = percent * aPlayer.duration;
+        console.log("Seek complete to:", aPlayer.currentTime);
     }
 
     function seekAudio(seconds) {
