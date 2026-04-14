@@ -54,6 +54,7 @@ Crear una aplicación web para ayudar a los usuarios a prepararse para el examen
     *   Implementación de slider interactivo en el reproductor de audio.
     *   Automatización de XP (+15) y marcado de completado al finalizar el podcast.
     *   Corrección estructural de `.nav-bar` como hijo directo de `.app-container`.
+    *   Sincronización de CSS para `.nav-bar` con `position: absolute` y `bottom: 0`.
     *   Precarga del podcast de Geografía al inicio de la app.
 
 *   **2026-04-11 (Onboarding y Notificaciones):**

@@ -15,7 +15,19 @@
         .screen { flex: 1; overflow-y: auto; display: none; padding-bottom: 80px; }
         .screen.active { display: block; }
         .header { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); color: white; padding: 25px 20px; border-bottom-right-radius: 30px; border-bottom-left-radius: 30px; }
-        .nav-bar { position: absolute; bottom: 0; left: 0; width: 100%; display: flex; justify-content: space-around; padding: 12px 0; background: white; border-top: 1px solid #e5e7eb; z-index: 100; box-sizing: border-box; }
+        .nav-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            background: white;
+            border-top: 1px solid #e5e7eb;
+            z-index: 100;
+            box-sizing: border-box;
+        }
         .card { background: white; border-radius: 15px; padding: 15px; border: 1px solid #e5e7eb; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         .status-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
         .dot-red { background: #ef4444; }
@@ -1252,7 +1264,6 @@
     </div>
 
     <!-- Navigation Bar -->
-    <!-- Fix for Git: added a blank comment line to force update -->
     <div class="nav-bar">
         <button onclick="goHome()" id="nav-home" class="text-blue-600 text-center">
             <i class="fa-solid fa-house"></i>
