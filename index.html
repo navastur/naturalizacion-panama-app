@@ -777,11 +777,7 @@
                         </div>
                     </div>
 
-                    <div class="mt-6 flex justify-between items-center pt-4 border-t border-gray-700/50">
-                        <button id="claim-podcast-btn" onclick="claimPodcastXP()" class="w-full bg-blue-600 text-white font-black py-3 rounded-xl uppercase text-[10px] tracking-widest shadow-lg shadow-blue-900/20 active:scale-95 transition-all">
-                            MARCAR COMPLETADO (+15 XP)
-                        </button>
-                    </div>
+
                 </div>
             </div>
 
@@ -2833,11 +2829,18 @@ function restartProvincesGame() {
             aPlayer.onended = function() {
                 playBtn.innerHTML = '<i class="fa-solid fa-play fa-xl ml-1"></i>';
                 console.log("DEBUG: Podcast local finalizado:", vidId);
+                
                 if(!userData.completedMedia.includes(vidId)) {
                     userData.xp += 15;
                     userData.completedMedia.push(vidId);
                     saveData();
                     updateDashboard();
+                    
+                    // Mostrar check visual en la lista
+                    const check = document.getElementById(`podcast-check-${vidId}`);
+                    if(check) check.style.display = 'flex';
+                    
+                    console.log("✨ XP de Podcast asignado automáticamente.");
                 }
             };
         } else {
@@ -2853,31 +2856,11 @@ function restartProvincesGame() {
         // Reset claim button state
         const btn = document.getElementById('claim-podcast-btn');
         if (btn) {
-            if(userData.completedMedia.includes(vidId)) {
-                btn.innerText = "✓ COMPLETADO";
-                btn.classList.replace('bg-blue-600', 'bg-gray-400');
-                btn.disabled = true;
-            } else {
-                btn.innerText = "MARCAR COMPLETADO (+15 XP)";
-                btn.classList.replace('bg-gray-400', 'bg-blue-600');
-                btn.disabled = false;
-            }
+            // Se puede omitir o dejar para futuras extensiones de UI
         }
     }
 
-    function claimPodcastXP() {
-        if(!userData.completedMedia.includes(currentPodcastId)) {
-            userData.xp += 15;
-            userData.completedMedia.push(currentPodcastId);
-            updateDashboard();
-
-            const btn = document.getElementById('claim-podcast-btn');
-            btn.innerText = "✓ Completado";
-            btn.classList.replace('bg-blue-600', 'bg-gray-400');
-            btn.classList.replace('shadow-blue-100', 'shadow-gray-100');
-            btn.disabled = true;
-        }
-    }
+    // Eliminada function claimPodcastXP() por automatización en onended
 
 
     // --- ZOOM AND PAN LOGIC FOR SVG MAP ---
